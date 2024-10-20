@@ -134,3 +134,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
+// Scaffold-DbContext "server=localhost;database=Boulangerie;User=root;Pwd=root;GuidFormat=Binary16" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force

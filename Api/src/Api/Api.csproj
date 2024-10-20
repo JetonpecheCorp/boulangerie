@@ -42,8 +42,6 @@
 
 	<ItemGroup>
 		<Folder Include="Services\" />
-		<Folder Include="ModelsImport\" />
-		<Folder Include="ModelsExport\" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
