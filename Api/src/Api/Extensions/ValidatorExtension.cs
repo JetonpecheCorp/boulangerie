@@ -5,11 +5,14 @@ namespace Api.Extensions;
 
 public static class ValidatorExtension
 {
+
+#pragma warning disable CS1570 // Le code XML du commentaire XML est incorrect
     /// <summary>
     /// Check si le mot de passe contient 1 maj, 1 min, 1 chiffre, 1 caractere spé (#?!@$%^&*-_=+;.,§£§)
     /// Longeur de 8 minimum et est pas vide
     /// </summary>
     public static IRuleBuilderOptions<T, string> MotDePasse<T>(this IRuleBuilder<T, string> ruleBuilder)
+#pragma warning restore CS1570 // Le code XML du commentaire XML est incorrect
     {
         return ruleBuilder
             .NotEmpty()

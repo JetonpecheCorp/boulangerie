@@ -7,6 +7,7 @@ public static class WebApplicationExtension
     public static WebApplication AjouterRouteAPI(this WebApplication _app)
     {
         _app.MapGroup("utilisateur").AjouterRouteUtilisateur();
+        _app.MapGroup("groupe").AjouterRouteGroupe();
 
         return _app;
     }

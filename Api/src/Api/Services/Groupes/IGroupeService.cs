@@ -1,7 +1,27 @@
-﻿namespace Api.Services.Groupes;
+﻿using Api.Models;
+using Api.ModelsExports.Groupes;
+
+namespace Api.Services.Groupes;
 
 public interface IGroupeService
 {
+    /// <summary>
+    /// Lister les groupes
+    /// </summary>
+    /// <returns>
+    ///     Tableau des groupes
+    /// </returns>
+    Task<GroupeExport[]> ListerAsync();
+
+    /// <summary>
+    /// Ajouter un nouveau groupe
+    /// </summary>
+    /// <param name="_groupe">info du groupe</param>
+    /// <returns>
+    /// <see langword="true"/> si ajouté, sinon <see langword="false"/>
+    /// </returns>
+    Task<bool> AjouterAsync(Groupe _groupe);
+
     /// <summary>
     /// Verifier qu'un groupe existe
     /// </summary>
