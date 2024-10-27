@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Observable } from 'rxjs';
+import { Pagination } from '../models/Pagination';
+import { Ingredient } from '../models/Ingredient';
 
 export class IngredientService 
 {
@@ -9,9 +11,9 @@ export class IngredientService
 
   private http: HttpClient = inject(HttpClient);
 
-  Lister()
+  Lister(_numPage: number, _nbParPage: number): Observable<Pagination<Ingredient>>
   {
-    const INFOS = { numPage: 1, nbParPage: 10 };
-    return this.http.get(`${this.BASE_API}/lister`, { params: INFOS });
+    const INFOS = { numPage: _numPage, nbParPage: _nbParPage };
+    return this.http.get<Pagination<Ingredient>>(`${this.BASE_API}/lister`, { params: INFOS });
   }
 }

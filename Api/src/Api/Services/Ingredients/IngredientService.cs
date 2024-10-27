@@ -17,7 +17,7 @@ public class IngredientService(BoulangerieContext _context): IIngredientService
             .Take(_nbParPage)
             .Select(x => new IngredientExport
             {
-               IdPublic = x.IdPublic.ToString(),
+               IdPublic = x.IdPublic.ToString("D"),
                Nom = x.Nom,
                CodeInterne = x.CodeInterne,
                Stock = x.Stock,

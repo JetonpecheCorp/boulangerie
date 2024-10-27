@@ -24,6 +24,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ThemeService } from '@service/ThemeService.Service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IngredientService } from '@service/Ingredient.service';
 
 const matInput: MatFormFieldDefaultOptions = {
   appearance: 'outline'
@@ -51,6 +52,7 @@ export const appConfig: ApplicationConfig = {
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: AuthentificationService, useClass: AuthentificationService },
     { provide: ThemeService, useClass: ThemeService },
+    { provide: IngredientService, useClass: IngredientService },
 
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matInput }
   ]

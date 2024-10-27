@@ -40,7 +40,7 @@ public static class IngredientRoute
         if(_pagination.NbParPage <= 0)
             _pagination.NbParPage = 20;
 
-        int idGroupe = _httpContext.RecupererIdGroupe();
+        int idGroupe = 1;// _httpContext.RecupererIdGroupe();
 
         var paginationExport = await _ingredientServ.ListerAsync(
             _pagination.NumPage,
@@ -63,7 +63,7 @@ public static class IngredientRoute
         if (!validate.IsValid)
             return Results.Extensions.ErreurValidator(validate.Errors);
 
-        int idGroupe = _httpContext.RecupererIdGroupe();
+        int idGroupe = 1;//_httpContext.RecupererIdGroupe();
 
         Ingredient ingredient = new()
         {
