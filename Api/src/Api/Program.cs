@@ -1,3 +1,4 @@
+using Api;
 using Api.Extensions;
 using Api.Models;
 using FluentValidation;
@@ -11,7 +12,7 @@ string cheminCleRsa = builder.Configuration.GetValue<string>("cheminCleRsa")!;
 
 RSA rsa = RSA.Create();
 
-// creer la cle une seule fois
+// creer la clé une seule fois
 if (!File.Exists(cheminCleRsa))
 {
     // cree un fichier bin pour signer le JWT
@@ -19,8 +20,12 @@ if (!File.Exists(cheminCleRsa))
     File.WriteAllBytes(cheminCleRsa, clePriver);
 }
 
-// recupere la cl�
+// recupere la clé
 rsa.ImportRSAPrivateKey(File.ReadAllBytes(cheminCleRsa), out _);
+
+builder.Services.AddAuthorizationBuilder()
+    .AddDefaultPolicy(NomPolicyJwt.DefautClient, x => x.RequireRole("client").RequireClaim("idUtilisateur").RequireClaim("idGroupe"))
+    .AddPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur"));
 
 builder.Services.AjouterSecuriteJwt(rsa);
 builder.Services.AddDbContext<BoulangerieContext>(x =>

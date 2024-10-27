@@ -11,7 +11,12 @@ public class UtilisateurService(BoulangerieContext _context) : IUtilisateurServi
         await _context.SaveChangesAsync();
     }
 
-    public async Task<bool> MailExiste(string _mail, int _idGroupe = 0)
+    public async Task<Utilisateur?> InfoAsync(string _mail)
+    {
+        return await _context.Utilisateurs.Where(x => x.Mail == _mail).FirstOrDefaultAsync();
+    }
+
+    public async Task<bool> MailExisteAsync(string _mail, int _idGroupe = 0)
     {
         if(string.IsNullOrWhiteSpace(_mail))
             return false;

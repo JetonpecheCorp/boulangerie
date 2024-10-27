@@ -8,6 +8,8 @@ public static class WebApplicationExtension
     {
         _app.MapGroup("utilisateur").AjouterRouteUtilisateur();
         _app.MapGroup("groupe").AjouterRouteGroupe();
+        _app.MapGroup("authentification").AjouterRouteAuthentification();
+        _app.MapGroup("ingredient").AjouterRouteIngredient();
 
         return _app;
     }

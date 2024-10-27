@@ -1,4 +1,5 @@
 ﻿using Api.Services.Groupes;
+using Api.Services.Ingredients;
 using Api.Services.Utilisateurs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -18,7 +19,8 @@ public static class IServiceCollectionExtension
     public static IServiceCollection AjouterService(this IServiceCollection _service, RSA _rsa)
     {
         _service.AddScoped<IGroupeService, GroupeService>()
-            .AddScoped<IUtilisateurService, UtilisateurService>();
+            .AddScoped<IUtilisateurService, UtilisateurService>()
+            .AddScoped<IIngredientService, IngredientService>();
 
         _service.AddSingleton<IJwtService>(new JwtService(_rsa, ""))
             .AddSingleton<IMdpService, MdpService>();

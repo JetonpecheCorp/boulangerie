@@ -1,0 +1,56 @@
+.spacer {
+    flex: 1 1 auto;
+  }
+
+#navbar
+{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background-color: var(--sys-primary);
+  color: var(--sys-on-primary);
+
+  & button
+  {
+    color: var(--sys-on-primary);
+  }
+}
+
+.example-container {
+  width: 400px;
+  height: 200px;
+  margin: 12px;
+  border: 1px solid #555;
+}
+
+.drawer
+{
+  width: 250px;
+  border-right: 1px solid var(--sys-primary);
+  border-bottom-right-radius: 0;
+
+  & mat-nav-list {
+    margin-top: 70px;
+    padding-right: 10px;
+  }
+}
+
+.container
+{
+  height: 100%;
+}
+
+.marginTopDrawer 
+{
+  margin-left: 10px;
+
+  &.open
+  {
+    margin-left: 260px !important;
+  }
+  
+  margin-right: 10px;
+  margin-top: 7%;
+}

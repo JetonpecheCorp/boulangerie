@@ -21,7 +21,7 @@ public static class GroupeRoute
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter un nouveau groupe")
             .ProducesBadRequestErreurValidation()
-            .ProducesCreated();
+            .ProducesCreated<int>();
 
         return builder;
     }
