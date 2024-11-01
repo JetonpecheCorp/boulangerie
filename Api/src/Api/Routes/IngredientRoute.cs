@@ -21,7 +21,7 @@ public static class IngredientRoute
             .Produces<PaginationExport<IngredientExport>>();
 
         builder.MapPost("ajouter", AjouterAsync)
-            .WithDescription("Ajouter un nouveau ingredient")
+            .WithDescription("Ajouter un nouveau ingredient ('IdPublic' pas pris en compte ici)")
             .ProducesBadRequestErreurValidation()
             .ProducesCreated<string>();
 
