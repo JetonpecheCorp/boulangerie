@@ -25,7 +25,9 @@
       "dom"
     ],
     "paths": {
-      "@service/*": ["./src/service/*"]
+      "@service/*": ["./src/service/*"],
+      "@modal/*": ["./src/app/modals/*"],
+      "@model/*": ["./src/models/*"]
     }
   },
   "angularCompilerOptions": {

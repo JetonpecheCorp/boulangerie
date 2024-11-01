@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Ajouter un ingrédient</h2>
+<mat-dialog-content>
+    <form>
+        <app-input type="hidden" [controle]="form.controls['idPublic']" label="" />
+        <app-input [controle]="form.controls['nom']" label="Nom" [maxLength]="200" />
+        <app-input [controle]="form.controls['codeInterne']" label="Code" [maxLength]="100" />
+        <app-input type="number" [controle]="form.controls['stock']" label="Stock" />
+        <app-input type="number" [controle]="form.controls['stockAlert']" label="Stock d'alerte" />
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="null">Fermer</button>
+  <button mat-flat-button (click)="Ajouter()">
+    @if(btnClicker())
+    {
+        <mat-spinner class="spinnerBtn" diameter="30"></mat-spinner>
+    }
+    @else 
+    {
+        Ajouter
+    }
+</button>
+</mat-dialog-actions>

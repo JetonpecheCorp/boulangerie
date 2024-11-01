@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -9,6 +9,7 @@ import { ThemeService } from '@service/ThemeService.Service';
 import { InputComponent } from "../../components/input/input.component";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { environment } from '../../../environments/environment';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class LoginComponent implements OnInit
 
   private authentificationServ = inject(AuthentificationService);
   private serv = inject(ThemeService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void 
   {
@@ -42,7 +44,7 @@ export class LoginComponent implements OnInit
 
     const FORM = this.form.value;
 
-    this.authentificationServ.Connexion(FORM.login, FORM.mdp).subscribe({
+    this.authentificationServ.Connexion(FORM.login, FORM.mdp).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (retour) =>
       {
         environment.utilisateur = retour;

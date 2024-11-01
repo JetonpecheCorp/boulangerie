@@ -25,6 +25,12 @@ public static class IngredientRoute
             .ProducesBadRequestErreurValidation()
             .ProducesCreated<string>();
 
+        builder.MapPut("modifier", ModifierAsync)
+            .WithDescription("Modifier un ingredient")
+            .ProducesBadRequestErreurValidation()
+            .ProducesNoContent()
+            .ProducesNotFound();
+
         return builder;
     }
 
@@ -43,8 +49,7 @@ public static class IngredientRoute
         int idGroupe = 1;// _httpContext.RecupererIdGroupe();
 
         var paginationExport = await _ingredientServ.ListerAsync(
-            _pagination.NumPage,
-            _pagination.NbParPage,
+            _pagination,
             idGroupe
         );
 
@@ -63,7 +68,7 @@ public static class IngredientRoute
         if (!validate.IsValid)
             return Results.Extensions.ErreurValidator(validate.Errors);
 
-        int idGroupe = 1;//_httpContext.RecupererIdGroupe();
+        int idGroupe = _httpContext.RecupererIdGroupe();
 
         Ingredient ingredient = new()
         {
@@ -78,5 +83,33 @@ public static class IngredientRoute
         await _ingredientServ.AjouterAsync(ingredient);
 
         return Results.Created("", ingredient.IdPublic);
+    }
+
+    async static Task<IResult> ModifierAsync(
+       HttpContext _httpContext,
+       [FromServices] IValidator<IngredientImport> _validator,
+       [FromServices] IIngredientService _ingredientServ,
+       [FromBody] IngredientImport _ingredientImport
+    )
+    {
+        _ingredientImport.Mode = Enums.EModeImport.Modifier;
+
+        var validate = _validator.Validate(_ingredientImport);
+
+        if (!validate.IsValid)
+            return Results.Extensions.ErreurValidator(validate.Errors);
+
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        SetPropertyBuilder<Ingredient> builder = new();
+
+        builder.SetProperty(x => x.Stock, _ingredientImport.Stock)
+            .SetProperty(x => x.StockAlert, _ingredientImport.StockAlert)
+            .SetProperty(x => x.Nom, _ingredientImport.Nom)
+            .SetProperty(x => x.CodeInterne, _ingredientImport.CodeInterne);
+
+        bool estModifier = await _ingredientServ.ModifierAsync(idGroupe, _ingredientImport.IdPublic!, builder);
+
+        return estModifier ? Results.NoContent() : Results.NotFound("La ressource n'existe pas");
     }
 }

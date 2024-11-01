@@ -1,32 +1,39 @@
-<mat-form-field class="inputForm">
-    <mat-label>{{ label() }}</mat-label>
-    <input matInput 
-           class="input"
-           type="{{ type() }}" 
-           [attr.placeholder]="placeholder()"
-           [attr.maxlength]="maxLength() > 0 ? maxLength() : null"
-           [formControl]="$any(controle())">
-
-    @if(estInputMdp)
-    {
-        <button matSuffix 
-                mat-icon-button 
-                aria-label="Bouton cacher ou afficher le mot de passe"
-                (click)="ModifierVisibiliteMdp()">
-            <mat-icon>{{ mdpVisible() ? "visibility_off" : "visibility" }}</mat-icon>
-        </button>
-    }
-    @else if(type() == "text" && maxLength() > 0)
-    {
-        <mat-hint align="end">{{ controle().value.length }} / {{ maxLength() }}</mat-hint>
-    }
-
-    @if (controle().hasError("required")) 
-    {
-        <mat-error>Le champ est <strong>obligatoire</strong></mat-error>
-    }
-    @else if (controle().hasError("email")) 
-    {
-        <mat-error>Veuillez entrer une adresse mail</mat-error>
-    }
-</mat-form-field>
+@if(type() == "hidden")
+{
+    <input type="hidden" [formControl]="$any(controle())">
+}
+@else 
+{
+    <mat-form-field class="inputForm">
+        <mat-label>{{ label() }}</mat-label>
+        <input matInput 
+               class="input"
+               type="{{ type() }}" 
+               [attr.placeholder]="placeholder()"
+               [attr.maxlength]="maxLength() > 0 ? maxLength() : null"
+               [formControl]="$any(controle())">
+    
+        @if(estInputMdp)
+        {
+            <button matSuffix 
+                    mat-icon-button 
+                    aria-label="Bouton cacher ou afficher le mot de passe"
+                    (click)="ModifierVisibiliteMdp()">
+                <mat-icon>{{ mdpVisible() ? "visibility_off" : "visibility" }}</mat-icon>
+            </button>
+        }
+        @else if(type() == "text" && maxLength() > 0)
+        {
+            <mat-hint align="end">{{ controle().value ? controle().value.length : 0 }} / {{ maxLength() }}</mat-hint>
+        }
+    
+        @if (controle().hasError("required")) 
+        {
+            <mat-error>Le champ est <strong>obligatoire</strong></mat-error>
+        }
+        @else if (controle().hasError("email")) 
+        {
+            <mat-error>Veuillez entrer une adresse mail</mat-error>
+        }
+    </mat-form-field>
+}

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -6,29 +6,40 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { IngredientService } from '@service/Ingredient.service';
-import { merge } from 'rxjs';
-import { Ingredient } from '../../../models/Ingredient';
+import { debounceTime, merge } from 'rxjs';
+import { Ingredient } from '@model/Ingredient';
+import { PaginationExport } from '@model/exports/PaginationExport';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { AjouterModifierIngredientComponent } from '@modal/ajouter-modifier-ingredient/ajouter-modifier-ingredient.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-ingredient',
   standalone: true,
-  imports: [MatTableModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+  imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
   templateUrl: './ingredient.component.html',
   styleUrl: './ingredient.component.scss'
 })
 export class IngredientComponent implements OnInit, AfterViewInit
 {
-  displayedColumns: string[] = ["nom", "idPublic"];
+  displayedColumns: string[] = ["nom", "codeInterne", "stock", "stockAlert", "action"];
   dataSource: MatTableDataSource<Ingredient>;
   estEnChargement = signal(false);
 
   ingredentServ = inject(IngredientService);
+  destroyRef = inject(DestroyRef);
+  matDialog = inject(MatDialog);
 
   nbParPage: number;
   total: number;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  inputFormCtrl = new FormControl();
+
+  paginator = viewChild.required(MatPaginator);
+  sort = viewChild.required(MatSort);
 
   ngOnInit(): void 
   {
@@ -37,18 +48,65 @@ export class IngredientComponent implements OnInit, AfterViewInit
 
   ngAfterViewInit(): void
   {
-    this.dataSource.sort = this.sort;
+    this.Lister();
 
-    // declancher si le trié
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.dataSource.sort = this.sort();
+    this.paginator()._intl.itemsPerPageLabel = "Ingredient par page";
 
     // declancher si un des deux event est joué
-    merge(this.sort.sortChange, this.paginator.page).subscribe(() => this.Lister())
+    merge(this.inputFormCtrl.valueChanges, this.sort().sortChange)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.paginator().firstPage());
+
+    merge(this.sort().sortChange, this.paginator().page)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.Lister());
+
+    // event input recherche
+    this.inputFormCtrl.valueChanges.pipe(
+      debounceTime(300), 
+      takeUntilDestroyed(this.destroyRef)
+    )
+    .subscribe(() =>this.Lister());
   }
-  
-  protected Lister(): void
+
+  protected OuvrirModal(_ingredient?: Ingredient): void
   {
-    this.ingredentServ.Lister(this.paginator.pageIndex + 1, this.paginator.pageSize).subscribe({
+    const DIALOG_REF = this.matDialog.open(AjouterModifierIngredientComponent, {
+      data: _ingredient
+    });
+
+    DIALOG_REF.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((retour?: Ingredient) =>
+      {        
+        // modification
+        if(retour && _ingredient)
+        {
+          _ingredient.nom = retour.nom;
+          _ingredient.codeInterne = retour.codeInterne;
+          _ingredient.stock = retour.stock;
+          _ingredient.stockAlert = retour.stockAlert;
+        }
+        // ajout
+        else if(!_ingredient && retour)
+          this.Lister();
+      });
+  }
+
+  private Lister(): void
+  {
+    this.estEnChargement.set(true);
+
+    const INFOS: PaginationExport = { 
+      nbParPage: this.paginator().pageSize,
+      numPage: this.paginator().pageIndex + 1
+    };
+
+    if(this.inputFormCtrl.value)
+      INFOS.thermeRecherche = this.inputFormCtrl.value
+
+    this.ingredentServ.Lister(INFOS).subscribe({
       next: (retour) =>
       { 
         this.dataSource.data = [];
@@ -56,17 +114,9 @@ export class IngredientComponent implements OnInit, AfterViewInit
 
         this.total = retour.total;
         this.nbParPage = retour.nbParPage;
-      }
+        this.estEnChargement.set(false);
+      },
+      error: () =>this.estEnChargement.set(false)
     });
-  }
-
-  protected Rechercher(event: Event) 
-  {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
   }
 }

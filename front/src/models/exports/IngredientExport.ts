@@ -1,6 +1,8 @@
-export type Ingredient =
+export type IngredientExport =
 {
-    idPublic: string,
+    /** Pour la modification */
+    idPublic?: string,
+
     nom: string,
     codeInterne?: string,
     stock: number,

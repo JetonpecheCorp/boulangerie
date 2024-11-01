@@ -1,4 +1,4 @@
-.example-loading-shade {
+.loading-shade {
     position: absolute;
     top: 0;
     left: 0;
@@ -11,6 +11,10 @@
     justify-content: center;
   }
 
-  .example-container {
+  .container {
     position: relative;
+  }
+
+  h1 {
+    margin-top: 0;
   }

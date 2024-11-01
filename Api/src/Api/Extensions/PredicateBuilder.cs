@@ -1,4 +1,4 @@
-﻿namespace certyAPI.Extensions;
+﻿namespace Api.Extensions;
 
 using System;
 using System.Linq;
