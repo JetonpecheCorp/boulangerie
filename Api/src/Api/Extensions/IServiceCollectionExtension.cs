@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PolicyOutputCache;
 using Services.DeuxFa;
 using Services.Jwts;
 using Services.Mdp;
@@ -38,6 +39,18 @@ public static class IServiceCollectionExtension
 
         // donne acces a httpContext dans les validators
         _service.AddHttpContextAccessor();
+
+        return _service;
+    }
+
+    public static IServiceCollection AjouterOutputCache(this IServiceCollection _service)
+    {
+        // cache actif avec le authorize
+        _service.AddOutputCache(x =>
+        {
+            x.AddPolicy(NomCache.Tva, new CachePolicyNormal("tva", TimeSpan.FromMinutes(5)));
+            x.AddPolicy(NomCache.Categorie, new CachePolicyNormal("categorie", TimeSpan.FromSeconds(30)));
+        });
 
         return _service;
     }

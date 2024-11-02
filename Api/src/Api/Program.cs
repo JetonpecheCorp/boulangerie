@@ -4,7 +4,6 @@ using Api.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
-using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,15 +43,10 @@ builder.Services.AddDbContext<BoulangerieContext>(x =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AjouterSwagger();
 
-builder.Services.ConfigureHttpJsonOptions(x =>
-{
-    x.SerializerOptions.PropertyNameCaseInsensitive = true;
-    x.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-});
-
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddCors(x => x.AddDefaultPolicy(y => y.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 builder.Services.AjouterService(rsa);
+builder.Services.AjouterOutputCache();
 
 //builder.Services.AddSingleton<IMailService>(new MailService(new MailOptions
 //{
@@ -79,6 +73,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(x => x.DefaultModelsExpandDepth(-1));
 }
 
+app.UseOutputCache();
 app.AjouterRouteAPI();
 
 app.Run();

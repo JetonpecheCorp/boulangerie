@@ -12,6 +12,8 @@ public static class WebApplicationExtension
         _app.MapGroup("ingredient").AjouterRouteIngredient();
         _app.MapGroup("recette").AjouterRouteRecette();
         _app.MapGroup("produit").AjouterRouteProduit();
+        _app.MapGroup("tva").AjouterRouteTva();
+        _app.MapGroup("categorie").AjouterRouteCategorie();
 
         return _app;
     }

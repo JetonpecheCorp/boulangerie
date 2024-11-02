@@ -1,7 +1,16 @@
-﻿namespace Api.Services.Categories;
+﻿using Api.ModelsExports.Categories;
+
+namespace Api.Services.Categories;
 
 public interface ICategorieService
 {
+    /// <summary>
+    /// Lister les categories d'un groupe
+    /// </summary>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns></returns>
+    Task<CategorieExport[]> ListerAsync(int _idGroupe);
+
     /// <summary>
     /// Recuperer id cataegorie
     /// </summary>

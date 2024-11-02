@@ -19,12 +19,11 @@
 </mat-toolbar>
 
 <mat-drawer-container 
-  class="container"
   [hasBackdrop]="mdcBackdrop">
 
   <mat-drawer #drawer class="drawer" [mode]="drawerMode" [opened]="EstConnecter()">
     <mat-nav-list role="navigation">
-      <a mat-list-item>Recette</a>
+      <a mat-list-item routerLink="produit" routerLinkActive="active">Produit</a>
       <a mat-list-item routerLink="ingredient" routerLinkActive="active">Ingredient</a>
       <a mat-list-item>Client</a>
       <a mat-list-item>Fournisseur</a>

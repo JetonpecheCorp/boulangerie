@@ -1,14 +1,13 @@
-<h1>Gestion des ingrédients</h1>
+<h1>Gestion des produits</h1>
 
 <div style="text-align: center; margin-bottom: 10px;">
     <button mat-flat-button (click)="OuvrirModal()">
         <mat-icon>add</mat-icon>
-        Ajouter un ingrédient
+        Ajouter un produit
     </button>
 </div>
 
-
-<div class="container-table  mat-elevation-z8">
+<div class="container-table mat-elevation-z8">
     @if (estEnChargement()) 
     {
         <div class="loading-shade">
@@ -69,6 +68,6 @@
     <mat-paginator [length]="total" 
                    [pageSize]="nbParPage"
                    [pageSizeOptions]="[5, 10, 25, 100]" 
-                   aria-label="Ingredient par page">
+                   aria-label="Produit par page">
     </mat-paginator>
 </div>

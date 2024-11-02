@@ -1,9 +1,77 @@
 ﻿using Api.Models;
+using Api.ModelsExports.Produits;
+using Api.ModelsExports;
+using Api.ModelsImports;
+using Api.ModelsExports.Ingredients;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services.Produits;
 
 public sealed class ProduitService(BoulangerieContext _context) : IProduitService
 {
+    public async Task<PaginationExport<ProduitExport>> ListerAsync(PaginationImport _pagination, int _idGroupe)
+    {
+        var requete = _context.Produits.Where(x => x.IdGroupe == _idGroupe);
+
+        if (_pagination.ThermeRecherche is not null)
+        {
+#pragma warning disable CS8602 // Déréférencement d'une éventuelle référence null.
+            requete = requete.Where(x =>
+                x.Nom.Contains(_pagination.ThermeRecherche) || x.CodeInterne.Contains(_pagination.ThermeRecherche)
+            );
+#pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null.
+        }
+
+        requete = requete.OrderBy(x => x.Nom);
+
+        int total = await requete.CountAsync();
+
+        var liste = await requete
+            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
+            .Take(_pagination.NbParPage)
+            .Select(x => new ProduitExport
+            {
+                IdPublic = x.IdPublic.ToString("D"),
+                Nom = x.Nom,
+                CodeInterne = x.CodeInterne,
+                Stock = x.Stock,
+                StockAlert = x.StockAlert,
+                Poids = x.Poids,
+                PrixHt = x.PrixHt,
+                Allergene = x.Alergene,
+                Tva = new()
+                {
+                    Id = x.IdTva,
+                    Valeur = x.IdTvaNavigation.Valeur
+                },
+                Categorie = new()
+                {
+                    IdPublic = x.IdCategorieNavigation.IdPublic.ToString("D"),
+                    Nom = x.IdCategorieNavigation.Nom
+                }
+
+            }).ToArrayAsync();
+
+        for (int i = 0; i < liste.Length; i++)
+        {
+            var element = liste[i];
+
+            if (string.IsNullOrWhiteSpace(element.Allergene))
+                continue;
+
+            element.ListeAllergene = element.Allergene.Split(',');
+        }
+
+        PaginationExport<ProduitExport> pagination = new()
+        {
+            NumPage = _pagination.NumPage,
+            NbParPage = _pagination.NbParPage,
+            Total = total,
+            Liste = liste
+        };
+
+        return pagination;
+    }
     public async Task<bool> AjouterAsync(Produit _produit)
     {
         _context.Produits.Add(_produit);

@@ -17,8 +17,17 @@ $angular-material-theming-css-vars-theme: mat.define-theme(
   )
 );
 
+$densityInput: mat.define-theme(
+  (
+    density: (
+      scale: -3
+    )
+  )
+);
+
 :root {
     @include mat.all-component-themes($angular-material-theming-css-vars-theme);
     @include mat.system-level-colors($angular-material-theming-css-vars-theme); // 👈 Added
     @include mat.system-level-typography($angular-material-theming-css-vars-theme); // 👈 Added
+    @include mat.form-field-density($densityInput);
   }

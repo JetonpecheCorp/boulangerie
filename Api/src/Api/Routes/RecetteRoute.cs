@@ -8,15 +8,16 @@ public static class RecetteRoute
     {
         builder.WithOpenApi().ProducesServiceUnavailable();
 
-        builder.MapPost("ajouter", AjouterAsync);
+        builder.MapPost("ajouter", AjouterAsync)
+            .WithDescription("Ajouter un ");
 
         return builder;
     }
 
-    async static Task<IResult> AjouterAsync(HttpContext _httpContext)
+    async static Task<IResult> AjouterAsync(
+        HttpContext _httpContext
+    )
     {
-
-
-        return Results.Ok();
+        return Results.NoContent();
     }
 }

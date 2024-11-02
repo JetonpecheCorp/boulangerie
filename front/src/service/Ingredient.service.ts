@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { DestroyRef, inject } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Observable } from 'rxjs';
-import { Pagination } from '../models/Pagination';
-import { Ingredient } from '../models/Ingredient';
-import { PaginationExport } from '../models/exports/PaginationExport';
+import { Pagination } from '@model/Pagination';
+import { Ingredient } from '@model/Ingredient';
+import { PaginationExport } from '@model/exports/PaginationExport';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IngredientExport } from '@model/exports/IngredientExport';
 

@@ -1,5 +1,8 @@
 ﻿using Api.Extensions;
 using Api.Models;
+using Api.ModelsExports;
+using Api.ModelsExports.Produits;
+using Api.ModelsImports;
 using Api.ModelsImports.Produits;
 using Api.Services.Categories;
 using Api.Services.Produits;
@@ -14,12 +17,38 @@ public static class ProduitRoute
     {
         builder.WithOpenApi().ProducesServiceUnavailable();
 
+        builder.MapGet("lister", ListerAsync)
+            .WithDescription("Lister des produits")
+            .Produces<PaginationExport<ProduitExport>>();
+
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter un nouveau produit")
             .ProducesBadRequestErreurValidation()
             .ProducesCreated<string>();
 
         return builder;
+    }
+
+    async static Task<IResult> ListerAsync(
+        HttpContext _httpContext,
+        [AsParameters] PaginationImport _pagination,
+        [FromServices] IProduitService _produitServ
+    )
+    {
+        if (_pagination.NumPage <= 0)
+            _pagination.NumPage = 1;
+
+        if (_pagination.NbParPage <= 0)
+            _pagination.NbParPage = 20;
+
+        int idGroupe = 1;// _httpContext.RecupererIdGroupe();
+
+        var paginationExport = await _produitServ.ListerAsync(
+            _pagination,
+            idGroupe
+        );
+
+        return Results.Extensions.OK(paginationExport, PaginationExportContext.Default);
     }
 
     async static Task<IResult> AjouterAsync(

@@ -1,7 +1,15 @@
-﻿namespace Api.Services.Tvas;
+﻿using Api.ModelsExports.Tvas;
+
+namespace Api.Services.Tvas;
 
 public interface ITvaService
 {
+    /// <summary>
+    /// Lister les TVA
+    /// </summary>
+    /// <returns></returns>
+    Task<TvaExport[]> ListerAsync();
+
     /// <summary>
     /// Vérifier que la TVA exite
     /// </summary>
