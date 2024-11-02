@@ -53,6 +53,7 @@ builder.Services.ConfigureHttpJsonOptions(x =>
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddCors(x => x.AddDefaultPolicy(y => y.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 builder.Services.AjouterService(rsa);
+
 //builder.Services.AddSingleton<IMailService>(new MailService(new MailOptions
 //{
 //    Expediteur = "",

@@ -1,5 +1,9 @@
-﻿using Api.Services.Groupes;
+﻿using Api.Services.Categories;
+using Api.Services.Groupes;
 using Api.Services.Ingredients;
+using Api.Services.Produits;
+using Api.Services.Recettes;
+using Api.Services.Tvas;
 using Api.Services.Utilisateurs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -20,13 +24,20 @@ public static class IServiceCollectionExtension
     {
         _service.AddScoped<IGroupeService, GroupeService>()
             .AddScoped<IUtilisateurService, UtilisateurService>()
-            .AddScoped<IIngredientService, IngredientService>();
+            .AddScoped<IIngredientService, IngredientService>()
+            .AddScoped<IRecetteService, RecetteService>()
+            .AddScoped<ITvaService, TvaService>()
+            .AddScoped<ICategorieService, CategorieService>()
+            .AddScoped<IProduitService, ProduitService>();
 
         _service.AddSingleton<IJwtService>(new JwtService(_rsa, ""))
             .AddSingleton<IMdpService, MdpService>();
 
         _service.AddTransient<IDeuxFaService, DeuxFaService>()
             .AddTransient<IQrCodeService, QrCodeService>();
+
+        // donne acces a httpContext dans les validators
+        _service.AddHttpContextAccessor();
 
         return _service;
     }

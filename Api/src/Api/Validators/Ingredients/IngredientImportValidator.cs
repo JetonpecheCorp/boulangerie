@@ -9,6 +9,9 @@ public class IngredientImportValidator: AbstractValidator<IngredientImport>
     {
         RuleFor(x => x.Nom).NotEmpty().MaximumLength(200);
         RuleFor(x => x.CodeInterne).MaximumLength(100);
+        RuleFor(x => x.StockAlert).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.Stock).GreaterThanOrEqualTo(0);
+
         RuleFor(x => x).Custom((x, context) =>
         {
             if(x.Mode == Enums.EModeImport.Modifier)
