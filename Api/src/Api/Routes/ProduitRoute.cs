@@ -78,8 +78,6 @@ public static class ProduitRoute
             Alergene = string.Join(",", _produitImport.ListeAllergene),
             CodeInterne = _produitImport.CodeInterne,
             Poids = _produitImport.Poids,
-            DateCreation = DateOnly.FromDateTime(DateTime.UtcNow),
-            DateModification = DateOnly.FromDateTime(DateTime.UtcNow),
             Stock = _produitImport.Stock,
             StockAlert = _produitImport.StockAlert
         };

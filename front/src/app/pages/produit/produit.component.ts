@@ -13,6 +13,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProduitService } from '@service/Produit.service';
+import { Produit } from '@model/Produit';
 
 @Component({
   selector: 'app-produit',
@@ -23,8 +24,8 @@ import { ProduitService } from '@service/Produit.service';
 })
 export class ProduitComponent implements AfterViewInit
 {
-  displayedColumns: string[] = ["nom", "codeInterne", "prixHt", "stock", "stockAlert", "action"];
-  dataSource = signal<MatTableDataSource<any>>(new MatTableDataSource());
+  displayedColumns: string[] = ["nom", "codeInterne", "prixHt", "poids", "stock", "stockAlert", "action"];
+  dataSource = signal<MatTableDataSource<Produit>>(new MatTableDataSource());
   estEnChargement = signal(false);
 
   produitServ = inject(ProduitService);
@@ -63,7 +64,7 @@ export class ProduitComponent implements AfterViewInit
     .subscribe(() =>this.Lister());
   }
 
-  protected OuvrirModal(_produit?: any): void
+  protected OuvrirModal(_produit?: Produit): void
   {
 
   }
