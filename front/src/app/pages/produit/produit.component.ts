@@ -83,9 +83,12 @@ export class ProduitComponent implements AfterViewInit
 
     this.produitServ.Lister(INFOS).subscribe({
       next: (retour) =>
-      { 
-        this.dataSource().data = [];
-        this.dataSource().data = retour.liste;
+      {
+        this.dataSource.update(x =>
+        {
+          x.data = retour.liste;
+          return x;
+        });
 
         this.total.set(retour.total);
         this.nbParPage.set(retour.nbParPage);
