@@ -20,7 +20,7 @@
         <input matInput [formControl]="inputFormCtrl">
     </mat-form-field>
 
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table mat-table [dataSource]="dataSource()" matSort>
 
         <!-- nom Column -->
         <ng-container matColumnDef="nom">
@@ -32,6 +32,12 @@
         <ng-container matColumnDef="codeInterne">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
             <td mat-cell *matCellDef="let row"> {{row.codeInterne}}</td>
+        </ng-container>
+
+        <!-- prix ht interne -->
+        <ng-container matColumnDef="prixHt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Prix HT </th>
+            <td mat-cell *matCellDef="let row"> {{row.prixHt}}</td>
         </ng-container>
 
         <!-- stock interne -->
@@ -65,8 +71,8 @@
         </tr>
     </table>
 
-    <mat-paginator [length]="total" 
-                   [pageSize]="nbParPage"
+    <mat-paginator [length]="total()" 
+                   [pageSize]="nbParPage()"
                    [pageSizeOptions]="[5, 10, 25, 100]" 
                    aria-label="Produit par page">
     </mat-paginator>

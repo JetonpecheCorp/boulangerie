@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -23,34 +23,29 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './ingredient.component.html',
   styleUrl: './ingredient.component.scss'
 })
-export class IngredientComponent implements OnInit, AfterViewInit
+export class IngredientComponent implements AfterViewInit
 {
   displayedColumns: string[] = ["nom", "codeInterne", "stock", "stockAlert", "action"];
-  dataSource: MatTableDataSource<Ingredient>;
+  dataSource = signal<MatTableDataSource<Ingredient>>(new MatTableDataSource());
   estEnChargement = signal(false);
 
   ingredentServ = inject(IngredientService);
   destroyRef = inject(DestroyRef);
   matDialog = inject(MatDialog);
 
-  nbParPage: number;
-  total: number;
+  nbParPage = signal(0);
+  total = signal(0);
 
   inputFormCtrl = new FormControl();
 
   paginator = viewChild.required(MatPaginator);
   sort = viewChild.required(MatSort);
 
-  ngOnInit(): void 
-  {
-    this.dataSource = new MatTableDataSource();
-  }
-
   ngAfterViewInit(): void
   {
     this.Lister();
 
-    this.dataSource.sort = this.sort();
+    this.dataSource().sort = this.sort();
     this.paginator()._intl.itemsPerPageLabel = "Ingredient par page";
 
     // declancher si un des deux event est joué
@@ -109,11 +104,11 @@ export class IngredientComponent implements OnInit, AfterViewInit
     this.ingredentServ.Lister(INFOS).subscribe({
       next: (retour) =>
       { 
-        this.dataSource.data = [];
-        this.dataSource.data = retour.liste;
+        this.dataSource().data = [];
+        this.dataSource().data = retour.liste;
 
-        this.total = retour.total;
-        this.nbParPage = retour.nbParPage;
+        this.total.set(retour.total);
+        this.nbParPage.set(retour.nbParPage);
         this.estEnChargement.set(false);
       },
       error: () =>this.estEnChargement.set(false)

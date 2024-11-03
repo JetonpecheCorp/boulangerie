@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -21,34 +21,29 @@ import { ProduitService } from '@service/Produit.service';
   templateUrl: './produit.component.html',
   styleUrl: './produit.component.scss'
 })
-export class ProduitComponent implements OnInit, AfterViewInit
+export class ProduitComponent implements AfterViewInit
 {
-  displayedColumns: string[] = ["nom", "codeInterne", "stock", "stockAlert", "action"];
-  dataSource: MatTableDataSource<any>;
+  displayedColumns: string[] = ["nom", "codeInterne", "prixHt", "stock", "stockAlert", "action"];
+  dataSource = signal<MatTableDataSource<any>>(new MatTableDataSource());
   estEnChargement = signal(false);
 
   produitServ = inject(ProduitService);
   destroyRef = inject(DestroyRef);
   matDialog = inject(MatDialog);
 
-  nbParPage: number;
-  total: number;
+  nbParPage = signal(0);
+  total = signal(0);
 
   inputFormCtrl = new FormControl();
 
   paginator = viewChild.required(MatPaginator);
   sort = viewChild.required(MatSort);
 
-  ngOnInit(): void 
-  {
-    this.dataSource = new MatTableDataSource();
-  }
-
   ngAfterViewInit(): void
   {
     this.Lister();
 
-    this.dataSource.sort = this.sort();
+    this.dataSource().sort = this.sort();
     this.paginator()._intl.itemsPerPageLabel = "Produit par page";
 
     // declancher si un des deux event est joué
@@ -88,11 +83,11 @@ export class ProduitComponent implements OnInit, AfterViewInit
     this.produitServ.Lister(INFOS).subscribe({
       next: (retour) =>
       { 
-        this.dataSource.data = [];
-        this.dataSource.data = retour.liste;
+        this.dataSource().data = [];
+        this.dataSource().data = retour.liste;
 
-        this.total = retour.total;
-        this.nbParPage = retour.nbParPage;
+        this.total.set(retour.total);
+        this.nbParPage.set(retour.nbParPage);
         this.estEnChargement.set(false);
       },
       error: () =>this.estEnChargement.set(false)

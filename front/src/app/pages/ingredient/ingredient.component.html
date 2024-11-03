@@ -21,7 +21,7 @@
         <input matInput [formControl]="inputFormCtrl">
     </mat-form-field>
 
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table mat-table [dataSource]="dataSource()" matSort>
 
         <!-- nom Column -->
         <ng-container matColumnDef="nom">
@@ -66,8 +66,8 @@
         </tr>
     </table>
 
-    <mat-paginator [length]="total" 
-                   [pageSize]="nbParPage"
+    <mat-paginator [length]="total()" 
+                   [pageSize]="nbParPage()"
                    [pageSizeOptions]="[5, 10, 25, 100]" 
                    aria-label="Ingredient par page">
     </mat-paginator>
