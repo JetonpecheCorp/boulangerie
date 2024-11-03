@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProduitService } from '@service/Produit.service';
 import { Produit } from '@model/Produit';
+import { AjouterModifierProduitComponent } from '@modal/ajouter-modifier-produit/ajouter-modifier-produit.component';
 
 @Component({
   selector: 'app-produit',
@@ -66,7 +67,33 @@ export class ProduitComponent implements AfterViewInit
 
   protected OuvrirModal(_produit?: Produit): void
   {
+    const DIALOG_REF = this.matDialog.open(AjouterModifierProduitComponent, { data: _produit });
 
+    DIALOG_REF.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (retour?) =>
+        {
+          // modification
+          if(retour && _produit)
+            {
+              _produit.nom = retour.produit.nom;
+              _produit.codeInterne = retour.produit.codeInterne;
+              _produit.stock = retour.produit.stock;
+              _produit.stockAlert = retour.produit.stockAlert;
+              _produit.poids = retour.produit.poids;
+              _produit.prixHt = retour.produit.prixHt;
+              _produit.listeAllergene = retour.produit.listeAllergene;
+              _produit.categorie.idPublic = retour.produit.idPublicCategorie;
+              _produit.categorie.nom = retour.nomCategorie;
+              _produit.tva.id = retour.produit.idTva;
+              _produit.tva.valeur = retour.tvaValeur;
+            }
+            // ajout
+            else if(!_produit && retour)
+              this.Lister();
+        }
+      });
   }
 
   private Lister(): void

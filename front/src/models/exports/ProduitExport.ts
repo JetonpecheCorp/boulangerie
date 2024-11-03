@@ -1,9 +1,8 @@
-import { Categorie } from "./Categorie"
-import { Tva } from "./Tva"
-
-export type Produit = 
+export type ProduitExport =
 {
-    idPublic: string,
+    /** Pour la modification */
+    idPublic?: string,
+
     nom: string,
     codeInterne?: string,
     prixHt: number,
@@ -11,6 +10,6 @@ export type Produit =
     poids?: number,
     stock: number,
     stockAlert: number,
-    tva: Tva,
-    categorie: Categorie
+    idTva: number,
+    idPublicCategorie: string
 }

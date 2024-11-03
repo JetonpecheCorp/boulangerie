@@ -16,6 +16,15 @@ public class ProduitImportValidator: AbstractValidator<ProduitImport>
         RuleFor(x => x.StockAlert).GreaterThanOrEqualTo(0);
         RuleFor(x => x.Stock).GreaterThanOrEqualTo(0);
 
+        RuleFor(x => x).Custom((x, context) =>
+        {
+            if (x.Mode == Enums.EModeImport.Modifier)
+            {
+                if (string.IsNullOrEmpty(x.IdPublic))
+                    context.AddFailure("IdPublic", "IdPublic ne peux pas être null ou vide");
+            }
+        });
+
         RuleFor(x => x.Poids).Custom((poids, context) =>
         {
             if (poids is not null && poids < 0)

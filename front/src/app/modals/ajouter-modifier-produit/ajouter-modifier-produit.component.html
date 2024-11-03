@@ -1,0 +1,115 @@
+<h2 mat-dialog-title>Ajouter un produit</h2>
+<mat-dialog-content>
+    <form>
+        <app-input type="hidden" [controle]="form.controls['idPublic']" label="" />
+
+        <div class="row">
+
+            <!-- nom -->
+            <div class="col-12" style="margin-top: 20px;">
+                <app-input  [controle]="form.controls['nom']" 
+                            label="Nom" 
+                            [maxLength]="200" />
+            </div>
+
+            <!-- code interne -->
+            <div class="col-12">
+                <app-input  [controle]="form.controls['codeInterne']" 
+                            label="Code interne" 
+                            [maxLength]="100" />
+            </div>
+
+            <!-- categorie -->
+            <div class="col-12" style="margin-bottom: 30px;">
+                <mat-form-field>
+                    <mat-label>Catégorie</mat-label>
+                    <mat-select [formControl]="$any(form.controls['idPublicCategorie'])">
+                    @for (element of listeCategorie(); track element.idPublic) 
+                    {
+                        <mat-option [value]="element.idPublic">{{ element.nom }}</mat-option>
+                    }
+                    </mat-select>
+
+                    @if (form.controls['idPublicCategorie'].hasError("required")) 
+                    {
+                        <mat-error>Le champ est <strong>obligatoire</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <!-- prix ht -->
+            <div class="col-lg-6 col-sm-6 col-xs-12" style="margin-bottom: 20px;">
+                <app-input  [controle]="form.controls['prixHt']"
+                            label="Prix HT"  
+                            type="number" />
+            </div>
+
+            <!-- tva -->
+            <div class="col-lg-6 col-sm-6 col-xs-12" style="margin-bottom: 20px;">
+                <mat-form-field>
+                    <mat-label>Tva</mat-label>
+                    <mat-select [formControl]="$any(form.controls['idTva'])">
+                    @for (element of listeTva(); track element.id) 
+                    {
+                        <mat-option [value]="element.id">{{ element.valeur }} %</mat-option>
+                    }
+                    </mat-select>
+
+                    @if (form.controls['idTva'].hasError("required")) 
+                    {
+                        <mat-error>Le champ est <strong>obligatoire</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <!-- stock -->
+            <div class="col-lg-6 col-sm-6 col-xs-12" style="margin-bottom: 20px;">
+                <app-input  [controle]="form.controls['stock']"
+                            label="Stock"
+                            type="number" />
+            </div>
+
+            <!-- stock alerte -->
+            <div class="col-lg-6 col-sm-6 col-xs-12" style="margin-bottom: 20px;">
+                <app-input  [controle]="form.controls['stockAlert']"
+                            label="Stock d'alerte"
+                            type="number" />
+            </div>
+
+            <!-- tip allergene -->
+            <div class="col-12">
+                <mat-form-field>
+                    <mat-label>Liste Allergenes</mat-label>
+                    <mat-chip-grid #reactiveChipGrid aria-label="Ajouter un allergene" [formControl]="$any(form.controls['listeAllergene'])">
+                    @for (element of listeAlergene(); track element) 
+                    {
+                        <mat-chip-row (removed)="SupprimerTip(element)">
+                        {{ element }}
+                        <button matChipRemove aria-label="Supprimer le tag element">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                        </mat-chip-row>
+                    }
+                    </mat-chip-grid>
+                    <input  placeholder="Nouveau tag..."
+                            [matChipInputFor]="reactiveChipGrid"
+                            (matChipInputTokenEnd)="AjouterTip($event)">
+        
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="null">Fermer</button>
+  <button mat-flat-button (click)="Valider()">
+    @if(btnClicker())
+    {
+        <mat-spinner class="spinnerBtn" diameter="30"></mat-spinner>
+    }
+    @else 
+    {
+        Ajouter
+    }
+</button>
+</mat-dialog-actions>

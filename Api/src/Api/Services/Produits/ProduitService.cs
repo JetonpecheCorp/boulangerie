@@ -4,6 +4,7 @@ using Api.ModelsExports;
 using Api.ModelsImports;
 using Api.ModelsExports.Ingredients;
 using Microsoft.EntityFrameworkCore;
+using Api.Extensions;
 
 namespace Api.Services.Produits;
 
@@ -76,6 +77,20 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
     {
         _context.Produits.Add(_produit);
         int nb = await _context.SaveChangesAsync();
+
+        return nb > 0;
+    }
+
+    public async Task<bool> ModifierAsync(int _idGroupe, string _idPublic, SetPropertyBuilder<Produit> _builder)
+    {
+        int nb = 0;
+
+        if(Guid.TryParse(_idPublic, out Guid idPublic))
+        {
+            nb = await _context.Produits
+                .Where(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublic)
+                .ExecuteUpdateAsync(_builder.SetPropertyCalls);
+        }
 
         return nb > 0;
     }

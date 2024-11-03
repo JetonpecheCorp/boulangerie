@@ -35,5 +35,9 @@
         {
             <mat-error>Veuillez entrer une adresse mail</mat-error>
         }
+        @else if (controle().hasError("min")) 
+        {
+            <mat-error>La valeur minimum est de <strong>{{ controle().getError('min').min }}</strong></mat-error>
+        }
     </mat-form-field>
 }

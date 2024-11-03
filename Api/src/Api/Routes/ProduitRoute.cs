@@ -26,6 +26,11 @@ public static class ProduitRoute
             .ProducesBadRequestErreurValidation()
             .ProducesCreated<string>();
 
+        builder.MapPut("modifier", ModifierAsync)
+           .WithDescription("Modifier un produit")
+           .ProducesNotFound()
+           .ProducesNoContent();
+
         return builder;
     }
 
@@ -84,6 +89,41 @@ public static class ProduitRoute
 
         await _produitServ.AjouterAsync(produit);
 
-        return Results.Created();
+        return Results.Created("", produit.IdPublic);
+    }
+
+    async static Task<IResult> ModifierAsync(
+        HttpContext _httpContext,
+        [FromServices] IValidator<ProduitImport> _validator,
+        [FromServices] IProduitService _produitServ,
+        [FromServices] ICategorieService _categorieServ,
+        [FromBody] ProduitImport _produitImport
+    )
+    {
+        _produitImport.Mode = Enums.EModeImport.Modifier;
+
+        var validate = await _validator.ValidateAsync(_produitImport);
+
+        if (!validate.IsValid)
+            return Results.Extensions.ErreurValidator(validate.Errors);
+
+        int idGroupe = _httpContext.RecupererIdGroupe();
+        int idCategorie = await _categorieServ.RecupererIdAsync(_produitImport.IdPublicCategorie, idGroupe);
+
+        SetPropertyBuilder<Produit> builder = new();
+
+        builder.SetProperty(x => x.Alergene, string.Join(',', _produitImport.ListeAllergene))
+            .SetProperty(x => x.IdCategorie, idCategorie)
+            .SetProperty(x => x.IdTva, _produitImport.IdTva)
+            .SetProperty(x => x.Nom, _produitImport.Nom.XSS())
+            .SetProperty(x => x.PrixHt, _produitImport.PrixHt)
+            .SetProperty(x => x.CodeInterne, _produitImport.CodeInterne)
+            .SetProperty(x => x.Poids, _produitImport.Poids)
+            .SetProperty(x => x.Stock, _produitImport.Stock)
+            .SetProperty(x => x.StockAlert, _produitImport.StockAlert);
+
+        bool estModifier = await _produitServ.ModifierAsync(idGroupe, _produitImport.IdPublic!, builder);
+
+        return estModifier ? Results.NoContent() : Results.NotFound("Le produit n'existe pas");
     }
 }

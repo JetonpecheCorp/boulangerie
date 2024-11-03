@@ -35,7 +35,7 @@ export class AjouterModifierIngredientComponent implements OnInit
     });
   }
 
-  protected Ajouter(): void
+  protected Valider(): void
   {    
     if(this.form.invalid || this.btnClicker())
       return;

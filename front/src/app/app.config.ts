@@ -27,6 +27,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IngredientService } from '@service/Ingredient.service';
 import { ProduitService } from '@service/Produit.service';
 import { TvaService } from '@service/Tva.service';
+import { CategorieService } from '@service/Categorie.service';
 
 const matInput: MatFormFieldDefaultOptions = {
   appearance: 'outline',
@@ -57,6 +58,7 @@ export const appConfig: ApplicationConfig = {
     { provide: IngredientService, useClass: IngredientService },
     { provide: ProduitService, useClass: ProduitService },
     { provide: TvaService, useClass: TvaService },
+    { provide: CategorieService, useClass: CategorieService },
 
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matInput }
   ]
