@@ -5,14 +5,13 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { InputComponent } from "@component/input/input.component";
 import { IngredientService } from '@service/Ingredient.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Ingredient } from '@model/Ingredient';
 import { ButtonComponent } from "@component/button/button.component";
 
 @Component({
   selector: 'app-ajouter-modifier-ingredient',
   standalone: true,
-  imports: [MatDialogModule, MatProgressSpinnerModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
+  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
   templateUrl: './ajouter-modifier-ingredient.component.html',
   styleUrl: './ajouter-modifier-ingredient.component.scss'
 })

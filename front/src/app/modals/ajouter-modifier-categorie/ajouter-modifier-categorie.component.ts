@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { InputComponent } from "@component/input/input.component";
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Ingredient } from '@model/Ingredient';
 import { CategorieService } from '@service/Categorie.service';
 import { ButtonComponent } from '@component/button/button.component';
@@ -12,7 +11,7 @@ import { ButtonComponent } from '@component/button/button.component';
 @Component({
   selector: 'app-ajouter-modifier-categorie',
   standalone: true,
-  imports: [MatDialogModule, MatProgressSpinnerModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
+  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
   templateUrl: './ajouter-modifier-categorie.component.html',
   styleUrl: './ajouter-modifier-categorie.component.scss'
 })

@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { InputComponent } from "@component/input/input.component";
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProduitService } from '@service/Produit.service';
 import { Produit } from '@model/Produit';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
@@ -20,7 +19,7 @@ import { ButtonComponent } from "@component/button/button.component";
 @Component({
   selector: 'app-ajouter-modifier-produit',
   standalone: true,
-  imports: [MatDialogModule, MatSelectModule, MatIconModule, MatChipsModule, MatProgressSpinnerModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
+  imports: [MatDialogModule, MatSelectModule, MatIconModule, MatChipsModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
   templateUrl: './ajouter-modifier-produit.component.html',
   styleUrl: './ajouter-modifier-produit.component.scss'
 })
