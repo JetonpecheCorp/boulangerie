@@ -9,7 +9,7 @@ public partial class Recette
 
     public int IdProduit { get; set; }
 
-    public decimal? Quantite { get; set; }
+    public decimal Quantite { get; set; }
 
     public virtual Ingredient IdIngredientNavigation { get; set; } = null!;
 

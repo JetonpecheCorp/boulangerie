@@ -15,11 +15,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { ProduitService } from '@service/Produit.service';
 import { Produit } from '@model/Produit';
 import { AjouterModifierProduitComponent } from '@modal/ajouter-modifier-produit/ajouter-modifier-produit.component';
+import { RecetteProduitComponent } from '@modal/recette-produit/recette-produit.component';
+import { StopPropagationDirective } from '../../directive/stop-propagation.directive';
 
 @Component({
   selector: 'app-produit',
   standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+  imports: [StopPropagationDirective, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
   templateUrl: './produit.component.html',
   styleUrl: './produit.component.scss'
 })
@@ -63,6 +65,11 @@ export class ProduitComponent implements AfterViewInit
       takeUntilDestroyed(this.destroyRef)
     )
     .subscribe(() =>this.Lister());
+  }
+
+  protected OuvrirModalRecetteProduit(_idPublicProduit: string): void
+  {
+    this.matDialog.open(RecetteProduitComponent, { minWidth: "700px", data: _idPublicProduit });
   }
 
   protected OuvrirModal(_produit?: Produit): void

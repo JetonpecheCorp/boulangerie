@@ -108,7 +108,7 @@ public class CategorieService(BoulangerieContext _context): ICategorieService
 
     public async Task<bool> ExisteAsync(string _idPublicCategorie, int _idGroupe)
     {
-        if(Guid.TryParse(_idPublicCategorie, out Guid idPublic))
+        if (Guid.TryParse(_idPublicCategorie, out Guid idPublic))
             return await _context.Categories.AnyAsync(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublic);
 
         return false;

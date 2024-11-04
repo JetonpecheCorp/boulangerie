@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>Recette</h2>
+<mat-dialog-content>
+
+    <table mat-table [dataSource]="dataSource()">
+
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="checkbox">
+            <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                            [checked]="selection().hasValue() && isAllSelected()"
+                            [indeterminate]="selection().hasValue() && !isAllSelected()"
+                            [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+            <mat-checkbox   stop-propagation
+                            (change)="$event ? selection().toggle(row) : null"
+                            [checked]="selection().isSelected(row)"
+                            [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+            </td>
+        </ng-container>
+        
+        <!-- Position Column -->
+        <ng-container matColumnDef="nomIngredient">
+            <th mat-header-cell *matHeaderCellDef> Ingredient </th>
+            <td mat-cell *matCellDef="let element"> {{element.nomIngredient}} </td>
+        </ng-container>
+        
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="quantite">
+            <th mat-header-cell *matHeaderCellDef> Quantité </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantite}} </td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            (click)="selection().toggle(row)">
+        </tr>
+    </table>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="null">Fermer</button>
+</mat-dialog-actions>

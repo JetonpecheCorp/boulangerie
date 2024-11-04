@@ -2,7 +2,6 @@
 using Api.ModelsExports.Produits;
 using Api.ModelsExports;
 using Api.ModelsImports;
-using Api.ModelsExports.Ingredients;
 using Microsoft.EntityFrameworkCore;
 using Api.Extensions;
 

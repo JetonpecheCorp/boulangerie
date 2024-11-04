@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Tva (
 
 CREATE TABLE IF NOT EXISTS Boulangerie.UtilisateurAdmin (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    IdPublic BINARY(16) NOT NULL,
+    IdPublic CHAR(36) NOT NULL,
 
     Nom VARCHAR(200) NOT NULL,
     Prenom VARCHAR(200) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Client (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
     IdGroupe INT NOT NULL,
 
-    IdPublic BINARY(16) NOT NULL,
+    IdPublic CHAR(36) NOT NULL,
     Nom VARCHAR(300) NOT NULL,
     Mail VARCHAR(250) NULL,
     Telephone VARCHAR(20) NULL,
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Vehicule (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
     IdGroupe INT NOT NULL,
 
-    IdPublic BINARY(16) NOT NULL,
+    IdPublic CHAR(36) NOT NULL,
     Immatriculation VARCHAR(15) NOT NULL,
     InfoComplementaire VARCHAR(1000) NULL,
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Categorie (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
     IdGroupe INT NOT NULL,
 
-    IdPublic BINARY(16) NOT NULL,
+    IdPublic CHAR(36) NOT NULL,
 
     Nom VARCHAR(300) NOT NULL,
     EstSupprimer TINYINT(1) NOT NULL DEFAULT 0,
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Fournisseur (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
     IdGroupe INT NOT NULL,
 
-    IdPublic BINARY(16) NOT NULL,
+    IdPublic CHAR(36) NOT NULL,
 
     Nom VARCHAR(300) NOT NULL,
     Adresse VARCHAR(800) NULL,
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Ingredient (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
     IdGroupe INT NOT NULL,
 
-    IdPublic BINARY(16) NOT NULL,
+    IdPublic CHAR(36) NOT NULL,
     Nom VARCHAR(200) NOT NULL,
     CodeInterne VARCHAR(100) NULL,
 
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Utilisateur (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     IdGroupe INT NOT NULL,
 
-    IdPublic BINARY(16) NOT NULL,
+    IdPublic CHAR(36) NOT NULL,
     Nom VARCHAR(200) NOT NULL,
     Prenom VARCHAR(200) NOT NULL,
     Mail VARCHAR(250) NOT NULL,
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Produit (
     IdCategorie INT NOT NULL,
     IdTva INT NOT NULL,
 
-    IdPublic BINARY(16) NOT NULL,
+    IdPublic CHAR(36) NOT NULL,
     Nom VARCHAR(300) NOT NULL,
     PrixHT DECIMAL(8, 2) NOT NULL,
     Alergene VARCHAR (5000) NULL,
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Recette (
     IdIngredient INT NOT NULL,
     IdProduit INT NOT NULL,
 
-    Quantite DECIMAL(10, 3),
+    Quantite DECIMAL(10, 3) NOT NULL DEFAULT 0,
 
     PRIMARY KEY (IdIngredient, IdProduit),
 
@@ -230,3 +230,12 @@ INSERT INTO Boulangerie.Groupe (Id, Nom, Adresse) VALUES (1, "Groupe 1", "Adress
 INSERT INTO Boulangerie.Tva (Id, Valeur) 
 VALUES 
 (1, 5.5), (2, 10), (3, 20), (4, 8.5), (5, 2.10), (6, 1.75), (7, 1.05);
+
+INSERT INTO Boulangerie.Ingredient (Id, IdGroupe, IdPublic, Nom, CodeInterne, Stock, StockAlert)
+VALUES 
+(1, 1, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bdd236", "Chocolat", "cho1", 10, 0),
+(2, 1, "43192df3-6bbe-46d5-8996-f8ba4091aa4f", "Sucre", "su", 32, 10);
+
+INSERT INTO Boulangerie.Categorie (Id, IdGroupe, IdPublic, Nom) VALUES
+(1, 1, "9b0eb25d-a78d-4af6-ba7b-90f7f50e09b3", "Pain"),
+(2, 1, "a21cef71-33a7-4945-8174-7c67be4104e1", "Gateau");

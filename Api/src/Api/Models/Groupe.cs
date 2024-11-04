@@ -11,6 +11,8 @@ public partial class Groupe
 
     public string Adresse { get; set; } = null!;
 
+    public bool? ConnexionBloquer { get; set; }
+
     public virtual ICollection<Categorie> Categories { get; set; } = new List<Categorie>();
 
     public virtual ICollection<Client> Clients { get; set; } = new List<Client>();

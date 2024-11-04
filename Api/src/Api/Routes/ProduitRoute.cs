@@ -46,7 +46,7 @@ public static class ProduitRoute
         if (_pagination.NbParPage <= 0)
             _pagination.NbParPage = 20;
 
-        int idGroupe = 1;// _httpContext.RecupererIdGroupe();
+        int idGroupe = _httpContext.RecupererIdGroupe();
 
         var paginationExport = await _produitServ.ListerAsync(
             _pagination,

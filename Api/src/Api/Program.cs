@@ -78,4 +78,4 @@ app.AjouterRouteAPI();
 
 app.Run();
 
-// Scaffold-DbContext "server=localhost;database=Boulangerie;User=root;Pwd=root;GuidFormat=Binary16" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
+// Scaffold-DbContext "server=localhost;database=Boulangerie;User=root;Pwd=root;GuidFormat=Char36" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force

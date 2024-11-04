@@ -29,6 +29,7 @@ import { ProduitService } from '@service/Produit.service';
 import { TvaService } from '@service/Tva.service';
 import { CategorieService } from '@service/Categorie.service';
 import { JwtInterceptor } from '../interceptor/jwt.interceptor';
+import { RecetteService } from '@service/Recette.service';
 
 const matInput: MatFormFieldDefaultOptions = {
   appearance: 'outline',
@@ -60,6 +61,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ProduitService, useClass: ProduitService },
     { provide: TvaService, useClass: TvaService },
     { provide: CategorieService, useClass: CategorieService },
+    { provide: RecetteService, useClass: RecetteService },
 
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matInput }
   ]

@@ -46,10 +46,7 @@ public partial class BoulangerieContext : DbContext
 
     public virtual DbSet<Vehicule> Vehicules { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;database=Boulangerie;user=root;pwd=root;guidformat=Binary16", Microsoft.EntityFrameworkCore.ServerVersion.Parse("9.1.0-mysql"));
-
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -160,6 +157,7 @@ public partial class BoulangerieContext : DbContext
             entity.ToTable("Groupe");
 
             entity.Property(e => e.Adresse).HasMaxLength(800);
+            entity.Property(e => e.ConnexionBloquer).HasDefaultValueSql("'0'");
             entity.Property(e => e.Nom).HasMaxLength(300);
         });
 
