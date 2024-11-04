@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideToastr } from 'ngx-toastr';
 import { AuthentificationService } from '../service/Authentification.service';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
@@ -28,6 +28,7 @@ import { IngredientService } from '@service/Ingredient.service';
 import { ProduitService } from '@service/Produit.service';
 import { TvaService } from '@service/Tva.service';
 import { CategorieService } from '@service/Categorie.service';
+import { JwtInterceptor } from '../interceptor/jwt.interceptor';
 
 const matInput: MatFormFieldDefaultOptions = {
   appearance: 'outline',
@@ -49,7 +50,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes), 
     provideAnimationsAsync(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([JwtInterceptor])),
     provideToastr(),
 
     { provide: LocationStrategy, useClass: HashLocationStrategy },

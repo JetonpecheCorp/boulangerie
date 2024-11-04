@@ -102,14 +102,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button [mat-dialog-close]="null">Fermer</button>
-  <button mat-flat-button (click)="Valider()">
-    @if(btnClicker())
-    {
-        <mat-spinner class="spinnerBtn" diameter="30"></mat-spinner>
-    }
-    @else 
-    {
-        Ajouter
-    }
-</button>
+  <app-button (onClick)="Valider()"
+              [label]="labelBtn()"
+              [btnClicker]="btnClicker()" />
 </mat-dialog-actions>

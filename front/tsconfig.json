@@ -27,7 +27,8 @@
     "paths": {
       "@service/*": ["./src/service/*"],
       "@modal/*": ["./src/app/modals/*"],
-      "@model/*": ["./src/models/*"]
+      "@model/*": ["./src/models/*"],
+      "@component/*": ["./src/app/components/*"]
     }
   },
   "angularCompilerOptions": {

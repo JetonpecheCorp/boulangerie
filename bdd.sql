@@ -1,4 +1,4 @@
-DROP DATABASE Boulangerie;
+DROP DATABASE IF EXISTS Boulangerie;
 
 CREATE DATABASE IF NOT EXISTS Boulangerie;
 

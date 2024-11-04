@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { InputComponent } from "../../components/input/input.component";
+import { InputComponent } from "@component/input/input.component";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProduitService } from '@service/Produit.service';
 import { Produit } from '@model/Produit';
@@ -15,11 +15,12 @@ import { Tva } from '@model/Tva';
 import { CategorieService } from '@service/Categorie.service';
 import { Categorie } from '@model/Categorie';
 import { MatSelectModule } from '@angular/material/select';
+import { ButtonComponent } from "@component/button/button.component";
 
 @Component({
   selector: 'app-ajouter-modifier-produit',
   standalone: true,
-  imports: [MatDialogModule, MatSelectModule, MatIconModule, MatChipsModule, MatProgressSpinnerModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent],
+  imports: [MatDialogModule, MatSelectModule, MatIconModule, MatChipsModule, MatProgressSpinnerModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
   templateUrl: './ajouter-modifier-produit.component.html',
   styleUrl: './ajouter-modifier-produit.component.scss'
 })
@@ -27,6 +28,7 @@ export class AjouterModifierProduitComponent implements OnInit
 {
   protected form: FormGroup;
   protected btnClicker = signal(false);
+  protected labelBtn = signal("");
   protected listeAlergene = signal(this.matDialogData?.listeAllergene ?? []);
   protected listeTva = signal<Tva[]>([]);
   protected listeCategorie = signal<Categorie[]>([]);
@@ -41,6 +43,8 @@ export class AjouterModifierProduitComponent implements OnInit
 
   ngOnInit(): void 
   {
+    this.labelBtn.set(this.matDialogData ? "Modifier" : "Ajouter");
+
     this.ListerTva();
     this.ListerCategorie();
 

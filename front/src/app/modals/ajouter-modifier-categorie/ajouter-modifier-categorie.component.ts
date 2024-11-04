@@ -4,26 +4,26 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { InputComponent } from "@component/input/input.component";
-import { IngredientService } from '@service/Ingredient.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Ingredient } from '@model/Ingredient';
-import { ButtonComponent } from "@component/button/button.component";
+import { CategorieService } from '@service/Categorie.service';
+import { ButtonComponent } from '@component/button/button.component';
 
 @Component({
-  selector: 'app-ajouter-modifier-ingredient',
+  selector: 'app-ajouter-modifier-categorie',
   standalone: true,
   imports: [MatDialogModule, MatProgressSpinnerModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
-  templateUrl: './ajouter-modifier-ingredient.component.html',
-  styleUrl: './ajouter-modifier-ingredient.component.scss'
+  templateUrl: './ajouter-modifier-categorie.component.html',
+  styleUrl: './ajouter-modifier-categorie.component.scss'
 })
-export class AjouterModifierIngredientComponent implements OnInit
+export class AjouterModifierCategorieComponent implements OnInit
 {
   protected form: FormGroup;
   protected btnClicker = signal(false);
   protected labelBtn = signal("");
 
-  private ingredientServ = inject(IngredientService);
-  private dialogRef = inject(MatDialogRef<AjouterModifierIngredientComponent>);
+  private categorieServ = inject(CategorieService);
+  private dialogRef = inject(MatDialogRef<AjouterModifierCategorieComponent>);
   private matDialogData?: Ingredient = inject(MAT_DIALOG_DATA);
 
   ngOnInit(): void 
@@ -32,10 +32,7 @@ export class AjouterModifierIngredientComponent implements OnInit
 
     this.form = new FormGroup({
       idPublic: new FormControl(this.matDialogData?.idPublic),
-      nom: new FormControl<string>(this.matDialogData?.nom ?? "", [Validators.required, Validators.maxLength(200)]),
-      codeInterne: new FormControl<string | null>(this.matDialogData?.codeInterne ?? null, [Validators.maxLength(100)]),
-      stock: new FormControl<number>(this.matDialogData?.stock ?? 0),
-      stockAlert: new FormControl<number>(this.matDialogData?.stockAlert ?? 0)
+      nom: new FormControl<string>(this.matDialogData?.nom ?? "", [Validators.required, Validators.maxLength(300)])
     });
   }
 
@@ -48,7 +45,8 @@ export class AjouterModifierIngredientComponent implements OnInit
     
     if(this.matDialogData)
     {
-      this.ingredientServ.Modifier(this.form.value).subscribe({
+      const FORM = this.form.value;
+      this.categorieServ.Modifier(FORM.idPublic, FORM.nom).subscribe({
         next: () =>
         {
           this.btnClicker.set(false);
@@ -59,9 +57,7 @@ export class AjouterModifierIngredientComponent implements OnInit
     }
     else
     {
-      delete this.form.value.idPublic;
-
-      this.ingredientServ.Ajouter(this.form.value).subscribe({
+      this.categorieServ.Ajouter(this.form.value.nom).subscribe({
         next: () =>
         {
           this.btnClicker.set(false);

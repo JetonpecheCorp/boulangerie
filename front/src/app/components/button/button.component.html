@@ -1,0 +1,12 @@
+<button mat-flat-button (click)="Onclick()">
+    @if(btnClicker())
+    {
+        <mat-spinner [diameter]="diametreSpinner()"
+                     [class]="classSpinner()">
+        </mat-spinner>
+    }
+    @else 
+    {
+        {{ label() }}
+    }
+</button>
