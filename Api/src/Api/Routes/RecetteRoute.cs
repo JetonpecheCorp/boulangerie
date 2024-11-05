@@ -19,6 +19,9 @@ public static class RecetteRoute
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter un ");
 
+        builder.MapDelete("supprimer", SupprimerAsync)
+            .WithDescription("Supprimer un ingredient d'une recette d'un produit");
+
         return builder;
     }
 
@@ -40,5 +43,22 @@ public static class RecetteRoute
     )
     {
         return Results.NoContent();
+    }
+
+    async static Task<IResult> SupprimerAsync(
+        HttpContext _httpContext,
+        [FromServices] IRecetteService _recetteServ,
+        [FromBody] RecetteSupprimerImport _recetteImport
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        bool estSupprimer = await _recetteServ.SupprimerAsync(
+            _recetteImport.IdPublicProduit,
+            _recetteImport.IdPublicIngredient,
+            idGroupe
+        );
+
+        return estSupprimer ? Results.NoContent() : Results.NotFound("L'ingredient dans la recette n'existe pas");
     }
 }

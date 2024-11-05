@@ -1,7 +1,35 @@
+import { DestroyRef, inject, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalConfirmationComponent } from '@component/modal-confirmation/modal-confirmation.component';
 import { argbFromHex, themeFromSourceColor, applyTheme } from '@material/material-color-utilities';
+import { Subject } from 'rxjs';
 
 export class ThemeService
 {
+  private matDialog = inject(MatDialog);
+  private destroyRef = inject(DestroyRef);
+  retourConfirmation: Subject<boolean>;
+
+  OuvrirConfirmation(_titre: string, _message: string): void
+  {
+    this.retourConfirmation = new Subject<boolean>();
+    
+    const DIALOG_REF = this.matDialog.open(ModalConfirmationComponent, { data: { 
+        titre: _titre,
+        message: _message
+      } 
+    });
+
+    DIALOG_REF.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (retour: boolean) =>
+      {
+        this.retourConfirmation.next(retour === true);
+        this.retourConfirmation.complete();
+      }
+    });
+  }
+
     generateDynamicTheme(ev: Event): void
     {
         const fallbackColor = '#005cbb';

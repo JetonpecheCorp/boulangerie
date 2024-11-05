@@ -35,4 +35,24 @@ public sealed class RecetteService(BoulangerieContext _context) : IRecetteServic
 
         return nb > 0;
     }
+
+    public async Task<bool> SupprimerAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe)
+    {
+        if(
+            Guid.TryParse(_idPublicProduit, out Guid idPublicProduit) && 
+            Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient)
+        )
+        {
+            int nb = await _context.Recettes.Where(x =>
+                x.IdIngredientNavigation.IdPublic == idPublicIngredient &&
+                x.IdProduitNavigation.IdPublic == idPublicProduit &&
+                x.IdProduitNavigation.IdGroupe == _idGroupe &&
+                x.IdIngredientNavigation.IdGroupe == _idGroupe
+            ).ExecuteDeleteAsync();
+
+            return nb > 0;
+        }
+
+        return false;
+    }
 }

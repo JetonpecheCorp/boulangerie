@@ -16,4 +16,14 @@ export class RecetteService
   { 
     return this.http.get<Recette[]>(`${this.BASE_API}/lister/${_idPublicProduit}`).pipe(takeUntilDestroyed(this.destroyRef));
   }
+
+  Supprimer(_idPublicProduit: string, _idPublicIngredient: string): Observable<void>
+  {
+    const INFOS = {
+      idPublicIngredient: _idPublicIngredient,
+      idPublicProduit: _idPublicProduit
+    };
+
+    return this.http.delete<void>(`${this.BASE_API}/supprimer`, { body: INFOS }).pipe(takeUntilDestroyed(this.destroyRef));
+  }
 }

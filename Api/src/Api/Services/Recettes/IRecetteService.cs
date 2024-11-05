@@ -19,4 +19,13 @@ public interface IRecetteService
     /// <param name="_recette">recette conserné</param>
     /// <returns></returns>
     Task<bool> AjouterAsync(Recette _recette);
+
+    /// <summary>
+    /// Supprimer un ingredient de la recette du produit
+    /// </summary>
+    /// <param name="_idPublicProduit">produit conserné</param>
+    /// <param name="_idPublicIngredient">ingredient conserné</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns><see langword="true"/> si supprimé, sinon <see langword="false"/></returns>
+    Task<bool> SupprimerAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe);
 }

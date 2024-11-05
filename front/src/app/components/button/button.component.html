@@ -1,12 +1,65 @@
-<button mat-flat-button (click)="Onclick()">
-    @if(btnClicker())
+@switch (style()) 
+{
+    @case ("flat") 
     {
-        <mat-spinner [diameter]="diametreSpinner()"
-                     [class]="classSpinner()">
-        </mat-spinner>
+        <button stop-propagation mat-flat-button (click)="Onclick()">
+            @if(btnClicker())
+            {
+                <mat-spinner [diameter]="diametreSpinner()"
+                             [class]="classSpinner()">
+                </mat-spinner>
+            }
+            @else 
+            {
+                @if(icon())
+                {
+                    <mat-icon>{{ icon() }}</mat-icon>
+                }
+                
+                {{ label() }}
+            }
+        </button>
     }
-    @else 
+    @case ("raised") 
     {
-        {{ label() }}
+        <button stop-propagation mat-raised-button (click)="Onclick()">
+            @if(btnClicker())
+            {
+                <mat-spinner [diameter]="diametreSpinner()"
+                             [class]="classSpinner()">
+                </mat-spinner>
+            }
+            @else 
+            {
+                @if(icon())
+                {
+                    <mat-icon>{{ icon() }}</mat-icon>
+                }
+                
+                {{ label() }}
+            }
+        </button>
     }
-</button>
+    @case ("miniFab") 
+    {
+        <button stop-propagation mat-mini-fab (click)="Onclick()">
+            @if(btnClicker())
+            {
+                <mat-spinner [diameter]="diametreSpinner()"
+                             [class]="classSpinner()">
+                </mat-spinner>
+            }
+            @else 
+            {
+                @if(icon())
+                {
+                    <mat-icon>{{ icon() }}</mat-icon>
+                }
+                
+                {{ label() }}
+            }
+        </button>
+    }
+}
+
+

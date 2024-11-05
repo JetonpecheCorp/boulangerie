@@ -6,24 +6,24 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ButtonComponent } from '@component/button/button.component';
 import { Recette } from '@model/Recette';
 import { RecetteService } from '@service/Recette.service';
-import { StopPropagationDirective } from '../../directive/stop-propagation.directive';
-import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ThemeService } from '@service/ThemeService.Service';
 
 @Component({
   selector: 'app-recette-produit',
   standalone: true,
-  imports: [MatCheckboxModule, StopPropagationDirective, MatTableModule, MatTabsModule, MatDialogModule, MatButton, ButtonComponent],
+  imports: [MatCheckboxModule, MatTableModule, MatTabsModule, MatDialogModule, MatButton, ButtonComponent],
   templateUrl: './recette-produit.component.html',
   styleUrl: './recette-produit.component.scss'
 })
 export class RecetteProduitComponent implements OnInit
 {
-  protected displayedColumns: string[] = ["checkbox", "nomIngredient", "quantite"];
+  protected displayedColumns: string[] = ["nomIngredient", "quantite", "action"];
   protected dataSource = signal<MatTableDataSource<Recette>>(new MatTableDataSource());
-  protected selection = signal<SelectionModel<Recette>>(new SelectionModel<Recette>(true, []));
+  protected btnClicker = signal(false);
 
   private recetteServ = inject(RecetteService);
+  private themeServ = inject(ThemeService);
   private idPublicProduit: string = inject(MAT_DIALOG_DATA);
 
   ngOnInit(): void 
@@ -31,34 +31,38 @@ export class RecetteProduitComponent implements OnInit
     this.Lister();
   }
 
-  protected isAllSelected(): boolean
+  protected OuvrirModalConfirmation(_recette: Recette): void
   {
-    const numSelected = this.selection().selected.length;
-    const numRows = this.dataSource().data.length;
+    const TITRE = "Confirmation supression";
+    const MSG = `Confirmez vous la suppression de l'ingredient '${_recette.nomIngredient}' du produit '${_recette.nomProduit}'`
 
-    return numSelected === numRows;
-  }
-
-  protected toggleAllRows(): void
-  {
-    this.selection.update(x =>
-    {
-      if(this.isAllSelected())
-        x.clear();
-
-      else
-        x.select(...this.dataSource().data);
-
-      return x;
+    this.themeServ.OuvrirConfirmation(TITRE, MSG);
+    this.themeServ.retourConfirmation.subscribe({
+      next: (retour: boolean) =>
+      {
+        if(retour)
+          this.Supprimer(_recette.idPublicProduit, _recette.idPublicIngredient);
+      }
     });
   }
 
-  protected checkboxLabel(_recette?: Recette): string 
+  private Supprimer(_idPublicProduit: string, _idPublicIngredient: string): void
   {
-    if (!_recette)
-      return `${this.isAllSelected() ? 'déselectionner' : 'selectionner'} tous`;
+    this.btnClicker.set(true);
 
-    return `${this.selection().isSelected(_recette) ? 'déselectionner' : 'selectionner'} ${_recette.nomIngredient}`;
+    this.recetteServ.Supprimer(_idPublicProduit, _idPublicIngredient).subscribe({
+      next: () => 
+      {
+        this.dataSource.update(x => 
+        {
+          x.data = x.data.filter(y => y.idPublicIngredient != _idPublicIngredient);
+          return x;
+        });
+
+        this.btnClicker.set(false);
+      }
+    })
+    
   }
 
   private Lister(): void
