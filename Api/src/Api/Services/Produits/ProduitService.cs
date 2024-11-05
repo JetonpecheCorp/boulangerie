@@ -72,6 +72,21 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
 
         return pagination;
     }
+
+    public async Task<int> RecupererIdAsync(string _idPublicProduit, int _idGroupe)
+    {
+        int id = 0;
+
+        if (Guid.TryParse(_idPublicProduit, out Guid idPublicProduit))
+        {
+            id = await _context.Produits.Where(x => x.IdPublic == idPublicProduit && x.IdGroupe == _idGroupe)
+                    .Select(x => x.Id)
+                    .FirstOrDefaultAsync();
+        }
+
+        return id;
+    }
+
     public async Task<bool> AjouterAsync(Produit _produit)
     {
         _context.Produits.Add(_produit);
@@ -92,5 +107,13 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
         }
 
         return nb > 0;
+    }
+
+    public async Task<bool> ExisteAsync(string _idPublicProduit, int _idGroupe)
+    {
+        if(Guid.TryParse(_idPublicProduit, out Guid idPublicProduit))
+            return await _context.Produits.AnyAsync(x => x.IdPublic == idPublicProduit);
+
+        return false;
     }
 }

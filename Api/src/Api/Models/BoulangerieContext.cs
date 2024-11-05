@@ -46,7 +46,10 @@ public partial class BoulangerieContext : DbContext
 
     public virtual DbSet<Vehicule> Vehicules { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
+    {
+        
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder

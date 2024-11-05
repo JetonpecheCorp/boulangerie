@@ -28,4 +28,13 @@ public interface IRecetteService
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns><see langword="true"/> si supprimé, sinon <see langword="false"/></returns>
     Task<bool> SupprimerAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe);
+
+    /// <summary>
+    /// Verifier que l'ingredient et le produit existe dans la recette
+    /// </summary>
+    /// <param name="_idPublicProduit">id public du produit</param>
+    /// <param name="_idPublicIngredient">id public d l'ingredient</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns><see langword="true"/> si existe, sinon <see langword="false"/></returns>
+    Task<bool> ExisteAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe);
 }

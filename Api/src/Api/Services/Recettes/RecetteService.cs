@@ -41,8 +41,8 @@ public sealed class RecetteService(BoulangerieContext _context) : IRecetteServic
         if (string.IsNullOrWhiteSpace(_idPublicIngredient) || string.IsNullOrWhiteSpace(_idPublicProduit))
             return false;
 
-        if(
-            Guid.TryParse(_idPublicProduit, out Guid idPublicProduit) && 
+        if (
+            Guid.TryParse(_idPublicProduit, out Guid idPublicProduit) &&
             Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient)
         )
         {
@@ -54,6 +54,27 @@ public sealed class RecetteService(BoulangerieContext _context) : IRecetteServic
             ).ExecuteDeleteAsync();
 
             return nb > 0;
+        }
+
+        return false;
+    }
+
+    public async Task<bool> ExisteAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe)
+    {
+        if (string.IsNullOrWhiteSpace(_idPublicIngredient) || string.IsNullOrWhiteSpace(_idPublicProduit))
+            return false;
+
+        if (
+            Guid.TryParse(_idPublicProduit, out Guid idPublicProduit) &&
+            Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient)
+        )
+        {
+            return await _context.Recettes.AnyAsync(x =>
+                x.IdIngredientNavigation.IdPublic == idPublicIngredient &&
+                x.IdProduitNavigation.IdPublic == idPublicProduit &&
+                x.IdProduitNavigation.IdGroupe == _idGroupe &&
+                x.IdIngredientNavigation.IdGroupe == _idGroupe
+            );
         }
 
         return false;

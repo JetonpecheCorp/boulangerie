@@ -1,7 +1,11 @@
 ﻿using Api.Extensions;
+using Api.Models;
 using Api.ModelsExports.Recettes;
 using Api.ModelsImports.Recettes;
+using Api.Services.Ingredients;
+using Api.Services.Produits;
 using Api.Services.Recettes;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Routes;
@@ -17,10 +21,10 @@ public static class RecetteRoute
             .Produces<RecetteExport[]>();
 
         builder.MapPost("ajouter", AjouterAsync)
-            .WithDescription("Ajouter un ");
+            .WithDescription("Ajouter un ingredient à la recette d'un produit");
 
         builder.MapDelete("supprimer", SupprimerAsync)
-            .WithDescription("Supprimer un ingredient d'une recette d'un produit")
+            .WithDescription("Supprimer un ingredient à la recette d'un produit")
             .ProducesNotFound()
             .ProducesNoContent();
 
@@ -41,10 +45,34 @@ public static class RecetteRoute
     }
 
     async static Task<IResult> AjouterAsync(
-        HttpContext _httpContext
+        HttpContext _httpContext,
+        [FromServices] IValidator<RecetteImport> _validator,
+        [FromServices] IProduitService _produitServ,
+        [FromServices] IIngredientService _ingredientServ,
+        [FromServices] IRecetteService _recetteServ,
+        [FromBody] RecetteImport _recetteImport
     )
     {
-        return Results.NoContent();
+        var validate = await _validator.ValidateAsync(_recetteImport);
+
+        if (!validate.IsValid)
+            return Results.Extensions.ErreurValidator(validate.Errors);
+
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        int idProduit = await _produitServ.RecupererIdAsync(_recetteImport.IdPublicProduit, idGroupe);
+        int idIngredient = await _ingredientServ.RecupererIdAsync(_recetteImport.IdPublicIngredient, idGroupe);
+
+        Recette recette = new()
+        {
+            IdIngredient = idIngredient,
+            IdProduit = idProduit,
+            Quantite = _recetteImport.Quantite
+        };
+
+        await _recetteServ.AjouterAsync(recette);
+
+        return Results.Created();
     }
 
     async static Task<IResult> SupprimerAsync(

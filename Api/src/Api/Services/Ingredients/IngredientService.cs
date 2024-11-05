@@ -51,6 +51,20 @@ public class IngredientService(BoulangerieContext _context): IIngredientService
         return pagination;
     }
 
+    public async Task<int> RecupererIdAsync(string _idPublicIngredient, int _idGroupe)
+    {
+        int id = 0;
+
+        if(Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient))
+        {
+            id = await _context.Ingredients.Where(x => x.IdPublic == idPublicIngredient && x.IdGroupe == _idGroupe)
+                    .Select(x => x.Id)
+                    .FirstOrDefaultAsync();
+        }
+
+        return id;
+    }
+
     public async Task<bool> AjouterAsync(Ingredient _ingredient)
     {
         _context.Add(_ingredient);
@@ -71,5 +85,13 @@ public class IngredientService(BoulangerieContext _context): IIngredientService
         }
 
         return nb > 0;
+    }
+
+    public async Task<bool> ExisteAsync(string _idPublicIngredient, int _idGroupe)
+    {
+        if (Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient))
+            return await _context.Ingredients.AnyAsync(x => x.IdPublic == idPublicIngredient);
+
+        return false;
     }
 }
