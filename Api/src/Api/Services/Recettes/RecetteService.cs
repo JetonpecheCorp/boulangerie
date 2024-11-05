@@ -38,6 +38,9 @@ public sealed class RecetteService(BoulangerieContext _context) : IRecetteServic
 
     public async Task<bool> SupprimerAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe)
     {
+        if (string.IsNullOrWhiteSpace(_idPublicIngredient) || string.IsNullOrWhiteSpace(_idPublicProduit))
+            return false;
+
         if(
             Guid.TryParse(_idPublicProduit, out Guid idPublicProduit) && 
             Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient)

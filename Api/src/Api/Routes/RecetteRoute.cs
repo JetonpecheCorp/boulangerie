@@ -20,7 +20,9 @@ public static class RecetteRoute
             .WithDescription("Ajouter un ");
 
         builder.MapDelete("supprimer", SupprimerAsync)
-            .WithDescription("Supprimer un ingredient d'une recette d'un produit");
+            .WithDescription("Supprimer un ingredient d'une recette d'un produit")
+            .ProducesNotFound()
+            .ProducesNoContent();
 
         return builder;
     }
