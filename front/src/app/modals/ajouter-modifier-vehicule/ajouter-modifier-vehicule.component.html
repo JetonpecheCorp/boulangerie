@@ -6,7 +6,10 @@
 
     <mat-form-field>
         <mat-label>Info complementaire</mat-label>
-        <textarea matInput [formControl]="$any(form.controls['infoComplementaire'])"></textarea>
+        <textarea matInput 
+                  maxlength="1000"
+                  rows="5"
+                  [formControl]="$any(form.controls['infoComplementaire'])"></textarea>
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
