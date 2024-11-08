@@ -39,7 +39,7 @@ export class RecetteProduitComponent implements OnInit
   {
     let listeIdPublicIngredient: string[] = [];
 
-    if(_recette)
+    if(!_recette)
     {
       for (const element of this.dataSource().data) 
         listeIdPublicIngredient.push(element.idPublicIngredient);

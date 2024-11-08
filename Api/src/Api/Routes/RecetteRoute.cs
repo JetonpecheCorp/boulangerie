@@ -25,7 +25,7 @@ public static class RecetteRoute
             .ProducesBadRequestErreurValidation()
             .ProducesCreated();
 
-        builder.MapPost("modifierQuantite", ModifierQuantiteAsync)
+        builder.MapPut("modifierQuantite", ModifierQuantiteAsync)
             .WithDescription("Modifier la quantité d'un ingredient de la recette d'un produit")
             .ProducesBadRequestErreurValidation()
             .ProducesCreated();
@@ -84,13 +84,26 @@ public static class RecetteRoute
 
     async static Task<IResult> ModifierQuantiteAsync(
         HttpContext _httpContext,
+        [FromServices] IValidator<RecetteModifierQteImport> _validator,
         [FromServices] IRecetteService _recetteServ,
         [FromBody] RecetteModifierQteImport _recetteImport
     )
     {
+        var validate = await _validator.ValidateAsync(_recetteImport);
+
+        if(!validate.IsValid)
+            return Results.Extensions.ErreurValidator(validate.Errors);
+
         int idGroupe = _httpContext.RecupererIdGroupe();
 
-        
+        bool ok = await _recetteServ.ModifierQteAsync(
+            _recetteImport.IdPublicProduit,
+            _recetteImport.IdPublicIngredient,
+            _recetteImport.Quantite,
+            idGroupe
+        );
+
+        return ok ? Results.NoContent() : Results.NotFound("L'ingredient de la recette n'existe pas");
     }
 
     async static Task<IResult> SupprimerAsync(

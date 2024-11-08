@@ -22,17 +22,17 @@ public interface IRecetteService
     Task<bool> AjouterAsync(Recette _recette);
 
     /// <summary>
-    /// Modifier une recette
+    /// Modifier une qte
     /// </summary>
-    /// <param name="_builder">infos a modifier</param>
     /// <param name="_idPublicProduit">id public produit conserné</param>
     /// <param name="_idPublicIngredient">id public ingredient conserné</param>
     /// <param name="_idGroupe">id groupe conserné</param>
+    /// <param name="_quantite">nouvelle quantite</param>
     /// <returns><see langword="true"/> si modifié, sinon <see langword="false"/></returns>
-    Task<bool> ModifierAsync(
-        SetPropertyBuilder<Recette> _builder, 
+    Task<bool> ModifierQteAsync(
         string _idPublicProduit, 
         string _idPublicIngredient, 
+        decimal _quantite,
         int _idGroupe
     );
 

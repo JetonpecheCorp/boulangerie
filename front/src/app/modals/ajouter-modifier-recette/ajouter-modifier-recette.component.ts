@@ -73,12 +73,9 @@ export class AjouterModifierRecetteComponent implements OnInit
       return;
 
     if(this.modeModifier())
-    {
-      console.log(this.form);
-      return;
-      
+    { 
       const INFOS: RecetteExport = {
-        idPublicIngredient: this.info.recette.idPublic,
+        idPublicIngredient: this.info.recette.idPublicIngredient,
         idPublicProduit: this.info.idPublicProduit,
         quantite: this.form.value.quantite
       };
@@ -160,7 +157,7 @@ export class AjouterModifierRecetteComponent implements OnInit
 
   private InitAutoComplete(_liste: Ingredient[])
   {
-    let liste: Ingredient[] = [];
+    let liste: Ingredient[] = [];    
 
     for (const element of _liste) 
       {

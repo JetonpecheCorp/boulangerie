@@ -37,19 +37,30 @@ public sealed class RecetteService(BoulangerieContext _context) : IRecetteServic
         return nb > 0;
     }
 
-    public async Task<bool> ModifierAsync(
-        SetPropertyBuilder<Recette> _builder,
+    public async Task<bool> ModifierQteAsync(
         string _idPublicProduit,
         string _idPublicIngredient,
+        decimal _quantite,
         int _idGroupe
     )
     {
-        _context.Recettes.Where(x => 
-            x.IdProduitNavigation.IdPublic == _idPublicProduit && 
-            x.IdProduitNavigation.IdGroupe == _idGroupe &&
-            x.IdIngredientNavigation.IdPublic == _idPublicIngredient &&
-            x.IdIngredientNavigation.IdGroupe == _idGroupe
+        int nb = 0;
+
+        if(
+            Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient) &&
+            Guid.TryParse(_idPublicProduit, out Guid idPublicProduit)
         )
+        {
+            nb = await _context.Recettes.Where(x =>
+                x.IdIngredientNavigation.IdPublic == idPublicIngredient &&
+                x.IdProduitNavigation.IdPublic == idPublicProduit &&
+                x.IdProduitNavigation.IdGroupe == _idGroupe &&
+                x.IdIngredientNavigation.IdGroupe == _idGroupe
+            )
+            .ExecuteUpdateAsync(x => x.SetProperty(y => y.Quantite, _quantite));
+        }
+
+        return nb > 0;
     }
 
     public async Task<bool> SupprimerAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe)
