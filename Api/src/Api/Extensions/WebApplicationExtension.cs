@@ -14,6 +14,7 @@ public static class WebApplicationExtension
         _app.MapGroup("produit").AjouterRouteProduit();
         _app.MapGroup("tva").AjouterRouteTva();
         _app.MapGroup("categorie").AjouterRouteCategorie();
+        _app.MapGroup("vehicule").AjouterRouteVehicule();
 
         return _app;
     }

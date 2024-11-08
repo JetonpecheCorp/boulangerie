@@ -5,6 +5,7 @@ using Api.Services.Produits;
 using Api.Services.Recettes;
 using Api.Services.Tvas;
 using Api.Services.Utilisateurs;
+using Api.Services.Vehicules;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -29,7 +30,8 @@ public static class IServiceCollectionExtension
             .AddScoped<IRecetteService, RecetteService>()
             .AddScoped<ITvaService, TvaService>()
             .AddScoped<ICategorieService, CategorieService>()
-            .AddScoped<IProduitService, ProduitService>();
+            .AddScoped<IProduitService, ProduitService>()
+            .AddScoped<IVehiculeService, VehiculeService>();
 
         _service.AddSingleton<IJwtService>(new JwtService(_rsa, ""))
             .AddSingleton<IMdpService, MdpService>();
