@@ -18,7 +18,7 @@ export class ButtonComponent
   classSpinner = input<string>("spinnerBtn");
   btnClicker = model.required<boolean>();
   icon = input<string | null>(null);
-  style = input<"flat" | "raised" | "miniFab">("flat");
+  style = input<"flat" | "raised" | "miniFab" | "basic">("flat");
 
   onClick = output();
 

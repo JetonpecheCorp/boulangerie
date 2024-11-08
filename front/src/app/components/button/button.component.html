@@ -60,6 +60,26 @@
             }
         </button>
     }
+    @case ("basic") 
+    {
+        <button stop-propagation mat-button (click)="Onclick()">
+            @if(btnClicker())
+            {
+                <mat-spinner [diameter]="diametreSpinner()"
+                             [class]="classSpinner()">
+                </mat-spinner>
+            }
+            @else 
+            {
+                @if(icon())
+                {
+                    <mat-icon>{{ icon() }}</mat-icon>
+                }
+                
+                {{ label() }}
+            }
+        </button>
+    }
 }
 
 

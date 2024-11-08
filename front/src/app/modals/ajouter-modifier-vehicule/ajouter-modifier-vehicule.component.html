@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>{{ labelBtn() }} un véhicule</h2>
+<mat-dialog-content>
+    <app-input [controle]="form.controls['immatriculation']" 
+               label="Immatriculation"
+               [maxLength]="15" />
+
+    <mat-form-field>
+        <mat-label>Info complementaire</mat-label>
+        <textarea matInput [formControl]="$any(form.controls['infoComplementaire'])"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="null">Fermer</button>&nbsp;
+
+    <app-button (onClick)="Valider()" 
+                [btnClicker]="btnClicker()" 
+                [label]="labelBtn()" />
+</mat-dialog-actions>
