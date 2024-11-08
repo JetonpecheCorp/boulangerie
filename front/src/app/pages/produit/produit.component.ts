@@ -67,9 +67,13 @@ export class ProduitComponent implements AfterViewInit
     .subscribe(() =>this.Lister());
   }
 
-  protected OuvrirModalRecetteProduit(_idPublicProduit: string): void
+  protected OuvrirModalRecetteProduit(_produit: Produit): void
   {
-    this.matDialog.open(RecetteProduitComponent, { minWidth: "700px", data: _idPublicProduit });
+    this.matDialog.open(RecetteProduitComponent, { minWidth: "700px", data: {
+        idPublicProduit: _produit.idPublic,
+        nomProduit: _produit.nom
+      }
+    });
   }
 
   protected OuvrirModal(_produit?: Produit): void

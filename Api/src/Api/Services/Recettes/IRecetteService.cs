@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using Api.Extensions;
+using Api.Models;
 using Api.ModelsExports.Recettes;
 
 namespace Api.Services.Recettes;
@@ -19,6 +20,21 @@ public interface IRecetteService
     /// <param name="_recette">recette conserné</param>
     /// <returns></returns>
     Task<bool> AjouterAsync(Recette _recette);
+
+    /// <summary>
+    /// Modifier une recette
+    /// </summary>
+    /// <param name="_builder">infos a modifier</param>
+    /// <param name="_idPublicProduit">id public produit conserné</param>
+    /// <param name="_idPublicIngredient">id public ingredient conserné</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns><see langword="true"/> si modifié, sinon <see langword="false"/></returns>
+    Task<bool> ModifierAsync(
+        SetPropertyBuilder<Recette> _builder, 
+        string _idPublicProduit, 
+        string _idPublicIngredient, 
+        int _idGroupe
+    );
 
     /// <summary>
     /// Supprimer un ingredient de la recette du produit

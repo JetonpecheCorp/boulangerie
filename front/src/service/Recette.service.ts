@@ -4,6 +4,7 @@ import { environment } from '../environments/environment';
 import { Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Recette } from '@model/Recette';
+import { RecetteExport } from '@model/exports/RecetteExport';
 
 export class RecetteService 
 {
@@ -15,6 +16,16 @@ export class RecetteService
   Lister(_idPublicProduit: string): Observable<Recette[]>
   { 
     return this.http.get<Recette[]>(`${this.BASE_API}/lister/${_idPublicProduit}`).pipe(takeUntilDestroyed(this.destroyRef));
+  }
+
+  Ajouter(_recette: RecetteExport): Observable<void>
+  {
+    return this.http.post<void>(`${this.BASE_API}/ajouter`, _recette).pipe(takeUntilDestroyed(this.destroyRef));
+  }
+
+  ModifierQuantite(_recette: RecetteExport): Observable<void>
+  {
+    return this.http.put<void>(`${this.BASE_API}/modifierQuantite`, _recette).pipe(takeUntilDestroyed(this.destroyRef));
   }
 
   Supprimer(_idPublicProduit: string, _idPublicIngredient: string): Observable<void>

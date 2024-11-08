@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using Api.Extensions;
+using Api.Models;
 using Api.ModelsExports.Recettes;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +35,21 @@ public sealed class RecetteService(BoulangerieContext _context) : IRecetteServic
         int nb = await _context.SaveChangesAsync();
 
         return nb > 0;
+    }
+
+    public async Task<bool> ModifierAsync(
+        SetPropertyBuilder<Recette> _builder,
+        string _idPublicProduit,
+        string _idPublicIngredient,
+        int _idGroupe
+    )
+    {
+        _context.Recettes.Where(x => 
+            x.IdProduitNavigation.IdPublic == _idPublicProduit && 
+            x.IdProduitNavigation.IdGroupe == _idGroupe &&
+            x.IdIngredientNavigation.IdPublic == _idPublicIngredient &&
+            x.IdIngredientNavigation.IdGroupe == _idGroupe
+        )
     }
 
     public async Task<bool> SupprimerAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe)

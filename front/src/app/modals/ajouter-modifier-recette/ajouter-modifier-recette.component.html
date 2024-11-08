@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Modifier la recette</h2>
+<mat-dialog-content>
+
+  @if(!modeModifier())
+  {
+    <mat-form-field style="margin-top: 10px; margin-bottom: 20px;">
+      <mat-label>Ingredient</mat-label>
+      <input type="text"
+            aria-label="Ingredient"
+            matInput
+            [formControl]="$any(form.controls['autoComplete'])"
+            [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        @for (option of dataSourceFiltrer(); track option.idPublic) 
+        {
+          <mat-option [value]="option.nom">{{ option.nom }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  }
+  <app-input type="number" 
+             [controle]="form.controls['quantite']"
+             label="Quantité" />
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="Fermer()">Fermer</button>&nbsp;
+  
+  <app-button (onClick)="Valider(false)"
+              [btnClicker]="btnClicker()"
+              label="ajouter" />&nbsp;
+
+  <app-button (onClick)="Valider(true)"
+              [btnClicker]="btnClicker()"
+              label="ajouter et fermer" />
+</mat-dialog-actions>

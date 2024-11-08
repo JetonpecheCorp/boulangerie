@@ -1,6 +1,13 @@
 <h2 mat-dialog-title>Recette</h2>
 <mat-dialog-content>
 
+    <div style="text-align: center;">
+        <button mat-flat-button (click)="OuvrirModal()">
+            <mat-icon>add</mat-icon>
+            Ajouter un ingrédient
+        </button>
+    </div>
+
     <table mat-table [dataSource]="dataSource()">
         
         <!-- nom ingredient Column -->
@@ -19,6 +26,12 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> Action </th>
             <td mat-cell *matCellDef="let element">
+
+                <app-button (onClick)="OuvrirModal(element)"
+                            icon="edit"
+                            [style]="'miniFab'"
+                            [btnClicker]="false" />&nbsp;
+
                 <app-button (onClick)="OuvrirModalConfirmation(element)"
                             icon="delete"
                             [style]="'miniFab'"

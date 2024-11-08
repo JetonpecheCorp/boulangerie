@@ -21,7 +21,14 @@ public static class RecetteRoute
             .Produces<RecetteExport[]>();
 
         builder.MapPost("ajouter", AjouterAsync)
-            .WithDescription("Ajouter un ingredient à la recette d'un produit");
+            .WithDescription("Ajouter un ingredient à la recette d'un produit")
+            .ProducesBadRequestErreurValidation()
+            .ProducesCreated();
+
+        builder.MapPost("modifierQuantite", ModifierQuantiteAsync)
+            .WithDescription("Modifier la quantité d'un ingredient de la recette d'un produit")
+            .ProducesBadRequestErreurValidation()
+            .ProducesCreated();
 
         builder.MapDelete("supprimer", SupprimerAsync)
             .WithDescription("Supprimer un ingredient à la recette d'un produit")
@@ -73,6 +80,17 @@ public static class RecetteRoute
         await _recetteServ.AjouterAsync(recette);
 
         return Results.Created();
+    }
+
+    async static Task<IResult> ModifierQuantiteAsync(
+        HttpContext _httpContext,
+        [FromServices] IRecetteService _recetteServ,
+        [FromBody] RecetteModifierQteImport _recetteImport
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        
     }
 
     async static Task<IResult> SupprimerAsync(

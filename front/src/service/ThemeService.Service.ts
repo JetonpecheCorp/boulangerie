@@ -32,7 +32,7 @@ export class ThemeService
 
     generateDynamicTheme(ev: Event): void
     {
-        const fallbackColor = '#005cbb';
+        const fallbackColor = '#3040b6';
         const sourceColor = (ev.target as HTMLInputElement).value;
     
         let argb;

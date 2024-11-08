@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ButtonComponent } from '@component/button/button.component';
@@ -8,11 +8,13 @@ import { Recette } from '@model/Recette';
 import { RecetteService } from '@service/Recette.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ThemeService } from '@service/ThemeService.Service';
+import { MatIconModule } from '@angular/material/icon';
+import { AjouterModifierRecetteComponent } from "../ajouter-modifier-recette/ajouter-modifier-recette.component";
 
 @Component({
   selector: 'app-recette-produit',
   standalone: true,
-  imports: [MatCheckboxModule, MatTableModule, MatTabsModule, MatDialogModule, MatButton, ButtonComponent],
+  imports: [MatDialogModule, MatIconModule, MatCheckboxModule, MatTableModule, MatTabsModule, MatButton, ButtonComponent, AjouterModifierRecetteComponent],
   templateUrl: './recette-produit.component.html',
   styleUrl: './recette-produit.component.scss'
 })
@@ -24,11 +26,59 @@ export class RecetteProduitComponent implements OnInit
 
   private recetteServ = inject(RecetteService);
   private themeServ = inject(ThemeService);
-  private idPublicProduit: string = inject(MAT_DIALOG_DATA);
+  private matDialog = inject(MatDialog);
 
+  private infos = inject(MAT_DIALOG_DATA);
+  
   ngOnInit(): void 
   {    
     this.Lister();
+  }
+
+  protected OuvrirModal(_recette?: Recette): void
+  {
+    let listeIdPublicIngredient: string[] = [];
+
+    if(_recette)
+    {
+      for (const element of this.dataSource().data) 
+        listeIdPublicIngredient.push(element.idPublicIngredient);
+    }
+
+    const DIALOG_REF = this.matDialog.open(AjouterModifierRecetteComponent, { 
+      data: {
+        idPublicProduit: this.infos.idPublicProduit,
+        nomProduit: this.infos.nomProduit,
+        recette: _recette,
+        listeIdPublicIngredient: listeIdPublicIngredient
+      },
+      disableClose: true
+    });
+
+    DIALOG_REF.afterClosed().subscribe({
+      next: (retour: Recette[] | number) =>
+      {
+        if(!retour)
+          return;
+
+        if(_recette)
+        {
+          _recette.quantite = retour as number;
+        }
+        else
+        {
+          this.dataSource.update(x =>
+          {
+            for (const element of retour as Recette[])
+              x.data.push(element);
+  
+            return x;
+          });
+        }
+
+        this.dataSource().data = this.dataSource().data;
+      }
+    });
   }
 
   protected OuvrirModalConfirmation(_recette: Recette): void
@@ -61,17 +111,14 @@ export class RecetteProduitComponent implements OnInit
 
         this.btnClicker.set(false);
       }
-    })
-    
+    });
   }
 
   private Lister(): void
   {
-    this.recetteServ.Lister(this.idPublicProduit).subscribe({
+    this.recetteServ.Lister(this.infos.idPublicProduit).subscribe({
       next: (retour) =>
-      {
-        console.log(retour);
-        
+      {        
         this.dataSource.update(x =>
         {
           x.data = retour;
