@@ -1,4 +1,5 @@
 ﻿using Api.ModelsExports.Categories;
+using Api.ModelsExports.Fournisseurs;
 using Api.ModelsExports.Ingredients;
 using Api.ModelsExports.Produits;
 using Api.ModelsExports.Vehicules;
@@ -28,4 +29,5 @@ public sealed record PaginationExport<T> where T : class
 [JsonSerializable(typeof(PaginationExport<ProduitExport>))]
 [JsonSerializable(typeof(PaginationExport<CategorieExport>))]
 [JsonSerializable(typeof(PaginationExport<VehiculeExport>))]
+[JsonSerializable(typeof(PaginationExport<FournisseurExport>))]
 public partial class PaginationExportContext: JsonSerializerContext { }

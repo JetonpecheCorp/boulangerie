@@ -1,4 +1,5 @@
 ﻿using Api.Services.Categories;
+using Api.Services.Fournisseurs;
 using Api.Services.Groupes;
 using Api.Services.Ingredients;
 using Api.Services.Produits;
@@ -31,7 +32,8 @@ public static class IServiceCollectionExtension
             .AddScoped<ITvaService, TvaService>()
             .AddScoped<ICategorieService, CategorieService>()
             .AddScoped<IProduitService, ProduitService>()
-            .AddScoped<IVehiculeService, VehiculeService>();
+            .AddScoped<IVehiculeService, VehiculeService>()
+            .AddScoped<IFournisseurService, FournisseurService>();
 
         _service.AddSingleton<IJwtService>(new JwtService(_rsa, ""))
             .AddSingleton<IMdpService, MdpService>();
