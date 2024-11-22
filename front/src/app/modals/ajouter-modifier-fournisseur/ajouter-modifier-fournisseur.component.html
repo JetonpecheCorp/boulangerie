@@ -1,0 +1,100 @@
+<h2 mat-dialog-title>{{ labelBtn() }} un fournisseur</h2>
+<mat-dialog-content>
+    <form>
+        <app-input type="hidden" [controle]="form.controls['idPublic']" label="" />
+
+        <div class="row">
+            <div class="col-lg-6 col-xs-12">
+                <app-input [controle]="form.controls['nom']" label="Nom" [maxLength]="300" />
+            </div>
+
+            <div class="col-lg-6 col-xs-12">
+                <app-input [controle]="form.controls['adresse']" label="Adresse" [maxLength]="800" />
+            </div>
+
+            <div class="col-lg-6 col-xs-12">
+                <app-input type="email" [controle]="form.controls['mail']" label="Mail" />
+            </div>
+
+            <div class="col-lg-6 col-xs-12">
+                <app-input type="text" [controle]="form.controls['telephone']" label="Téléphone" />
+            </div>
+
+            <div style="margin-top: 15px;"></div>
+
+            <!-- autocomplete ingredient -->
+            <div class="col-lg-6 col-xs-12">
+                <mat-form-field>
+                    <mat-label>Ingrédient(s) choisi</mat-label>
+
+                    <mat-chip-grid #chipGridIngredient aria-label="Ingrédient(s) choisi">
+                        @for (element of listeIngredientChoisi(); track element.idPublic) 
+                        {
+                            <mat-chip-row (removed)="SupprimerIngredient(element, $index)">
+                            {{element.nom}}
+                            <button matChipRemove [attr.aria-label]="'supprimer ' + element.nom">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                            </mat-chip-row>
+                        }
+                    </mat-chip-grid>
+
+                    <input placeholder="Choisir un ingredient"
+                           [matChipInputFor]="chipGridIngredient"
+                           [matAutocomplete]="auto"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+
+                    <mat-autocomplete autoActiveFirstOption 
+                                      #auto="matAutocomplete" 
+                                      (optionSelected)="IngredientChoisi($event.option.value)">
+
+                        @for (element of listeIngredientFiltrer(); track element.idPublic) 
+                        {
+                            <mat-option [value]="element.nom">{{element.nom}}</mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+
+            <!-- autoccomplete produit -->
+            <div class="col-lg-6 col-xs-12">
+                <mat-form-field>
+                    <mat-label>Produit(s) choisi</mat-label>
+
+                    <mat-chip-grid #chipGridProduit aria-label="Produit(s) choisi">
+                        @for (element of listeProduitChoisi(); track element.idPublic) 
+                        {
+                            <mat-chip-row (removed)="SupprimerProduit(element, $index)">
+                                {{element.nom}}
+                                <button matChipRemove [attr.aria-label]="'supprimer ' + element.nom">
+                                    <mat-icon>cancel</mat-icon>
+                                </button>
+                            </mat-chip-row>
+                        }
+                    </mat-chip-grid>
+
+                    <input placeholder="Choisir un produit"
+                           [matChipInputFor]="chipGridProduit"
+                           [matAutocomplete]="auto2"
+                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+
+                    <mat-autocomplete autoActiveFirstOption 
+                                      #auto2="matAutocomplete" 
+                                      (optionSelected)="ProduitChoisi($event.option.value)">
+
+                        @for (element of listeProduitFiltrer(); track element.idPublic) 
+                        {
+                            <mat-option [value]="element.nom">{{element.nom}}</mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="null">Fermer</button>
+  <app-button (onClick)="Valider()"
+              [label]="labelBtn()"
+              [btnClicker]="btnClicker()" />
+</mat-dialog-actions>

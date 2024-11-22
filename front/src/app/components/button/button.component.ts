@@ -16,7 +16,7 @@ export class ButtonComponent
   label = input<string>("");
   diametreSpinner = input<number>(30);
   classSpinner = input<string>("spinnerBtn");
-  btnClicker = model.required<boolean>();
+  btnClicker = model<boolean>(false);
   icon = input<string | null>(null);
   style = input<"flat" | "raised" | "miniFab" | "basic">("flat");
 

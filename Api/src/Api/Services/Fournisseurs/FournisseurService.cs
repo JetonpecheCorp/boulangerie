@@ -4,6 +4,7 @@ using Api.ModelsExports;
 using Api.ModelsExports.Fournisseurs;
 using Api.ModelsImports;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 
 namespace Api.Services.Fournisseurs;
 
@@ -53,15 +54,51 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
         return pagination;
     }
 
-    public async Task<bool> AjouterAsync(Fournisseur _fournisseur)
+    public async Task<bool> AjouterAsync(Fournisseur _fournisseur, string[] _listeIdPublicIngredient, string[] _listeIdPublicProduit)
     {
+        if (_listeIdPublicIngredient.Length > 0)
+        {
+            var predicat = PredicateBuilder.False<Ingredient>();
+
+            foreach (var element in _listeIdPublicIngredient)
+            {
+                var idPublic = Guid.Parse(element);
+
+                predicat = predicat.Or(x => x.IdPublic == idPublic);
+            }
+
+            var listeIngredient = await _context.Ingredients.Where(predicat).ToArrayAsync();
+            _fournisseur.IdIngredients = listeIngredient;
+        }
+
+        if (_listeIdPublicProduit.Length > 0)
+        {
+            var predicat = PredicateBuilder.False<Produit>();
+
+            foreach (var element in _listeIdPublicProduit)
+            {
+                var idPublic = Guid.Parse(element);
+
+                predicat = predicat.Or(x => x.IdPublic == idPublic);
+            }
+
+            var listeProduit = await _context.Produits.Where(predicat).ToArrayAsync();
+            _fournisseur.IdProduits = listeProduit;
+        }
+
         _context.Fournisseurs.Add(_fournisseur);
         int nb = await _context.SaveChangesAsync();
 
         return nb > 0;
     }
 
-    public async Task<bool> ModifierAsync(int _idGroupe, string _idPublicFournisseur, SetPropertyBuilder<Fournisseur> _builder)
+    public async Task<bool> ModifierAsync(
+        int _idGroupe, 
+        string _idPublicFournisseur, 
+        SetPropertyBuilder<Fournisseur> _builder,
+        string[] _listeIdPublicProduit,
+        string[] _listeIdPublicIngredient
+    )
     {
         int nb = 0;
 
@@ -69,6 +106,61 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
         {
             nb = await _context.Fournisseurs.Where(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublicFournisseur)
                 .ExecuteUpdateAsync(_builder.SetPropertyCalls);
+
+            if (nb == 0)
+                return false;
+        }
+
+        _context.Database.ExecuteSqlRaw("DELETE fi.* FROM FournisseurIngredient fi JOIN Fournisseur f ON f.Id = fi.IdFournisseur WHERE IdPublic = ?", _idPublicFournisseur);
+
+        if (_listeIdPublicIngredient.Length > 0)
+        {
+            var predicat = PredicateBuilder.False<Ingredient>();
+
+            foreach (var element in _listeIdPublicIngredient)
+            {
+                var idPublic = Guid.Parse(element);
+
+                predicat = predicat.Or(x => x.IdPublic == idPublic);
+            }
+
+            var listeIngredient = await _context.Ingredients.Where(predicat).ToArrayAsync();
+
+            var listeFournisseurIngredient = _context.Fournisseurs
+                .Where(x => x.IdPublic == idPublicFournisseur)
+                .First()
+                .IdIngredients;
+
+            foreach (var item in listeIngredient)
+                listeFournisseurIngredient.Add(item);
+
+           nb = await _context.SaveChangesAsync();
+        }
+
+        _context.Database.ExecuteSqlRaw("DELETE fp.* FROM FournisseurProduit fp JOIN Fournisseur f ON f.Id = fp.IdFournisseur WHERE IdPublic = ?", _idPublicFournisseur);
+
+        if (_listeIdPublicProduit.Length > 0)
+        {
+            var predicat = PredicateBuilder.False<Produit>();
+
+            foreach (var element in _listeIdPublicProduit)
+            {
+                var idPublic = Guid.Parse(element);
+
+                predicat = predicat.Or(x => x.IdPublic == idPublic);
+            }
+
+            var listeProduit = await _context.Produits.Where(predicat).ToArrayAsync();
+
+            var listeFournisseurProduit = _context.Fournisseurs
+                .Where(x => x.IdPublic == idPublicFournisseur)
+                .First()
+                .IdProduits;
+
+            foreach (var item in listeProduit)
+                listeFournisseurProduit.Add(item);
+
+            nb = await _context.SaveChangesAsync();
         }
 
         return nb > 0;

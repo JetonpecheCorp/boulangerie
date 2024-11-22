@@ -25,5 +25,10 @@ export const routes: Routes = [
         path: "vehicule",
         loadComponent: () => import('./pages/vehicule/vehicule.component').then(x => x.VehiculeComponent),
         title: "Vehicule"
+    },
+    {
+        path: "fournisseur",
+        loadComponent: () => import('./pages/fournisseur/fournisseur.component').then(x => x.FournisseurComponent),
+        title: "Fournisseur"
     }
 ];

@@ -21,8 +21,10 @@ public interface IFournisseurService
     /// Ajouter un nouveau fournisseur
     /// </summary>
     /// <param name="_fournisseur">fournisseur conserné</param>
+    /// <param name="_listeIdPublicIngredient">ingredient du fournisseur conserné</param>
+    /// <param name="_listeIdPublicProduit">produit du fournisseur conserné</param>
     /// <returns><see langword="true"/> si ajouté, sinon <see langword="false"/></returns>
-    Task<bool> AjouterAsync(Fournisseur _fournisseur);
+    Task<bool> AjouterAsync(Fournisseur _fournisseur, string[] _listeIdPublicIngredient, string[] _listeIdPublicProduit);
 
     /// <summary>
     /// Modifier les infos d'un fournisseur
@@ -30,8 +32,16 @@ public interface IFournisseurService
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <param name="_idPublicFournisseur">id public du fournisseur</param>
     /// <param name="_builder">les infos modifier</param>
+    /// <param name="_listeIdPublicProduit">les infos modifier</param>
+    /// <param name="_listeIdPublicIngredient">les infos modifier</param>
     /// <returns><see langword="true"/> si modifié, sinon <see langword="false"/></returns>
-    Task<bool> ModifierAsync(int _idGroupe, string _idPublicFournisseur, SetPropertyBuilder<Fournisseur> _builder);
+    Task<bool> ModifierAsync(
+        int _idGroupe, 
+        string _idPublicFournisseur, 
+        SetPropertyBuilder<Fournisseur> _builder,
+        string[] _listeIdPublicProduit,
+        string[] _listeIdPublicIngredient
+    );
 
     /// <summary>
     /// Archiver un fournisseur

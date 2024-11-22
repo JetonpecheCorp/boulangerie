@@ -5,6 +5,8 @@ using Api.ModelsExports.Fournisseurs;
 using Api.ModelsImports;
 using Api.ModelsImports.Fournisseurs;
 using Api.Services.Fournisseurs;
+using Api.Services.Ingredients;
+using Api.Services.Produits;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,7 +67,7 @@ public static class FournisseurRoute
         [FromBody] FournisseurImport _fournisseurImport
     )
     {
-        var validate = _validator.Validate(_fournisseurImport);
+        var validate = await _validator.ValidateAsync(_fournisseurImport);
 
         if (!validate.IsValid)
             return Results.Extensions.ErreurValidator(validate.Errors);
@@ -82,7 +84,11 @@ public static class FournisseurRoute
              Mail = _fournisseurImport.Mail
         };
 
-        await _fournisseurServ.AjouterAsync(fournisseur);
+        await _fournisseurServ.AjouterAsync(
+            fournisseur, 
+            _fournisseurImport.ListeIdPublicIngredient, 
+            _fournisseurImport.ListeIdPublicProduit
+        );
 
         return Results.Created("", fournisseur.IdPublic);
     }
@@ -91,11 +97,13 @@ public static class FournisseurRoute
         HttpContext _httpContext,
         [FromServices] IValidator<FournisseurImport> _validator,
         [FromServices] IFournisseurService _fournisseurServ,
+        [FromServices] IProduitService _produitServ,
+        [FromServices] IIngredientService _ingredientServ,
         [FromRoute(Name = "idPublicFournisseur")] string _idPublicFournisseur,
         [FromBody] FournisseurImport _fournisseurImport
     )
     {
-        var validate = _validator.Validate(_fournisseurImport);
+        var validate = await _validator.ValidateAsync(_fournisseurImport);
 
         if (!validate.IsValid)
             return Results.Extensions.ErreurValidator(validate.Errors);
@@ -110,7 +118,7 @@ public static class FournisseurRoute
             .SetProperty(x => x.Mail, _fournisseurImport.Mail)
             .SetProperty(x => x.DateModification, DateOnly.FromDateTime(DateTime.UtcNow));
 
-        bool ok = await _fournisseurServ.ModifierAsync(idGroupe, _idPublicFournisseur, builder);
+        bool ok = await _fournisseurServ.ModifierAsync(idGroupe, _idPublicFournisseur, builder, _fournisseurImport.ListeIdPublicProduit, _fournisseurImport.ListeIdPublicIngredient);
 
         return ok ? Results.NoContent() : Results.NotFound();
     }
