@@ -1,0 +1,22 @@
+<div class="container-flex">
+    @for (item of listeJourSemaine(); track $index) 
+    {
+        <div class="card">
+            <div class="titre">
+                <p><b>{{ item.nom }}</b> <br> {{ item.date }}</p>
+            </div>
+        
+            @for (item2 of info()[$index]; track item2)
+            {
+                <div class="element" (click)="ElementClicker(item2)">
+                    <p>
+                        <b>Nom:</b> {{ item2.nomProduit }} <br>
+                        <b>Quantité:</b> {{ item2.quantite }}
+                    </p>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+

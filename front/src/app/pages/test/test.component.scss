@@ -1,0 +1,40 @@
+.card
+{
+    width: calc(100% / 7);
+
+    p
+    {
+        padding: 5px;
+    }
+}
+
+.container-flex
+{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.titre
+{
+    background-color: black;
+    color: white;
+}
+
+.element:not(:last-child)
+{
+    border-bottom: 1px solid black;
+}
+
+@media screen and (max-width: 800px) 
+{
+    .card
+    {
+        width: 100%;
+    }
+
+    .container-flex
+    {
+        flex-direction: column;
+    }
+}
