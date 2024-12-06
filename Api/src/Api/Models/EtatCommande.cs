@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Api.Models;
 
-public partial class Categorie
+public partial class EtatCommande
 {
     public int Id { get; set; }
 
@@ -13,9 +13,9 @@ public partial class Categorie
 
     public string Nom { get; set; } = null!;
 
+    public string? CouleurHex { get; set; }
+
     public bool EstSupprimer { get; set; }
 
     public virtual Groupe IdGroupeNavigation { get; set; } = null!;
-
-    public virtual ICollection<Produit> Produits { get; set; } = new List<Produit>();
 }

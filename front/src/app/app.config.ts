@@ -17,6 +17,7 @@ import { JwtInterceptor } from '../interceptor/jwt.interceptor';
 import { RecetteService } from '@service/Recette.service';
 import { VehiculeService } from '@service/Vehicule.service';
 import { FournissseurService } from '@service/Fournisseur.service';
+import { CommandeService } from '@service/Commande.service';
 
 const matInput: MatFormFieldDefaultOptions = {
   appearance: 'outline',
@@ -41,6 +42,7 @@ export const appConfig: ApplicationConfig = {
     { provide: RecetteService, useClass: RecetteService },
     { provide: VehiculeService, useClass: VehiculeService },
     { provide: FournissseurService, useClass: FournissseurService },
+    { provide: CommandeService, useClass: CommandeService },
 
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matInput }
   ]

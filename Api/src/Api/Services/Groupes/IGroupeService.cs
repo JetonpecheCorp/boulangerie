@@ -23,6 +23,13 @@ public interface IGroupeService
     Task<bool> AjouterAsync(Groupe _groupe);
 
     /// <summary>
+    /// Recuperer le préfix d'un groupe
+    /// </summary>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns><see langword="string"/> si existe, sinon <see langword="null"/></returns>
+    Task<string> PrefixAsync(int _idGroupe);
+
+    /// <summary>
     /// Verifier qu'un groupe existe
     /// </summary>
     /// <param name="_idGroupe">id groupe conserné</param>

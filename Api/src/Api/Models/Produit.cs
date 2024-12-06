@@ -35,15 +35,15 @@ public partial class Produit
 
     public decimal StockAlert { get; set; }
 
+    public virtual ICollection<CommandeInterne> CommandeInternes { get; set; } = new List<CommandeInterne>();
+
     public virtual Categorie IdCategorieNavigation { get; set; } = null!;
 
     public virtual Groupe IdGroupeNavigation { get; set; } = null!;
 
     public virtual Tva IdTvaNavigation { get; set; } = null!;
 
-    public virtual ICollection<PlanningProduitUtilisateur> PlanningProduitUtilisateurs { get; set; } = new List<PlanningProduitUtilisateur>();
-
-    public virtual ICollection<ProduitLivraison> ProduitLivraisons { get; set; } = new List<ProduitLivraison>();
+    public virtual ICollection<ProduitCommande> ProduitCommandes { get; set; } = new List<ProduitCommande>();
 
     public virtual ICollection<Recette> Recettes { get; set; } = new List<Recette>();
 

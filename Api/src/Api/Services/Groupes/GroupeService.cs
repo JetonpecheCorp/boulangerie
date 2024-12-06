@@ -15,6 +15,13 @@ public sealed class GroupeService(BoulangerieContext _context) : IGroupeService
         }).ToArrayAsync();
     }
 
+    public async Task<string> PrefixAsync(int _idGroupe)
+    {
+        return await _context.Groupes.Where(x => x.Id == _idGroupe)
+            .Select(x => x.Prefix)
+            .FirstAsync();
+    }
+
     public async Task<bool> AjouterAsync(Groupe _groupe)
     {
         _context.Add(_groupe);

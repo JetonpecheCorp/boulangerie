@@ -1,5 +1,6 @@
-import { Component, model, OnInit, output, signal } from '@angular/core';
-import { ElementCalendrier } from '@model/Calendrier';
+import { Component, inject, model, OnInit, output, signal } from '@angular/core';
+import { Commande } from '@model/Commande';
+import { CommandeService } from '@service/Commande.service';
 
 @Component({
   selector: 'app-test',
@@ -12,36 +13,16 @@ export class TestComponent implements OnInit
 {
   elementClick = output();
 
-  Info = model<ElementCalendrier[]>([{
-    date: new Date("2024-11-30"),
-    nomProduit: "Pain",
-    idPublicProduit: "",
-    idPublic: "",
-    quantite: 10
-  },
-  {
-    date: new Date("2024-11-30"),
-    nomProduit: "Pain au chocolat",
-    idPublicProduit: "",
-    idPublic: "",
-    quantite: 5
-  },
-  {
-    date: new Date("2024-11-25"),
-    nomProduit: "Croissant",
-    idPublicProduit: "",
-    idPublic: "",
-    quantite: 10
-  }]);
-
   protected listeJourSemaine = signal<any[]>([]);
   protected info = signal<any[]>([]);
   private readonly LISTE_JOUR_SEMAINE = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
+  private commandeServ = inject(CommandeService);
+
   ngOnInit(): void 
   {
     this.listeJourSemaine.set(this.InitSemaine());
-    this.OrdonerInfo();
+    this.ListerCommande();
   }
 
   protected ElementClicker(_element: any): void
@@ -49,9 +30,9 @@ export class TestComponent implements OnInit
     this.elementClick.emit(_element);
   }
 
-  private OrdonerInfo(): void
+  private OrdonerInfo(_liste: Commande[]): void
   {
-    this.Info().sort((a, b) =>
+    _liste.sort((a, b) =>
     {
       return a.date.getTime() - b.date.getTime();
     });
@@ -60,7 +41,7 @@ export class TestComponent implements OnInit
 
     for (let i = 1; i <= 7; i++) 
     {
-      liste.push(this.Info().filter(x => x.date.getDay() == (i == 7 ? 0 : i)));
+      liste.push(_liste.filter(x => x.date.getDay() == (i == 7 ? 0 : i)));
     }
 
     this.info.set(liste);
@@ -95,5 +76,21 @@ export class TestComponent implements OnInit
     let diff = d.getDate() - day + (day == 0 ? -6 : 1); 
 
     return new Date(d.setDate(diff));
+  }
+
+  private ListerCommande(): void
+  {
+    let dateJour = this.DatePremierJourSemaine(new Date());
+    let dateFin = new Date("2024-12-06");
+
+    this.commandeServ.Lister(dateJour, dateFin).subscribe({
+      next: (liste) =>
+      {
+        this.OrdonerInfo(liste);
+
+        console.log(this.info());
+        
+      }
+    })
   }
 }

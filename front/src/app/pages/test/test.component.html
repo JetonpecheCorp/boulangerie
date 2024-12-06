@@ -10,9 +10,17 @@
             {
                 <div class="element" (click)="ElementClicker(item2)">
                     <p>
-                        <b>Nom:</b> {{ item2.nomProduit }} <br>
-                        <b>Quantité:</b> {{ item2.quantite }}
+                        <b>Nom:</b> {{ item2.client.nom }} <br>
+                        <b>N°</b> {{ item2.numero }} <br>
                     </p>
+
+                    <ul style="padding-left: 25px;">
+                        @for (item3 of item2.listeProduit; track $index) 
+                        {
+                            <li>{{ item3.nom }}</li>
+                        }
+                    </ul>
+
                 </div>
             }
         </div>

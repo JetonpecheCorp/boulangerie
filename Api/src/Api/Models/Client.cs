@@ -23,7 +23,7 @@ public partial class Client
 
     public string? InfoComplementaire { get; set; }
 
-    public virtual Groupe IdGroupeNavigation { get; set; } = null!;
+    public virtual ICollection<Commande> Commandes { get; set; } = new List<Commande>();
 
-    public virtual ICollection<Livraison> Livraisons { get; set; } = new List<Livraison>();
+    public virtual Groupe IdGroupeNavigation { get; set; } = null!;
 }
