@@ -1,11 +1,6 @@
-.card
+mat-card
 {
     width: calc(100% / 7);
-
-    p
-    {
-        padding: 5px;
-    }
 }
 
 .container-flex
@@ -15,10 +10,18 @@
     gap: 5px;
 }
 
-.titre
+mat-card-header
 {
     background-color: black;
     color: white;
+    border-top-left-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
+    border-top-right-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
+    padding: 0;
+}
+
+mat-card-content, mat-card-header
+{
+    padding: 5px;
 }
 
 .element:not(:last-child)

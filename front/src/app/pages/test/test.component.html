@@ -1,14 +1,27 @@
+<div style="text-align: center; margin-bottom: 10px;">
+    <button mat-mini-fab (click)="Precedent()">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+
+    &nbsp;{{ dateJour().toLocaleDateString() }}&nbsp;
+
+    <button mat-mini-fab (click)="Suivant()">
+        <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+</div>
+
 <div class="container-flex">
+
     @for (item of listeJourSemaine(); track $index) 
     {
-        <div class="card">
-            <div class="titre">
+        <mat-card appearance="outlined">
+            <mat-card-header>
                 <p><b>{{ item.nom }}</b> <br> {{ item.date }}</p>
-            </div>
+            </mat-card-header>
         
             @for (item2 of info()[$index]; track item2)
             {
-                <div class="element" (click)="ElementClicker(item2)">
+                <mat-card-content class="element" (click)="ElementClicker(item2)">
                     <p>
                         <b>Nom:</b> {{ item2.client.nom }} <br>
                         <b>N°</b> {{ item2.numero }} <br>
@@ -21,9 +34,9 @@
                         }
                     </ul>
 
-                </div>
+                </mat-card-content>
             }
-        </div>
+        </mat-card>
     }
 </div>
 

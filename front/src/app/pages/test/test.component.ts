@@ -1,11 +1,14 @@
 import { Component, inject, model, OnInit, output, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { Commande } from '@model/Commande';
 import { CommandeService } from '@service/Commande.service';
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [],
+  imports: [MatButtonModule, MatIconModule, MatCardModule],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
@@ -13,6 +16,7 @@ export class TestComponent implements OnInit
 {
   elementClick = output();
 
+  protected dateJour = signal(new Date());
   protected listeJourSemaine = signal<any[]>([]);
   protected info = signal<any[]>([]);
   private readonly LISTE_JOUR_SEMAINE = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
@@ -21,6 +25,35 @@ export class TestComponent implements OnInit
 
   ngOnInit(): void 
   {
+    this.listeJourSemaine.set(this.InitSemaine());
+    this.ListerCommande();
+  }
+
+  protected Suivant(): void
+  {
+    this.dateJour.update(x => 
+    {
+      x.setDate(x.getDate() + 7)
+
+      return x;
+    });
+
+    console.log(this.dateJour());
+    this.listeJourSemaine.set(this.InitSemaine());
+    this.ListerCommande();
+  }
+
+  protected Precedent(): void
+  {
+    this.dateJour.update(x => 
+    {
+      x.setDate(x.getDate() - 7)
+
+      return x;
+    });
+
+    console.log(this.dateJour());
+
     this.listeJourSemaine.set(this.InitSemaine());
     this.ListerCommande();
   }
@@ -47,11 +80,11 @@ export class TestComponent implements OnInit
     this.info.set(liste);
   }
 
-  private InitSemaine()
+  private InitSemaine(): any[]
   {
     let listeJour = [];
 
-    let dateDebutSemaine = this.DatePremierJourSemaine(new Date());
+    let dateDebutSemaine = this.DatePremierJourSemaine(this.dateJour());
     
     for (let i = 0; i < 7; i++) 
     {
@@ -80,9 +113,10 @@ export class TestComponent implements OnInit
 
   private ListerCommande(): void
   {
-    let dateJour = this.DatePremierJourSemaine(new Date());
-    let dateFin = new Date("2024-12-06");
-
+    let dateJour = this.DatePremierJourSemaine(this.dateJour());
+    let dateFin = new Date(dateJour.getTime());
+    dateFin.setDate(dateJour.getDate() + 6);
+    
     this.commandeServ.Lister(dateJour, dateFin).subscribe({
       next: (liste) =>
       {
