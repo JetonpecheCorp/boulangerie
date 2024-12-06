@@ -58,11 +58,6 @@ export class TestComponent implements OnInit
     this.ListerCommande();
   }
 
-  protected ElementClicker(_element: any): void
-  {
-    this.elementClick.emit(_element);
-  }
-
   private OrdonerInfo(_liste: Commande[]): void
   {
     _liste.sort((a, b) =>

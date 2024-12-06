@@ -21,10 +21,10 @@
         
             @for (item2 of info()[$index]; track item2)
             {
-                <mat-card-content class="element" (click)="ElementClicker(item2)">
+                <mat-card-content class="element">
                     <p>
                         <b>Nom:</b> {{ item2.client.nom }} <br>
-                        <b>N°</b> {{ item2.numero }} <br>
+                        <b>N°</b> {{ item2.numero }}
                     </p>
 
                     <ul style="padding-left: 25px;">
