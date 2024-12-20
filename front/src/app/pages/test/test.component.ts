@@ -7,6 +7,7 @@ import { CommandeService } from '@service/Commande.service';
 import { CalendrierSemaineComponent } from "./calendrier-semaine/calendrier-semaine.component";
 import { CalendrierJourComponent } from "./calendrier-jour/calendrier-jour.component";
 import { CalendrierMoisComponent } from "./calendrier-mois/calendrier-mois.component";
+import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
 
 enum EModeCalendrier 
 {
@@ -18,7 +19,7 @@ enum EModeCalendrier
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
+  imports: [MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
@@ -35,6 +36,11 @@ export class TestComponent implements OnInit
   ngOnInit(): void 
   {
     this.ListerCommande();
+  }
+
+  ChangerAffichage(_event: MatButtonToggleChange)
+  {
+    this.mode.set(_event.value);
   }
 
   protected Suivant(): void

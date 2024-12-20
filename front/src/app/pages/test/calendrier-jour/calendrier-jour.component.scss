@@ -5,8 +5,8 @@ mat-card
 
 mat-card-header
 {
-    background-color: black;
-    color: white;
+    background-color: var(--sys-primary);
+    color: var(--sys-on-primary);
     display: block;
     text-align: center;
     border-top-left-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
