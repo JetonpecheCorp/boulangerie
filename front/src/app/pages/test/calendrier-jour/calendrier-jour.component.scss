@@ -1,0 +1,25 @@
+mat-card
+{
+    width: 100%
+}
+
+mat-card-header
+{
+    background-color: black;
+    color: white;
+    display: block;
+    text-align: center;
+    border-top-left-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
+    border-top-right-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
+    padding: 0;
+}
+
+mat-card-content, mat-card-header
+{
+    padding: 5px;
+}
+
+.element:not(:last-child)
+{
+    border-bottom: 1px solid black;
+}

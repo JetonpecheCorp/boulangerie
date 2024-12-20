@@ -1,31 +1,37 @@
-import { Component, inject, model, OnInit, output, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Commande } from '@model/Commande';
 import { CommandeService } from '@service/Commande.service';
+import { CalendrierSemaineComponent } from "./calendrier-semaine/calendrier-semaine.component";
+import { CalendrierJourComponent } from "./calendrier-jour/calendrier-jour.component";
+
+enum EModeCalendrier 
+{
+  Jour,
+  Semaine
+}
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatCardModule],
+  imports: [MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
 export class TestComponent implements OnInit
 {
-  elementClick = output();
+  dateJour = signal(new Date());
+  listeCommande = signal<Commande[]>([]);
 
-  protected dateJour = signal(new Date());
-  protected listeJourSemaine = signal<any[]>([]);
-  protected info = signal<any[]>([]);
-  private readonly LISTE_JOUR_SEMAINE = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+  protected mode = signal(EModeCalendrier.Jour);
+  protected eModeCalendrier = EModeCalendrier;
 
   private commandeServ = inject(CommandeService);
 
   ngOnInit(): void 
   {
-    this.listeJourSemaine.set(this.InitSemaine());
     this.ListerCommande();
   }
 
@@ -33,13 +39,14 @@ export class TestComponent implements OnInit
   {
     this.dateJour.update(x => 
     {
-      x.setDate(x.getDate() + 7)
+      if(this.mode() == EModeCalendrier.Semaine)
+        x.setDate(x.getDate() + 7);
+      else
+        x.setDate(x.getDate() + 1);
 
       return x;
     });
 
-    console.log(this.dateJour());
-    this.listeJourSemaine.set(this.InitSemaine());
     this.ListerCommande();
   }
 
@@ -47,52 +54,15 @@ export class TestComponent implements OnInit
   {
     this.dateJour.update(x => 
     {
-      x.setDate(x.getDate() - 7)
+      if(this.mode() == EModeCalendrier.Semaine)
+        x.setDate(x.getDate() - 7);
+      else
+        x.setDate(x.getDate() - 1);
 
       return x;
     });
 
-    console.log(this.dateJour());
-
-    this.listeJourSemaine.set(this.InitSemaine());
     this.ListerCommande();
-  }
-
-  private OrdonerInfo(_liste: Commande[]): void
-  {
-    _liste.sort((a, b) =>
-    {
-      return a.date.getTime() - b.date.getTime();
-    });
-
-    let liste: any[] = [];
-
-    for (let i = 1; i <= 7; i++) 
-    {
-      liste.push(_liste.filter(x => x.date.getDay() == (i == 7 ? 0 : i)));
-    }
-
-    this.info.set(liste);
-  }
-
-  private InitSemaine(): any[]
-  {
-    let listeJour = [];
-
-    let dateDebutSemaine = this.DatePremierJourSemaine(this.dateJour());
-    
-    for (let i = 0; i < 7; i++) 
-    {
-      let date = new Date(dateDebutSemaine);
-      date.setDate(date.getDate() + i);      
-      
-      listeJour.push({
-        nom: this.LISTE_JOUR_SEMAINE[i],
-        date: date.toLocaleDateString()
-      });
-    }
-    
-    return listeJour;
   }
 
   private DatePremierJourSemaine(d: Date) : Date
@@ -108,17 +78,24 @@ export class TestComponent implements OnInit
 
   private ListerCommande(): void
   {
-    let dateJour = this.DatePremierJourSemaine(this.dateJour());
-    let dateFin = new Date(dateJour.getTime());
-    dateFin.setDate(dateJour.getDate() + 6);
+    let dateJour = undefined;
+    let dateFin = undefined;
+
+    if(this.mode() == EModeCalendrier.Semaine)
+    {
+      dateJour = this.DatePremierJourSemaine(this.dateJour());
+      dateFin = new Date(dateJour.getTime());
+      dateFin.setDate(dateJour.getDate() + 6);
+    }
+    else
+    {
+      dateJour = dateFin = this.dateJour();
+    }
     
     this.commandeServ.Lister(dateJour, dateFin).subscribe({
       next: (liste) =>
       {
-        this.OrdonerInfo(liste);
-
-        console.log(this.info());
-        
+        this.listeCommande.set(liste);
       }
     })
   }

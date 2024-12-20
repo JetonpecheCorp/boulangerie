@@ -1,0 +1,24 @@
+<mat-card appearance="outlined">
+    <mat-card-header>
+        <p><b>{{ jourSemaine().nom }}</b> <br> {{ jourSemaine().date }}</p>
+    </mat-card-header>
+
+    @for (element of listeCommande(); track element.numero)
+    {
+        <mat-card-content class="element" (click)="ElementClicker(element)">
+            <p>
+                <b>Nom:</b> {{ element.client.nom }} <br>
+                <b>N°</b> {{ element.numero }}
+            </p>
+
+            <ul style="padding-left: 25px;">
+                @for (element2 of element.listeProduit; track element2.idPublic) 
+                {
+                    <li>{{ element2.nom }} X{{ element2.quantite }}</li>
+                }
+            </ul>
+
+        </mat-card-content>
+    }
+
+</mat-card>

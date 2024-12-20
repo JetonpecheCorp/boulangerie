@@ -1,0 +1,29 @@
+<div class="container-flex">
+
+    @for (element of listeJourSemaine(); track $index) 
+    {
+        <mat-card appearance="outlined">
+            <mat-card-header>
+                <p><b>{{ element.nom }}</b> <br> {{ element.date }}</p>
+            </mat-card-header>
+        
+            @for (element2 of info()[$index]; track element2.numero)
+            {
+                <mat-card-content class="element" (click)="ElementClicker(element2)">
+                    <p>
+                        <b>Nom:</b> {{ element2.client.nom }} <br>
+                        <b>N°</b> {{ element2.numero }}
+                    </p>
+
+                    <ul style="padding-left: 25px;">
+                        @for (produit of element2.listeProduit; track produit.idPublic) 
+                        {
+                            <li>{{ produit.nom }} X{{ produit.quantite }}</li>
+                        }
+                    </ul>
+
+                </mat-card-content>
+            }
+        </mat-card>
+    }
+</div>

@@ -8,36 +8,17 @@
     <button mat-mini-fab (click)="Suivant()">
         <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
+
 </div>
 
-<div class="container-flex">
-
-    @for (item of listeJourSemaine(); track $index) 
+@switch (mode()) 
+{
+    @case (eModeCalendrier.Jour) 
     {
-        <mat-card appearance="outlined">
-            <mat-card-header>
-                <p><b>{{ item.nom }}</b> <br> {{ item.date }}</p>
-            </mat-card-header>
-        
-            @for (item2 of info()[$index]; track item2)
-            {
-                <mat-card-content class="element">
-                    <p>
-                        <b>Nom:</b> {{ item2.client.nom }} <br>
-                        <b>N°</b> {{ item2.numero }}
-                    </p>
-
-                    <ul style="padding-left: 25px;">
-                        @for (item3 of item2.listeProduit; track $index) 
-                        {
-                            <li>{{ item3.nom }}</li>
-                        }
-                    </ul>
-
-                </mat-card-content>
-            }
-        </mat-card>
+        <app-calendrier-jour [dateJour]="dateJour()" [listeCommande]="listeCommande()" />
     }
-</div>
-
-
+    @default 
+    {
+        <app-calendrier-semaine [dateJour]="dateJour()" [listeCommande]="listeCommande()" />
+    }
+}

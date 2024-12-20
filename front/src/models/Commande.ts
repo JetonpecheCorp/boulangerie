@@ -8,9 +8,12 @@ export type Commande =
         idPublic: string,
         nom: string
     },
-    listeProduit: {
-        idPublic: string,
-        nom: string
-        quantite: number
-    }
-}
+    listeProduit: ProduitCommande[]
+};
+
+export type ProduitCommande =
+{
+    idPublic: string,
+    nom: string
+    quantite: number
+};
