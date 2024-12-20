@@ -16,11 +16,11 @@ export class CommandeService
   private destroyRef: DestroyRef = inject(DestroyRef);
 
   Lister(_dateDebut: Date, _dateFin: Date, _status = 4): Observable<Commande[]>
-  {
-    let dateDebut = _dateDebut.toISOString().split('T')[0];
-    let dateFin = _dateFin.toISOString().split('T')[0];
+  { 
+    let dateDebut = _dateDebut.toISOFormat();
+    let dateFin = _dateFin.toISOFormat();
 
-    const INFOS = { dateDebut, dateFin, status: _status };
+    const INFOS = { dateDebut, dateFin, status: _status };    
 
     return this.http.get<any[]>(`${this.BASE_API}/lister`, { params: INFOS }).pipe(
         takeUntilDestroyed(this.destroyRef),

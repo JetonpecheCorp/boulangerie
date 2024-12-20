@@ -19,8 +19,6 @@ export class CalendrierJourComponent implements OnInit, OnChanges
 
   protected jourSemaine = signal<JourSemaine>({ date: "", nom: "" });
 
-  private readonly LISTE_JOUR_SEMAINE = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-
   ngOnInit(): void 
   {
     this.InitJourSemaine();
@@ -49,10 +47,8 @@ export class CalendrierJourComponent implements OnInit, OnChanges
 
   private InitJourSemaine(): void
   {
-    const INDEX = this.dateJour().getDay() == 0 ? 6 : this.dateJour().getDay() - 1;
-
     this.jourSemaine.set({
-      nom: this.LISTE_JOUR_SEMAINE[INDEX],
+      nom: this.dateJour().nomJour(),
       date: this.dateJour().toLocaleDateString()
     });
   }

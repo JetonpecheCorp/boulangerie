@@ -42,9 +42,11 @@ export class TestComponent implements OnInit
     this.dateJour.update(x => 
     {
       if(this.mode() == EModeCalendrier.Semaine)
-        x.setDate(x.getDate() + 7);
+        x.ajouterJour(7);
+      else if (this.mode() == EModeCalendrier.Mois)
+        x.ajouterMois(1);
       else
-        x.setDate(x.getDate() + 1);
+        x.ajouterJour(1);
 
       return x;
     });
@@ -57,25 +59,16 @@ export class TestComponent implements OnInit
     this.dateJour.update(x => 
     {
       if(this.mode() == EModeCalendrier.Semaine)
-        x.setDate(x.getDate() - 7);
+        x.ajouterJour(-7);
+      else if (this.mode() == EModeCalendrier.Mois)
+        x.ajouterMois(-1);
       else
-        x.setDate(x.getDate() - 1);
+        x.ajouterJour(-1);
 
       return x;
     });
 
     this.ListerCommande();
-  }
-
-  private DatePremierJourSemaine(d: Date) : Date
-  {
-    d = new Date(d);
-    let day = d.getDay();
-    
-    // adjust when day is sunday
-    let diff = d.getDate() - day + (day == 0 ? -6 : 1); 
-
-    return new Date(d.setDate(diff));
   }
 
   private ListerCommande(): void
@@ -85,20 +78,25 @@ export class TestComponent implements OnInit
 
     if(this.mode() == EModeCalendrier.Semaine)
     {
-      dateJour = this.DatePremierJourSemaine(this.dateJour());
+      dateJour = this.dateJour().datePremierJourSemaine();
       dateFin = new Date(dateJour.getTime());
-      dateFin.setDate(dateJour.getDate() + 6);
+      dateFin.ajouterJour(6);
+    }
+    else if(this.mode() == EModeCalendrier.Mois)
+    {
+      dateJour = this.dateJour().debutMois();
+      dateFin = this.dateJour().finMois();
     }
     else
     {
       dateJour = dateFin = this.dateJour();
-    }
+    }        
     
     this.commandeServ.Lister(dateJour, dateFin).subscribe({
       next: (liste) =>
       {
         this.listeCommande.set(liste);
       }
-    })
+    });
   }
 }

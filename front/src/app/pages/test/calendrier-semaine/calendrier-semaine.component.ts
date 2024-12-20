@@ -21,7 +21,6 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
 
   protected listeJourSemaine = signal<JourSemaine[]>([]);
   protected info = signal<any[]>([]);
-  private readonly LISTE_JOUR_SEMAINE = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
   ngOnInit(): void 
   {
@@ -63,30 +62,19 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
   {
     let listeJour: JourSemaine[] = [];
 
-    let dateDebutSemaine = this.DatePremierJourSemaine(this.dateJour());
+    let dateDebutSemaine = this.dateJour().datePremierJourSemaine();
     
     for (let i = 0; i < 7; i++) 
     {
       let date = new Date(dateDebutSemaine);
-      date.setDate(date.getDate() + i);      
+      date.ajouterJour(i);      
       
       listeJour.push({
-        nom: this.LISTE_JOUR_SEMAINE[i],
+        nom: date.nomJour(),
         date: date.toLocaleDateString()
       });
     }
     
     return listeJour;
-  }
-
-  private DatePremierJourSemaine(d: Date) : Date
-  {
-    d = new Date(d);
-    let day = d.getDay();
-    
-    // adjust when day is sunday
-    let diff = d.getDate() - day + (day == 0 ? -6 : 1); 
-
-    return new Date(d.setDate(diff));
   }
 }
