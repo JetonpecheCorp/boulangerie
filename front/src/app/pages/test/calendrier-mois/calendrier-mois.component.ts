@@ -2,6 +2,10 @@ import { Component, model, OnChanges, OnInit, output, signal, SimpleChanges } fr
 import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { Commande } from '@model/Commande';
 
+type JourMois = JourSemaine & {
+  nbCommande: number;
+};
+
 @Component({
   selector: 'app-calendrier-mois',
   standalone: true,
@@ -11,11 +15,11 @@ import { Commande } from '@model/Commande';
 })
 export class CalendrierMoisComponent implements OnInit, OnChanges
 {
-  jourClicker = output<Commande>();
+  jourClicker = output<Commande[]>();
 
   dateJour = model.required<Date>();
   listeCommande = model.required<Commande[]>();
-  listeJourMois = signal<JourSemaine[]>([]);
+  listeJourMois = signal<JourMois[]>([]);
 
   protected readonly LISTE_JOUR_SEMAINE = Date.listerNomJourSemaine();
 
@@ -30,14 +34,18 @@ export class CalendrierMoisComponent implements OnInit, OnChanges
     this.InitMois();  
   }
 
-  protected ElementClicker(_commande: Commande): void
+  protected ElementClicker(_date: string): void
   {
-    this.jourClicker.emit(_commande);
+    if(!_date)
+      return;
+
+    const LISTE = this.listeCommande().filter(x => x.date.toLocaleDateString() == _date);
+    this.jourClicker.emit(LISTE);
   }
 
   private InitMois(): void
   {
-    let liste: JourSemaine[] = [];
+    let liste: JourMois[] = [];
 
     const ANNEE = this.dateJour().getFullYear();
     const MOIS = this.dateJour().getMonth();
@@ -53,8 +61,9 @@ export class CalendrierMoisComponent implements OnInit, OnChanges
     for (let i = 0; i < NB_JOUR_DIFF; i++) 
     {
       liste.push({
-        date: date.toLocaleDateString(),
-        nom: ""
+        date: "",
+        nom: "",
+        nbCommande: 0
       });
 
       date.ajouterJour(1);
@@ -64,9 +73,12 @@ export class CalendrierMoisComponent implements OnInit, OnChanges
 
     for (let i = 0; i < dateFinMois.getDate(); i++) 
     {
+      const NB_COMMANDE = this.listeCommande().filter(x => x.date.toLocaleDateString() == date.toLocaleDateString()).length;
+
       liste.push({
         date: date.toLocaleDateString(),
-        nom: date.nomJour()
+        nom: date.nomJour(),
+        nbCommande : NB_COMMANDE
       });
 
       date.ajouterJour(1);

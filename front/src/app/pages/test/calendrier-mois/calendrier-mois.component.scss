@@ -25,8 +25,13 @@
     border: 1px solid black;
     height: 100px;
     cursor: pointer;
+
+    &.vide
+    {
+        cursor: default !important;
+    }
     
-    &:hover:not(.jour-semaine)
+    &:hover:not(.jour-semaine, .vide)
     {
         background-color: lightgray;
     }

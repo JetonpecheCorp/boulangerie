@@ -6,6 +6,12 @@
 
     @for (element of listeJourMois(); track $index) 
     {
-        <div class="element">{{ element.date }}</div>
+        <div [class.vide]="!element.date" class="element" (click)="ElementClicker(element.date)">
+            @if(element.date)
+            {
+                {{ element.date }} <br>
+                Commande(s): {{ element.nbCommande }}
+            }
+        </div>
     }
 </div>
