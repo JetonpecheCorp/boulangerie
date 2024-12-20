@@ -6,17 +6,19 @@ import { Commande } from '@model/Commande';
 import { CommandeService } from '@service/Commande.service';
 import { CalendrierSemaineComponent } from "./calendrier-semaine/calendrier-semaine.component";
 import { CalendrierJourComponent } from "./calendrier-jour/calendrier-jour.component";
+import { CalendrierMoisComponent } from "./calendrier-mois/calendrier-mois.component";
 
 enum EModeCalendrier 
 {
   Jour,
-  Semaine
+  Semaine,
+  Mois
 }
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent],
+  imports: [MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
@@ -25,7 +27,7 @@ export class TestComponent implements OnInit
   dateJour = signal(new Date());
   listeCommande = signal<Commande[]>([]);
 
-  protected mode = signal(EModeCalendrier.Jour);
+  protected mode = signal(EModeCalendrier.Mois);
   protected eModeCalendrier = EModeCalendrier;
 
   private commandeServ = inject(CommandeService);

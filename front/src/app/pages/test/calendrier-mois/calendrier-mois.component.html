@@ -1,0 +1,11 @@
+<div class="calendrier-body">
+    @for (element of LISTE_JOUR_SEMAINE; track $index) 
+    {
+        <div class="element jour-semaine">{{ element }}</div>
+    }
+
+    @for (element of listeJourMois(); track $index) 
+    {
+        <div class="element">{{ element.date }}</div>
+    }
+</div>

@@ -17,6 +17,10 @@
     {
         <app-calendrier-jour [dateJour]="dateJour()" [listeCommande]="listeCommande()" />
     }
+    @case (eModeCalendrier.Mois) 
+    {
+        <app-calendrier-mois [dateJour]="dateJour()" [listeCommande]="listeCommande()" />
+    }
     @default 
     {
         <app-calendrier-semaine [dateJour]="dateJour()" [listeCommande]="listeCommande()" />
