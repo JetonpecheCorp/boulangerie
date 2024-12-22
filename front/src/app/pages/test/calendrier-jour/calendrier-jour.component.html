@@ -1,24 +1,46 @@
 <mat-card appearance="outlined">
     <mat-card-header>
-        <p><b>{{ jourSemaine().nom }}</b> <br> {{ jourSemaine().date }}</p>
+        <p style="margin-bottom: 5px;"><b>{{ jourSemaine().nom }}</b> <br> {{ jourSemaine().date }}</p>
+
+        <button mat-raised-button (click)="
+            vueAlternatifActiver.set(!vueAlternatifActiver()); 
+            Alternatif()
+        ">
+            {{ vueAlternatifActiver() ? 'Normal' : 'Alternatif' }}
+        </button>
     </mat-card-header>
 
-    @for (element of listeCommande(); track element.numero)
+    @if(vueAlternatifActiver())
     {
-        <mat-card-content class="element" (click)="ElementClicker(element)">
-            <p>
-                <b>Nom:</b> {{ element.client.nom }} <br>
-                <b>N°</b> {{ element.numero }}
-            </p>
-
-            <ul style="padding-left: 25px;">
-                @for (element2 of element.listeProduit; track element2.idPublic) 
-                {
-                    <li>{{ element2.nom }} X{{ element2.quantite }}</li>
-                }
-            </ul>
-
-        </mat-card-content>
+        @for (element of listeCommandeAlternatif(); track element.idPublic) 
+        {
+            <mat-card-content class="element">
+                <p>
+                    <b>Nom:</b> {{ element.nom }} <br>
+                    <b>Quantité:</b> {{ element.quantite }}
+                </p>
+            </mat-card-content>
+        }
+    }
+    @else 
+    {
+        @for (element of listeCommande(); track element.numero)
+        {
+            <mat-card-content class="element" (click)="ElementClicker(element)">
+                <p>
+                    <b>Nom:</b> {{ element.client.nom }} <br>
+                    <b>N°</b> {{ element.numero }}
+                </p>
+    
+                <ul style="padding-left: 25px;">
+                    @for (element2 of element.listeProduit; track element2.idPublic) 
+                    {
+                        <li>{{ element2.nom }} X{{ element2.quantite }}</li>
+                    }
+                </ul>
+    
+            </mat-card-content>
+        }
     }
 
 </mat-card>

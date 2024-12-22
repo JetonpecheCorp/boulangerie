@@ -5,24 +5,47 @@
         <mat-card appearance="outlined">
             <mat-card-header>
                 <p><b>{{ element.nom }}</b> <br> {{ element.date }}</p>
+
+                <div>
+                    <button mat-mini-fab (click)="
+                        Alternatif($index)">
+                        <mat-icon>compare_arrows</mat-icon>
+                    </button>
+                </div>
+                
             </mat-card-header>
-        
-            @for (element2 of info()[$index]; track element2.numero)
+
+            @if(infoAlterntif()[$index] && infoAlterntif()[$index].length > 0)
             {
-                <mat-card-content class="element" (click)="ElementClicker(element2)">
-                    <p>
-                        <b>Nom:</b> {{ element2.client.nom }} <br>
-                        <b>N°</b> {{ element2.numero }}
-                    </p>
-
-                    <ul style="padding-left: 25px;">
-                        @for (produit of element2.listeProduit; track produit.idPublic) 
-                        {
-                            <li>{{ produit.nom }} X{{ produit.quantite }}</li>
-                        }
-                    </ul>
-
-                </mat-card-content>
+                @for (element of infoAlterntif()[$index]; track element.idPublic) 
+                {
+                    <mat-card-content class="element">
+                        <p>
+                            <b>Nom:</b> {{ element.nom }} <br>
+                            <b>Quantité:</b> {{ element.quantite }}
+                        </p>
+                    </mat-card-content>
+                }
+            }
+            @else 
+            {
+                @for (element2 of info()[$index]; track element2.numero)
+                {
+                    <mat-card-content class="element" (click)="ElementClicker(element2)">
+                        <p>
+                            <b>Nom:</b> {{ element2.client.nom }} <br>
+                            <b>N°</b> {{ element2.numero }}
+                        </p>
+    
+                        <ul style="padding-left: 25px;">
+                            @for (produit of element2.listeProduit; track produit.idPublic) 
+                            {
+                                <li>{{ produit.nom }} X{{ produit.quantite }}</li>
+                            }
+                        </ul>
+    
+                    </mat-card-content>
+                }
             }
         </mat-card>
     }

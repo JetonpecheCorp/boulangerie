@@ -12,11 +12,18 @@ mat-card
 
 mat-card-header
 {
+    position: relative;
     background-color: var(--sys-primary);
     color: var(--sys-on-primary);
     border-top-left-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
     border-top-right-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
     padding: 0;
+
+    div
+    {
+        position: absolute; 
+        right: 5px;
+    }
 }
 
 mat-card-content, mat-card-header
@@ -31,7 +38,7 @@ mat-card-content, mat-card-header
 
 @media screen and (max-width: 800px) 
 {
-    .card
+    mat-card
     {
         width: 100%;
     }

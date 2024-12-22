@@ -261,8 +261,12 @@ INSERT INTO Boulangerie.Produit (
 
 INSERT INTO Boulangerie.Commande (Id, IdClient, PrixTotalHT, Numero, DatePourLe)
 VALUES 
-(1, 1, 10.50, "Gup447390279310", "2024-12-06");
+(1, 1, 10.50, "Gup447390279310", "2024-12-06"),
+(2, 1, 30, "Gup447390279710", "2024-12-06"),
+(3, 1, 30, "Gup447390271710", "2024-12-07");
 
 INSERT INTO Boulangerie.ProduitCommande (IdProduit, IdCommande, Quantite, PrixHT)
 VALUES
-(1, 1, 10, 1.20), (2, 1, 2, 3);
+(1, 1, 10, 1.20), (2, 1, 2, 3),
+(1, 2, 10, 1.20), (2, 2, 2, 3),
+(1, 3, 10, 1.20), (2, 3, 2, 3);

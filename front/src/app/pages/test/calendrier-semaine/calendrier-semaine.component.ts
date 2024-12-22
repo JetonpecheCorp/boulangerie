@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { JourSemaine } from '@model/calendrier/JourSemaine';
-import { Commande } from '@model/Commande';
+import { Commande, ProduitCommande } from '@model/Commande';
 
 @Component({
   selector: 'app-calendrier-semaine',
@@ -21,6 +21,8 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
 
   protected listeJourSemaine = signal<JourSemaine[]>([]);
   protected info = signal<any[]>([]);
+  protected infoAlterntif = signal<any[]>([]);
+  protected vueAlternatifActiver = signal(false);
 
   ngOnInit(): void 
   {
@@ -34,6 +36,39 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
 
     this.listeJourSemaine.set(this.InitSemaine());
     this.OrdonerInfo();
+  }
+
+  protected Alternatif(_indexSemaine: number): void
+  {
+    let listeCommandeAlternatif: ProduitCommande[] = [];
+
+    const LISTE: Commande[] = this.info()[_indexSemaine];
+
+    for (let i = 0; i < _indexSemaine; i++) 
+      this.infoAlterntif().push([]);
+    
+    for (const element of LISTE) 
+    {
+      for (const element2 of element.listeProduit) 
+      {
+        let info = listeCommandeAlternatif.find(x => x.nom == element2.nom);
+        
+        if(info)
+          info.quantite += element2.quantite;
+
+        else
+          listeCommandeAlternatif.push({
+            idPublic: element2.idPublic,
+            nom: element2.nom,
+            quantite: element2.quantite
+          }); 
+      }
+    }
+
+    this.infoAlterntif().push(listeCommandeAlternatif);
+
+    for (let i = this.infoAlterntif().length; i < 7; i++) 
+      this.infoAlterntif().push([]);
   }
 
   protected ElementClicker(_commande: Commande): void
