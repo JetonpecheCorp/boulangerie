@@ -28,7 +28,6 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
   protected listeJourSemaine = signal<JourSemaine[]>([]);
   protected info = signal<any[]>([]);
   protected infoAlterntif = signal<CommandeAlternatif[]>([]);
-  protected vueAlternatifActiver = signal(false);
 
   ngOnInit(): void 
   {
