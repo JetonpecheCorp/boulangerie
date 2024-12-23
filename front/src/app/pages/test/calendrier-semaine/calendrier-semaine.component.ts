@@ -5,6 +5,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { Commande, ProduitCommande } from '@model/Commande';
 
+type CommandeAlternatif =
+{
+  estActif: boolean,
+  liste: ProduitCommande[]
+}
+
 @Component({
   selector: 'app-calendrier-semaine',
   standalone: true,
@@ -21,13 +27,13 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
 
   protected listeJourSemaine = signal<JourSemaine[]>([]);
   protected info = signal<any[]>([]);
-  protected infoAlterntif = signal<any[]>([]);
+  protected infoAlterntif = signal<CommandeAlternatif[]>([]);
   protected vueAlternatifActiver = signal(false);
 
   ngOnInit(): void 
   {
     this.listeJourSemaine.set(this.InitSemaine());
-    this.OrdonerInfo();
+    this.InitListeCommande();
   }
 
   ngOnChanges(changes: SimpleChanges): void 
@@ -35,23 +41,61 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
     this.listeCommande.set(changes["listeCommande"].currentValue);
 
     this.listeJourSemaine.set(this.InitSemaine());
-    this.OrdonerInfo();
+    this.InitListeCommande();
   }
 
-  protected Alternatif(_indexSemaine: number): void
+  protected ElementClicker(_commande: Commande): void
+  {
+    this.commandeClicker.emit(_commande);
+  }
+
+  protected AfficherVueAlternatif(_indexJour: number): void
+  {
+    this.infoAlterntif.update(x => 
+    {     
+      const INFO = x[_indexJour];
+      console.log(INFO);
+      
+
+      INFO.estActif = !INFO.estActif;
+        
+      return x;
+    });
+
+    console.log(this.infoAlterntif());
+    
+  }
+
+  private InitListeCommande(): void
+  {
+    this.infoAlterntif.set([]);
+
+    let liste: any[] = [];
+
+    let date = this.dateJour().datePremierJourSemaine();
+
+    for (let i = 1; i <= 7; i++) 
+    {
+      const LISTE = this.listeCommande().filter(x => x.date.getDay() == (i == 7 ? 0 : i) && date.toLocaleDateString() == x.date.toLocaleDateString());
+      liste.push(LISTE);
+
+      this.InitListeCommandeAlternatif(LISTE);
+
+      date.ajouterJour(1);
+    }
+
+    this.info.set(liste);    
+  }
+
+  private InitListeCommandeAlternatif(_listeCommande: Commande[]): void
   {
     let listeCommandeAlternatif: ProduitCommande[] = [];
-
-    const LISTE: Commande[] = this.info()[_indexSemaine];
-
-    for (let i = 0; i < _indexSemaine; i++) 
-      this.infoAlterntif().push([]);
     
-    for (const element of LISTE) 
+    for (const element of _listeCommande) 
     {
       for (const element2 of element.listeProduit) 
       {
-        let info = listeCommandeAlternatif.find(x => x.nom == element2.nom);
+        let info = listeCommandeAlternatif.find(x => x.idPublic == element2.idPublic);
         
         if(info)
           info.quantite += element2.quantite;
@@ -65,32 +109,10 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
       }
     }
 
-    this.infoAlterntif().push(listeCommandeAlternatif);
-
-    for (let i = this.infoAlterntif().length; i < 7; i++) 
-      this.infoAlterntif().push([]);
-  }
-
-  protected ElementClicker(_commande: Commande): void
-  {
-    this.commandeClicker.emit(_commande);
-  }
-
-  private OrdonerInfo(): void
-  {
-    this.listeCommande().sort((a, b) =>
-    {
-      return a.date.getTime() - b.date.getTime();
-    });
-
-    let liste: any[] = [];
-
-    for (let i = 1; i <= 7; i++) 
-    {
-      liste.push(this.listeCommande().filter(x => x.date.getDay() == (i == 7 ? 0 : i)));
-    }
-
-    this.info.set(liste);
+    this.infoAlterntif.update(x => [...x,{
+      estActif: false,
+      liste: listeCommandeAlternatif
+    }]);
   }
 
   private InitSemaine(): JourSemaine[]

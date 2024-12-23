@@ -7,17 +7,18 @@
                 <p><b>{{ element.nom }}</b> <br> {{ element.date }}</p>
 
                 <div>
-                    <button mat-mini-fab (click)="
-                        Alternatif($index)">
+                    <button mat-mini-fab (click)="AfficherVueAlternatif($index)">
                         <mat-icon>compare_arrows</mat-icon>
                     </button>
                 </div>
                 
             </mat-card-header>
 
-            @if(infoAlterntif()[$index] && infoAlterntif()[$index].length > 0)
+            @let estActif = infoAlterntif()[$index].estActif;
+
+            @if(estActif)
             {
-                @for (element of infoAlterntif()[$index]; track element.idPublic) 
+                @for (element of infoAlterntif()[$index].liste; track element.idPublic) 
                 {
                     <mat-card-content class="element">
                         <p>
@@ -27,7 +28,7 @@
                     </mat-card-content>
                 }
             }
-            @else 
+            @else
             {
                 @for (element2 of info()[$index]; track element2.numero)
                 {
@@ -36,14 +37,14 @@
                             <b>Nom:</b> {{ element2.client.nom }} <br>
                             <b>N°</b> {{ element2.numero }}
                         </p>
-    
+
                         <ul style="padding-left: 25px;">
                             @for (produit of element2.listeProduit; track produit.idPublic) 
                             {
                                 <li>{{ produit.nom }} X{{ produit.quantite }}</li>
                             }
                         </ul>
-    
+
                     </mat-card-content>
                 }
             }
