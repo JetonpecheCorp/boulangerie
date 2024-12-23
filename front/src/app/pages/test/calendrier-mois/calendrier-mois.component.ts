@@ -1,3 +1,4 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
 import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { Commande } from '@model/Commande';
@@ -20,8 +21,19 @@ export class CalendrierMoisComponent implements OnInit, OnChanges
   dateJour = model.required<Date>();
   listeCommande = model.required<Commande[]>();
   listeJourMois = signal<JourMois[]>([]);
+  estPetiteTaille = signal(false);
 
   protected readonly LISTE_JOUR_SEMAINE = Date.listerNomJourSemaine();
+
+    constructor(private breakpointObserver: BreakpointObserver) 
+    {
+      let breakpoint$ = this.breakpointObserver
+        .observe([ '(max-width: 768px)']);
+  
+      breakpoint$.subscribe(() =>
+        this.BreakpointChanges()
+      );
+    }
 
   ngOnInit(): void 
   {
@@ -41,6 +53,18 @@ export class CalendrierMoisComponent implements OnInit, OnChanges
 
     const LISTE = this.listeCommande().filter(x => x.date.toLocaleDateString() == _date);
     this.jourClicker.emit(LISTE);
+  }
+  
+  private BreakpointChanges(): void 
+  {
+    if (this.breakpointObserver.isMatched('(max-width: 768px)')) 
+    {
+      this.estPetiteTaille.set(true);
+    } 
+    else 
+    {
+      this.estPetiteTaille.set(false);
+    }
   }
 
   private InitMois(): void

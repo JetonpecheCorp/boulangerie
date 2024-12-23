@@ -1,7 +1,16 @@
 <div class="calendrier-body">
     @for (element of LISTE_JOUR_SEMAINE; track $index) 
     {
-        <div class="element jour-semaine">{{ element }}</div>
+        <div class="element jour-semaine">
+            @if(estPetiteTaille())
+            {
+                {{ element.abreviation }}
+            }
+            @else 
+            {
+                {{ element }}
+            }
+        </div>
     }
 
     @for (element of listeJourMois(); track $index) 
@@ -9,8 +18,16 @@
         <div [class.vide]="!element.date" class="element" (click)="ElementClicker(element.date)">
             @if(element.date)
             {
-                {{ element.date }} <br>
-                Commande(s): {{ element.nbCommande }}
+                @if(estPetiteTaille())
+                {
+                    {{ element.date.substring(0, 5) }} <br>
+                    Cmd(s): {{ element.nbCommande }}
+                }
+                @else 
+                {
+                    {{ element.date }} <br>
+                    Commande(s): {{ element.nbCommande }}
+                }
             }
         </div>
     }

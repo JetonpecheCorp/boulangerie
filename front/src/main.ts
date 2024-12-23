@@ -1,6 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
+import { NomJourSemaine } from '@model/calendrier/NomJourSemaine';
 
 declare global {
   interface Date {
@@ -17,13 +18,47 @@ declare global {
   }
 
   interface DateConstructor {
-    listerNomJourSemaine(): string[]
+    listerNomJourSemaine(): NomJourSemaine[]
   }
 }
 
-Date.listerNomJourSemaine = function (): string[]
+Date.listerNomJourSemaine = function (): NomJourSemaine[]
 {
-  return ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+  return [{ 
+      nom: "Lundi",
+      abreviation: "Lun.",
+      lettre: "L"
+    }, 
+    {
+      nom: "Mardi",
+      abreviation: "Mar.",
+      lettre: "M"
+    }, 
+    {
+      nom: "Mercredi",
+      abreviation: "Mer.",
+      lettre: "Me"
+    }, 
+    {
+      nom: "Jeudi",
+      abreviation: "Jeu.",
+      lettre: "J"
+    }, 
+    {
+      nom: "Vendredi",
+      abreviation: "Ven.",
+      lettre: "V"
+    }, 
+    {
+      nom: "Samedi",
+      abreviation: "Sam.",
+      lettre: "S"
+    }, 
+    {
+      nom: "Dimanche",
+      abreviation: "Dim.",
+      lettre: "D"
+    }];
 };
 
 Date.prototype.toISOFormat = function (): string
@@ -74,7 +109,7 @@ Date.prototype.nomJour = function (): string
 {
   const INDEX = this.getDay() == 0 ? 6 : this.getDay() - 1;
 
-  return Date.listerNomJourSemaine()[INDEX];
+  return Date.listerNomJourSemaine()[INDEX].nom;
 };
 
 Date.prototype.nbJourDiff = function (_date: Date): number 
