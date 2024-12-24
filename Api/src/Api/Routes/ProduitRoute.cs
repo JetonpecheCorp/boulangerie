@@ -21,6 +21,10 @@ public static class ProduitRoute
             .WithDescription("Lister des produits")
             .Produces<PaginationExport<ProduitExport>>();
 
+        builder.MapGet("listerLeger", ListerLegerAsync)
+            .WithDescription("Lister des produits de façon allégé")
+            .Produces<PaginationExport<ProduitLegerExport>>();
+
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter un nouveau produit")
             .ProducesBadRequestErreurValidation()
@@ -49,6 +53,28 @@ public static class ProduitRoute
         int idGroupe = _httpContext.RecupererIdGroupe();
 
         var paginationExport = await _produitServ.ListerAsync(
+            _pagination,
+            idGroupe
+        );
+
+        return Results.Extensions.OK(paginationExport, PaginationExportContext.Default);
+    }
+
+    async static Task<IResult> ListerLegerAsync(
+    HttpContext _httpContext,
+    [AsParameters] PaginationImport _pagination,
+    [FromServices] IProduitService _produitServ
+    )
+    {
+        if (_pagination.NumPage <= 0)
+            _pagination.NumPage = 1;
+
+        if (_pagination.NbParPage <= 0)
+            _pagination.NbParPage = 20;
+
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        var paginationExport = await _produitServ.ListerLegerAsync(
             _pagination,
             idGroupe
         );

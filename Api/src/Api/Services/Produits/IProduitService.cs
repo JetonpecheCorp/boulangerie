@@ -17,6 +17,14 @@ public interface IProduitService
     Task<PaginationExport<ProduitExport>> ListerAsync(PaginationImport _pagination, int _idGroupe);
 
     /// <summary>
+    /// Lister et paginer les produits
+    /// </summary>
+    /// <param name="_pagination">pagination</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns></returns>
+    Task<PaginationExport<ProduitLegerExport>> ListerLegerAsync(PaginationImport _pagination, int _idGroupe);
+
+    /// <summary>
     /// Recuperer id produit
     /// </summary>
     /// <param name="_idPublicProduit">id public de id produit conserné</param>

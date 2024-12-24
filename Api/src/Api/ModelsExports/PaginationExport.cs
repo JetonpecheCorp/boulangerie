@@ -27,6 +27,7 @@ public sealed record PaginationExport<T> where T : class
 
 [JsonSerializable(typeof(PaginationExport<IngredientExport>))]
 [JsonSerializable(typeof(PaginationExport<ProduitExport>))]
+[JsonSerializable(typeof(PaginationExport<ProduitLegerExport>))]
 [JsonSerializable(typeof(PaginationExport<CategorieExport>))]
 [JsonSerializable(typeof(PaginationExport<VehiculeExport>))]
 [JsonSerializable(typeof(PaginationExport<FournisseurExport>))]

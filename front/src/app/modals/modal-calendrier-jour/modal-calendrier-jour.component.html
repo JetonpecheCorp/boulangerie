@@ -1,0 +1,9 @@
+<mat-dialog-content class="mat-typography">
+    <app-calendrier-jour [dateJour]="info.date" 
+                         [listeCommande]="info.listeCommande" />
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-flat-button mat-dialog-close>Fermer</button>&nbsp;
+
+    <app-button label="Ajouter" (onClick)="OuvrirModalAjouterCommande()" />
+</mat-dialog-actions>

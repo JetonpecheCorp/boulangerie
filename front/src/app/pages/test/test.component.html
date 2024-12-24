@@ -25,7 +25,9 @@
     }
     @case (eModeCalendrier.Mois) 
     {
-        <app-calendrier-mois [dateJour]="dateJour()" [listeCommande]="listeCommande()" />
+        <app-calendrier-mois (jourClicker)="OuvrirModalCalendrierJour($event)"
+                             [dateJour]="dateJour()" 
+                             [listeCommande]="listeCommande()" />
     }
     @default 
     {

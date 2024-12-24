@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -18,6 +18,7 @@ import { RecetteService } from '@service/Recette.service';
 import { VehiculeService } from '@service/Vehicule.service';
 import { FournissseurService } from '@service/Fournisseur.service';
 import { CommandeService } from '@service/Commande.service';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 
 const matInput: MatFormFieldDefaultOptions = {
   appearance: 'outline',
@@ -31,6 +32,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([JwtInterceptor])),
     provideToastr(),
+    importProvidersFrom(MatNativeDateModule),
 
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: AuthentificationService, useClass: AuthentificationService },
@@ -44,6 +46,7 @@ export const appConfig: ApplicationConfig = {
     { provide: FournissseurService, useClass: FournissseurService },
     { provide: CommandeService, useClass: CommandeService },
 
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matInput }
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matInput },
+    { provide: MAT_DATE_LOCALE, useValue: navigator.language }
   ]
 };

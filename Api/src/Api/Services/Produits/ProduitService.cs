@@ -73,6 +73,44 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
         return pagination;
     }
 
+    public async Task<PaginationExport<ProduitLegerExport>> ListerLegerAsync(PaginationImport _pagination, int _idGroupe)
+    {
+        var requete = _context.Produits.Where(x => x.IdGroupe == _idGroupe);
+
+        if (_pagination.ThermeRecherche is not null)
+        {
+#pragma warning disable CS8602 // Déréférencement d'une éventuelle référence null.
+            requete = requete.Where(x =>
+                x.Nom.Contains(_pagination.ThermeRecherche) || x.CodeInterne.Contains(_pagination.ThermeRecherche)
+            );
+#pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null.
+        }
+
+        requete = requete.OrderBy(x => x.Nom);
+
+        int total = await requete.CountAsync();
+
+        var liste = await requete
+            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
+            .Take(_pagination.NbParPage)
+            .Select(x => new ProduitLegerExport
+            {
+                IdPublic = x.IdPublic.ToString("D"),
+                Nom = x.Nom,
+                PrixHt = x.PrixHt
+            }).ToArrayAsync();
+
+        PaginationExport<ProduitLegerExport> pagination = new()
+        {
+            NumPage = _pagination.NumPage,
+            NbParPage = _pagination.NbParPage,
+            Total = total,
+            Liste = liste
+        };
+
+        return pagination;
+    }
+
     public async Task<int> RecupererIdAsync(string _idPublicProduit, int _idGroupe)
     {
         int id = 0;

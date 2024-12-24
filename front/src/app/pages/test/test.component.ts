@@ -8,6 +8,10 @@ import { CalendrierSemaineComponent } from "./calendrier-semaine/calendrier-sema
 import { CalendrierJourComponent } from "./calendrier-jour/calendrier-jour.component";
 import { CalendrierMoisComponent } from "./calendrier-mois/calendrier-mois.component";
 import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalCalendrierJourComponent } from '@modal/modal-calendrier-jour/modal-calendrier-jour.component';
+import { RetourCalendrierMois } from '@model/calendrier/RetourCalendrier';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 enum EModeCalendrier 
 {
@@ -19,7 +23,7 @@ enum EModeCalendrier
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
+  imports: [MatSidenavModule, MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
@@ -32,15 +36,24 @@ export class TestComponent implements OnInit
   protected eModeCalendrier = EModeCalendrier;
 
   private commandeServ = inject(CommandeService);
+  private matDialog = inject(MatDialog);
 
   ngOnInit(): void 
   {
     this.ListerCommande();
   }
 
-  ChangerAffichage(_event: MatButtonToggleChange)
+  ChangerAffichage(_event: MatButtonToggleChange): void
   {
     this.mode.set(_event.value);
+  }
+
+  protected OuvrirModalCalendrierJour(_info: RetourCalendrierMois)
+  {
+    this.matDialog.open(ModalCalendrierJourComponent, { 
+      data: _info,
+      width: "80%"
+    });
   }
 
   protected Suivant(): void

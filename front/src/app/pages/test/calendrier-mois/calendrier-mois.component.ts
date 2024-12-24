@@ -1,7 +1,9 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
 import { JourSemaine } from '@model/calendrier/JourSemaine';
+import { RetourCalendrierMois } from '@model/calendrier/RetourCalendrier';
 import { Commande } from '@model/Commande';
+import { ButtonComponent } from "../../../components/button/button.component";
 
 type JourMois = JourSemaine & {
   nbCommande: number;
@@ -10,13 +12,13 @@ type JourMois = JourSemaine & {
 @Component({
   selector: 'app-calendrier-mois',
   standalone: true,
-  imports: [],
+  imports: [ButtonComponent],
   templateUrl: './calendrier-mois.component.html',
   styleUrl: './calendrier-mois.component.scss'
 })
 export class CalendrierMoisComponent implements OnInit, OnChanges
 {
-  jourClicker = output<Commande[]>();
+  jourClicker = output<RetourCalendrierMois>();
 
   dateJour = model.required<Date>();
   listeCommande = model.required<Commande[]>();
@@ -47,12 +49,28 @@ export class CalendrierMoisComponent implements OnInit, OnChanges
   }
 
   protected ElementClicker(_date: string): void
-  {
+  {    
     if(!_date)
       return;
 
     const LISTE = this.listeCommande().filter(x => x.date.toLocaleDateString() == _date);
-    this.jourClicker.emit(LISTE);
+
+    let date;
+
+    if(_date.includes("/"))
+    {
+      let dateISO = _date.split("/").reverse().join("-");
+      date = new Date(dateISO);
+    }
+    else
+      date = new Date(_date);
+
+    const INFO: RetourCalendrierMois = {
+      listeCommande: LISTE,
+      date: date
+    }
+
+    this.jourClicker.emit(INFO);
   }
   
   private BreakpointChanges(): void 
