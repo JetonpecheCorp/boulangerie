@@ -7,6 +7,7 @@ import { Categorie } from '@model/Categorie';
 import { PaginationExport } from '@model/exports/PaginationExport';
 import { Pagination } from '@model/Pagination';
 import { Commande } from '@model/Commande';
+import { CommandeExport } from '@model/exports/CommandeExport';
 
 export class CommandeService 
 {
@@ -38,9 +39,8 @@ export class CommandeService
     );
   }
 
-  Ajouter(_nom: string): Observable<void>
+  Ajouter(_commande: CommandeExport): Observable<string>
   {
-    const INFOS = { nom: _nom };
-    return this.http.post<void>(`${this.BASE_API}/ajouter`, INFOS).pipe(takeUntilDestroyed(this.destroyRef));
+    return this.http.post<string>(`${this.BASE_API}/ajouter`, _commande).pipe(takeUntilDestroyed(this.destroyRef));
   }
 }

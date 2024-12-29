@@ -17,3 +17,9 @@ export type ProduitCommande =
     nom: string
     quantite: number
 };
+
+export type ProduitCommandeExistant =
+{
+    idPublic: string,
+    nom: string
+}

@@ -1,0 +1,16 @@
+export type Client = 
+{
+    idPublic: string,
+    nom: string,
+    mail?: string,
+    telephone?: string,
+    adresse: string,
+    adresseFacturation: string,
+    infoComplementaire?: string
+};
+
+export type ClientLeger =
+{
+    idPublic: string,
+    nom: string
+}

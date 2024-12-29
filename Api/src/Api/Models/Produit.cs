@@ -35,8 +35,6 @@ public partial class Produit
 
     public decimal StockAlert { get; set; }
 
-    public virtual ICollection<CommandeInterne> CommandeInternes { get; set; } = new List<CommandeInterne>();
-
     public virtual Categorie IdCategorieNavigation { get; set; } = null!;
 
     public virtual Groupe IdGroupeNavigation { get; set; } = null!;

@@ -147,19 +147,10 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Livraison (
     FOREIGN KEY (IdUtilisateur) REFERENCES Utilisateur (Id)
 );
 
-CREATE TABLE IF NOT EXISTS Boulangerie.CommandeInterne (
-    Date DATE NOT NULL,
-    IdProduit INT NOT NULL,
-    Quantite INT NOT NULL,
-
-    PRIMARY KEY (Date, IdProduit),
-
-    FOREIGN KEY (IdProduit) REFERENCES Produit (Id)
-);
-
 CREATE TABLE IF NOT EXISTS Boulangerie.Commande (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    IdClient INT NOT NULL,
+    IdGroupe INT NOT NULL,
+    IdClient INT NULL,
     Numero VARCHAR(15) NOT NULL,
     PrixTotalHT DECIMAL(10, 2),
     EstLivraison TINYINT(1) NOT NULL DEFAULT 0,
@@ -170,7 +161,8 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Commande (
     DatLivraison DATETIME NULL,
     DateAnnulation DATETIME NULL,
 
-    FOREIGN KEY (IdClient) REFERENCES Client (Id)
+    FOREIGN KEY (IdClient) REFERENCES Client (Id),
+    FOREIGN KEY (IdGroupe) REFERENCES Groupe (Id)
 );
 
 CREATE TABLE IF NOT EXISTS Boulangerie.LivraisonCommande (
@@ -259,11 +251,11 @@ INSERT INTO Boulangerie.Produit (
     3, "", "EC", null, 5, 1
 );
 
-INSERT INTO Boulangerie.Commande (Id, IdClient, PrixTotalHT, Numero, DatePourLe)
+INSERT INTO Boulangerie.Commande (Id, IdGroupe, IdClient, PrixTotalHT, Numero, DatePourLe)
 VALUES 
-(1, 1, 10.50, "Gup447390279310", "2024-12-06"),
-(2, 1, 30, "Gup447390279710", "2024-12-06"),
-(3, 1, 30, "Gup447390271710", "2024-12-07");
+(1, 1, 1, 10.50, "Gup447390279310", "2024-12-06"),
+(2, 1, 1, 30, "Gup447390279710", "2024-12-06"),
+(3, 1, 1, 30, "Gup447390271710", "2024-12-07");
 
 INSERT INTO Boulangerie.ProduitCommande (IdProduit, IdCommande, Quantite, PrixHT)
 VALUES

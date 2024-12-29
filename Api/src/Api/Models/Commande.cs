@@ -7,7 +7,9 @@ public partial class Commande
 {
     public int Id { get; set; }
 
-    public int IdClient { get; set; }
+    public int IdGroupe { get; set; }
+
+    public int? IdClient { get; set; }
 
     public string Numero { get; set; } = null!;
 
@@ -25,7 +27,9 @@ public partial class Commande
 
     public DateTime? DateAnnulation { get; set; }
 
-    public virtual Client IdClientNavigation { get; set; } = null!;
+    public virtual Client? IdClientNavigation { get; set; }
+
+    public virtual Groupe IdGroupeNavigation { get; set; } = null!;
 
     public virtual ICollection<ProduitCommande> ProduitCommandes { get; set; } = new List<ProduitCommande>();
 

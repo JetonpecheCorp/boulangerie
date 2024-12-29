@@ -19,6 +19,8 @@ public partial class Groupe
 
     public virtual ICollection<Client> Clients { get; set; } = new List<Client>();
 
+    public virtual ICollection<Commande> Commandes { get; set; } = new List<Commande>();
+
     public virtual ICollection<Fournisseur> Fournisseurs { get; set; } = new List<Fournisseur>();
 
     public virtual ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();

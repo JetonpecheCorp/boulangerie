@@ -3,7 +3,6 @@ import { Component, model, OnChanges, OnInit, output, signal, SimpleChanges } fr
 import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { RetourCalendrierMois } from '@model/calendrier/RetourCalendrier';
 import { Commande } from '@model/Commande';
-import { ButtonComponent } from "../../../components/button/button.component";
 
 type JourMois = JourSemaine & {
   nbCommande: number;
@@ -12,7 +11,7 @@ type JourMois = JourSemaine & {
 @Component({
   selector: 'app-calendrier-mois',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [],
   templateUrl: './calendrier-mois.component.html',
   styleUrl: './calendrier-mois.component.scss'
 })

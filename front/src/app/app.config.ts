@@ -19,6 +19,7 @@ import { VehiculeService } from '@service/Vehicule.service';
 import { FournissseurService } from '@service/Fournisseur.service';
 import { CommandeService } from '@service/Commande.service';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { ClientService } from '@service/Client.service';
 
 const matInput: MatFormFieldDefaultOptions = {
   appearance: 'outline',
@@ -45,6 +46,7 @@ export const appConfig: ApplicationConfig = {
     { provide: VehiculeService, useClass: VehiculeService },
     { provide: FournissseurService, useClass: FournissseurService },
     { provide: CommandeService, useClass: CommandeService },
+    { provide: ClientService, useClass: ClientService },
 
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matInput },
     { provide: MAT_DATE_LOCALE, useValue: navigator.language }

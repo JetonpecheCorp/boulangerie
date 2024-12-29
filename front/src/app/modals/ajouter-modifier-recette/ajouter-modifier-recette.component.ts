@@ -56,9 +56,7 @@ export class AjouterModifierRecetteComponent implements OnInit
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (valeur?: string) =>
-        {
-          console.log(valeur);
-          
+        {          
           let liste = this.dataSource()
             .filter(option => option.nom.toLowerCase().includes(valeur?.toLocaleLowerCase() || ''));
 

@@ -22,8 +22,6 @@ public partial class BoulangerieContext : DbContext
 
     public virtual DbSet<Commande> Commandes { get; set; }
 
-    public virtual DbSet<CommandeInterne> CommandeInternes { get; set; }
-
     public virtual DbSet<Fournisseur> Fournisseurs { get; set; }
 
     public virtual DbSet<Groupe> Groupes { get; set; }
@@ -45,6 +43,7 @@ public partial class BoulangerieContext : DbContext
     public virtual DbSet<Vehicule> Vehicules { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -96,6 +95,8 @@ public partial class BoulangerieContext : DbContext
 
             entity.HasIndex(e => e.IdClient, "IdClient");
 
+            entity.HasIndex(e => e.IdGroupe, "IdGroupe");
+
             entity.Property(e => e.DatLivraison).HasColumnType("datetime");
             entity.Property(e => e.DateAnnulation).HasColumnType("datetime");
             entity.Property(e => e.DateCreation)
@@ -110,24 +111,12 @@ public partial class BoulangerieContext : DbContext
 
             entity.HasOne(d => d.IdClientNavigation).WithMany(p => p.Commandes)
                 .HasForeignKey(d => d.IdClient)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Commande_ibfk_1");
-        });
 
-        modelBuilder.Entity<CommandeInterne>(entity =>
-        {
-            entity.HasKey(e => new { e.Date, e.IdProduit })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-            entity.ToTable("CommandeInterne");
-
-            entity.HasIndex(e => e.IdProduit, "IdProduit");
-
-            entity.HasOne(d => d.IdProduitNavigation).WithMany(p => p.CommandeInternes)
-                .HasForeignKey(d => d.IdProduit)
+            entity.HasOne(d => d.IdGroupeNavigation).WithMany(p => p.Commandes)
+                .HasForeignKey(d => d.IdGroupe)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("CommandeInterne_ibfk_1");
+                .HasConstraintName("Commande_ibfk_2");
         });
 
         modelBuilder.Entity<Fournisseur>(entity =>

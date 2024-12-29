@@ -71,7 +71,7 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
         {
             var element = _listeProduitCommande[i];
 
-            if(Guid.TryParse(element.IdPublicProduit, out Guid idPublic))
+            if(Guid.TryParse(element.IdPublic, out Guid idPublic))
                 predicat = predicat.Or(x => x.IdPublic == idPublic);
         }
 
@@ -86,7 +86,7 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
             var element = produit[i];
 
             var quantite = _listeProduitCommande
-                .First(x => x.IdPublicProduit == element.IdPublic.ToString("D"))
+                .First(x => x.IdPublic == element.IdPublic.ToString("D"))
                 .Quantite;
 
             _context.ProduitCommandes.Add(new()
