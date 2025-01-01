@@ -13,7 +13,7 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
     public async Task<CommandeExport[]> ListerAsync(CommandeFiltreImport _filtre, int _idGroupe)
     {
         var requete = _context.Commandes
-            .Where(x => x.IdClientNavigation.IdGroupe == _idGroupe);
+            .Where(x => x.IdGroupe == _idGroupe);
 
         requete = _filtre.Status switch
         {
@@ -34,11 +34,11 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
             Date = x.DatePourLe,
             EstLivraison = x.EstLivraison,
             
-            Client = new CommandeClientExport
+            Client = x.IdClientNavigation != null ? new CommandeClientExport
             {
                 IdPublic = x.IdClientNavigation.IdPublic,
                 Nom = x.IdClientNavigation.Nom
-            },
+            } : null,
 
             ListeProduit = x.ProduitCommandes.Select(y => new CommandeProduitExport
             {

@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { DialogPosition, MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CalendrierJourComponent } from "../../pages/test/calendrier-jour/calendrier-jour.component";
 import { ButtonComponent } from "../../components/button/button.component";
 import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/modal-ajouter-commmande.component';
-import { Commande, ProduitCommande, ProduitCommandeExistant } from '@model/Commande';
+import { Commande, ProduitCommandeExistant } from '@model/Commande';
 
 @Component({
   selector: 'app-modal-calendrier-jour',
@@ -40,7 +40,10 @@ export class ModalCalendrierJourComponent
 
     this.matDialog.open(ModalAjouterCommmandeComponent, { 
       width: "700px",
-      data: listeProduitExistant
+      data: {
+        date: this.info.date,
+        listeProduitExistant: listeProduitExistant
+      }
     });
   }
 }

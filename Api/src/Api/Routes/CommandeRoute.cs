@@ -61,16 +61,17 @@ public static class CommandeRoute
         if (!validate.IsValid)
             return Results.Extensions.ErreurValidator(validate.Errors);
 
-        string idPublicClient = _commandeImport.IdPublicClient ?? _httpContext.RecupererIdPublique();
+        string idPublicClient = _commandeImport.IdPublicClient ?? "";
 
         int idGroupe = _httpContext.RecupererIdGroupe();
         string prefixGrp = await _groupeServ.PrefixAsync(idGroupe);
-        int idClient = await _clientServ.RecupererIdAsync(idPublicClient);
+        int? idClient = await _clientServ.RecupererIdAsync(idPublicClient);
         string numero = _mdpServ.Generer(12, false);
 
         Commande commande = new()
         {
             IdClient = idClient,
+            IdGroupe = idGroupe,
             Numero = $"{prefixGrp}{numero}",
             DatePourLe = _commandeImport.Date.ToDateTime(TimeOnly.MinValue)
         };

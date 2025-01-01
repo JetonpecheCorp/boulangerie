@@ -14,7 +14,7 @@ public sealed record CommandeExport
     public required bool EstLivraison { get; init; }
 
     [JsonPropertyName("client")]
-    public required CommandeClientExport Client { get; init; }
+    public required CommandeClientExport? Client { get; init; }
 
     [JsonPropertyName("listeProduit")]
     public required CommandeProduitExport[] ListeProduit { get; init; }
@@ -23,7 +23,7 @@ public sealed record CommandeExport
 public sealed record CommandeClientExport
 {
     [JsonPropertyName("idPublic")]
-    public required Guid IdPublic { get; init; }
+    public required Guid? IdPublic { get; init; }
 
     [JsonPropertyName("nom")]
     public required string Nom { get; init; }

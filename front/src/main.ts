@@ -63,7 +63,16 @@ Date.listerNomJourSemaine = function (): NomJourSemaine[]
 
 Date.prototype.toISOFormat = function (): string
 {
-  return `${this.getFullYear()}-${this.getMonth() + 1}-${this.getDate()}`;
+  let numJour: any = this.getDate();
+  let numMois: any = this.getMonth() + 1;
+
+  if(numJour < 10)
+    numJour = `0${numJour}`;
+
+  if(numMois < 10)
+    numMois = `0${numMois}`;
+
+  return `${this.getFullYear()}-${numMois}-${numJour}`;
 }
 
 Date.prototype.setDebutMois = function (): Date

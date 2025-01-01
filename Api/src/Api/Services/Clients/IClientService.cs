@@ -26,8 +26,8 @@ namespace Api.Services.Clients
         /// Recuperer Id du client
         /// </summary>
         /// <param name="_idPublicClient">id public conserné</param>
-        /// <returns>Id</returns>
-        Task<int> RecupererIdAsync(string _idPublicClient);
+        /// <returns><see langword="int"/>id, sinon <see langword="null"/></returns>
+        Task<int?> RecupererIdAsync(string _idPublicClient);
 
         /// <summary>
         /// Vérifier que la catégorie exite
