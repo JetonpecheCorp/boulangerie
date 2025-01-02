@@ -65,7 +65,7 @@ public static class CommandeRoute
 
         int idGroupe = _httpContext.RecupererIdGroupe();
         string prefixGrp = await _groupeServ.PrefixAsync(idGroupe);
-        int? idClient = await _clientServ.RecupererIdAsync(idPublicClient);
+        int? idClient = await _clientServ.RecupererIdAsync(idPublicClient, idGroupe);
         string numero = _mdpServ.Generer(12, false);
 
         Commande commande = new()
@@ -75,6 +75,9 @@ public static class CommandeRoute
             Numero = $"{prefixGrp}{numero}",
             DatePourLe = _commandeImport.Date.ToDateTime(TimeOnly.MinValue)
         };
+
+        if(idClient is null)
+            commande.DateValidation = DateTime.UtcNow;
 
         bool retour = await _commandeServ.AjouterAsync(commande, _commandeImport.ListeProduit);
 

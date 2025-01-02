@@ -24,8 +24,7 @@
                             matInput
                             [formControl]="$any(form.controls['autoCompleteClient'])"
                             [matAutocomplete]="autoClient">
-                    <mat-autocomplete (optionSelected)="ClientChoisi($event)" 
-                                      autoActiveFirstOption 
+                    <mat-autocomplete autoActiveFirstOption 
                                       #autoClient="matAutocomplete">
                         @for (option of dataSourceClientFiltrer(); track option.idPublic) 
                         {

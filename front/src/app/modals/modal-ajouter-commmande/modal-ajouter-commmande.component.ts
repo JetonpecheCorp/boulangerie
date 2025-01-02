@@ -8,18 +8,24 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProduitService } from '@service/Produit.service';
 import { PaginationExport } from '@model/exports/PaginationExport';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProduitLeger } from '@model/Produit';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProduitCommandeExport } from '@model/exports/ProduitCommandeExport';
 import { ToastrService } from 'ngx-toastr';
-import { ClientCommande, Commande, ProduitCommande, ProduitCommandeExistant } from '@model/Commande';
+import { ClientCommande, Commande, ProduitCommande } from '@model/Commande';
 import { CommandeService } from '@service/Commande.service';
 import { CommandeExport } from '@model/exports/CommandeExport';
 import { ClientService } from '@service/Client.service';
 import { ClientLeger } from '@model/Client';
+
+type Info = 
+{
+  date: Date,
+  commande: Commande | null
+}
 
 @Component({
   selector: 'app-modal-ajouter-commmande',
@@ -37,7 +43,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
 
   protected dataSourceFiltrer = signal<ProduitLeger[]>([]);
   protected dataSourceClientFiltrer = signal<ClientLeger[]>([]);
-  protected dialogData = inject(MAT_DIALOG_DATA);
+  protected dialogData: Info = inject(MAT_DIALOG_DATA);
 
   private dataSource = signal<ProduitLeger[]>([]);
   private dataSourceClient = signal<ClientLeger[]>([]);
@@ -51,9 +57,6 @@ export class ModalAjouterCommmandeComponent implements OnInit
 
   ngOnInit(): void 
   {
-    console.log(this.dialogData);
-    
-
     this.ListerProduit();
     this.ListerClient();
 
@@ -80,31 +83,13 @@ export class ModalAjouterCommmandeComponent implements OnInit
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (valeur?: string) =>
-        {
-          console.log(valeur);
-          
+        {          
           let liste = this.dataSource()
             .filter(option => option.nom.toLowerCase().includes(valeur?.toLocaleLowerCase() || ''));
 
           this.dataSourceFiltrer.set(liste);
         }
       });
-  }
-
-  protected ClientChoisi(_autocomplete: MatAutocompleteSelectedEvent)
-  {
-    const NOM_CLIENT = _autocomplete.option.value;
-    
-    let liste: ProduitLeger[] = [];
-
-    // for (const element of this.dialogData.listeProduitExistant) 
-    // {
-    //     const INDEX = (this.dialogData.listeProduitExistant as ProduitCommandeExistant[])
-    //       .findIndex(x => x.idPublic == element.idPublic);
-
-    //     if(INDEX == -1)
-    //       liste.push(element);
-    // }
   }
 
   protected AjouterProduit(): void
@@ -225,8 +210,6 @@ export class ModalAjouterCommmandeComponent implements OnInit
       },
       error: () => this.btnClicker.set(false)
     });
-
-    this.dialogRef.close();
   }
 
   private ListerProduit(): void

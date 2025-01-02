@@ -20,9 +20,3 @@ export type ClientCommande =
     idPublic: string,
     nom: string
 };
-
-export type ProduitCommandeExistant =
-{
-    idPublic: string,
-    nom: string
-}

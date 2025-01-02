@@ -10,7 +10,10 @@
     </button>
     <br><br>
 
-    <mat-button-toggle-group (change)="ChangerAffichage($event)" name="fontStyle" aria-label="Affichage calendrier">
+    <mat-button-toggle-group (change)="ChangerAffichage($event)" 
+                             name="fontStyle"
+                             [value]="mode()" 
+                             aria-label="Affichage calendrier">
         <mat-button-toggle [value]="eModeCalendrier.Jour">Jour</mat-button-toggle>
         <mat-button-toggle [value]="eModeCalendrier.Semaine">Semaine</mat-button-toggle>
         <mat-button-toggle [value]="eModeCalendrier.Mois">Mois</mat-button-toggle>

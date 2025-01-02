@@ -1,10 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CalendrierJourComponent } from "../../pages/test/calendrier-jour/calendrier-jour.component";
 import { ButtonComponent } from "../../components/button/button.component";
 import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/modal-ajouter-commmande.component';
-import { Commande, ProduitCommandeExistant } from '@model/Commande';
+import { Commande } from '@model/Commande';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+type Info =
+{
+  date: Date,
+  listeCommande: Commande[]
+}
 
 @Component({
   selector: 'app-modal-calendrier-jour',
@@ -15,35 +22,52 @@ import { Commande, ProduitCommandeExistant } from '@model/Commande';
 })
 export class ModalCalendrierJourComponent 
 {
-  protected info = inject(MAT_DIALOG_DATA);
+  protected info: Info = inject(MAT_DIALOG_DATA);
   private matDialog = inject(MatDialog);
+  private listeCommandeAjouter = signal<Commande[]>([]);
+  private destroyRef = inject(DestroyRef);
+  private dialogRef = inject(MatDialogRef<ModalCalendrierJourComponent>);
   
   protected OuvrirModalAjouterCommande(): void
   {
-    let listeProduitExistant: ProduitCommandeExistant[] = [];
-
-    for (const element of this.info.listeCommande as Commande[]) 
-    {
-      for (const element2 of element.listeProduit) 
-      {
-        const INDEX = listeProduitExistant.findIndex(x => x.idPublic == element2.idPublic);
-
-        if(INDEX == -1)
-        {
-          listeProduitExistant.push({
-            idPublic: element2.idPublic,
-            nom: element2.nom
-          });
-        }
-      }
-    }
-
-    this.matDialog.open(ModalAjouterCommmandeComponent, { 
+    const DIALOG_REF = this.matDialog.open(ModalAjouterCommmandeComponent, { 
       width: "700px",
       data: {
-        date: this.info.date,
-        listeProduitExistant: listeProduitExistant
+        date: this.info.date
       }
     });
+
+    DIALOG_REF.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (retour?: Commande) =>
+      {
+        if(!retour) 
+          return;
+
+        this.listeCommandeAjouter.update(x => [...x, retour]);
+        this.info.listeCommande.push(retour);
+      }
+    });
+  }
+
+  protected OuvrirModalModifierCommande(_commande: Commande): void
+  {
+    const DIALOG_REF = this.matDialog.open(ModalAjouterCommmandeComponent, { 
+      data: {
+        date: this.info.date
+      }
+    });
+
+    DIALOG_REF.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (retour: Commande) =>
+      {
+        const INDEX = this.info.listeCommande.findIndex(x => x.numero == _commande.numero);
+        this.info.listeCommande[INDEX] = retour;
+      }
+    });
+  }
+
+  protected Fermer(): void
+  {
+    this.dialogRef.close(this.listeCommandeAjouter());
   }
 }

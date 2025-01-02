@@ -61,9 +61,9 @@ public static class ProduitRoute
     }
 
     async static Task<IResult> ListerLegerAsync(
-    HttpContext _httpContext,
-    [AsParameters] PaginationImport _pagination,
-    [FromServices] IProduitService _produitServ
+        HttpContext _httpContext,
+        [AsParameters] PaginationImport _pagination,
+        [FromServices] IProduitService _produitServ
     )
     {
         if (_pagination.NumPage <= 0)

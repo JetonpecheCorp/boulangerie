@@ -1,5 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { RetourCalendrierMois } from '@model/calendrier/RetourCalendrier';
 import { Commande } from '@model/Commande';
@@ -20,9 +21,9 @@ export class CalendrierMoisComponent implements OnInit, OnChanges
   jourClicker = output<RetourCalendrierMois>();
 
   dateJour = model.required<Date>();
-  listeCommande = model.required<Commande[]>();
-  listeJourMois = signal<JourMois[]>([]);
-  estPetiteTaille = signal(false);
+  listeCommande =  model.required<Commande[]>();
+  protected listeJourMois = signal<JourMois[]>([]);
+  protected estPetiteTaille = signal(false);
 
   protected readonly LISTE_JOUR_SEMAINE = Date.listerNomJourSemaine();
 
@@ -42,8 +43,9 @@ export class CalendrierMoisComponent implements OnInit, OnChanges
   }
 
   ngOnChanges(changes: SimpleChanges): void 
-  {
+  {        
     this.listeCommande.set(changes["listeCommande"].currentValue);
+    
     this.InitMois();  
   }
 

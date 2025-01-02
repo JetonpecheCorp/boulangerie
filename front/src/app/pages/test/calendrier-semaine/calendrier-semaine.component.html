@@ -34,7 +34,7 @@
                 {
                     <mat-card-content class="element" (click)="ElementClicker(element2)">
                         <p>
-                            <b>Nom:</b> {{ element2.client.nom }} <br>
+                            <b>Nom:</b> {{ element2.client == null ? "Interne" : element2.client.nom }} <br>
                             <b>N°</b> {{ element2.numero }}
                         </p>
 

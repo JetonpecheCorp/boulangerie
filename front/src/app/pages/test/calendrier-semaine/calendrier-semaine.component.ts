@@ -52,17 +52,12 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
   {
     this.infoAlterntif.update(x => 
     {     
-      const INFO = x[_indexJour];
-      console.log(INFO);
-      
+      const INFO = x[_indexJour];      
 
       INFO.estActif = !INFO.estActif;
         
       return x;
-    });
-
-    console.log(this.infoAlterntif());
-    
+    });    
   }
 
   private InitListeCommande(): void

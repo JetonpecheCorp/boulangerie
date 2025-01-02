@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalCalendrierJourComponent } from '@modal/modal-calendrier-jour/modal-calendrier-jour.component';
 import { RetourCalendrierMois } from '@model/calendrier/RetourCalendrier';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 enum EModeCalendrier 
 {
@@ -37,6 +38,7 @@ export class TestComponent implements OnInit
 
   private commandeServ = inject(CommandeService);
   private matDialog = inject(MatDialog);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void 
   {
@@ -49,10 +51,19 @@ export class TestComponent implements OnInit
   }
 
   protected OuvrirModalCalendrierJour(_info: RetourCalendrierMois)
-  {
-    this.matDialog.open(ModalCalendrierJourComponent, { 
+  {    
+    const DIALOG_REF = this.matDialog.open(ModalCalendrierJourComponent, { 
       data: _info,
       width: "80%"
+    });
+
+    DIALOG_REF.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (retour: Commande[]) =>
+      {
+        let liste: any[] = [];
+
+        this.listeCommande.set(liste.concat(this.listeCommande(), retour));
+      }
     });
   }
 
