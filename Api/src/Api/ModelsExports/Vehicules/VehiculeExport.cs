@@ -5,7 +5,7 @@ namespace Api.ModelsExports.Vehicules;
 public sealed record VehiculeExport
 {
     [JsonPropertyName("idPublic")]
-    public required string IdPublic { get; init; }
+    public required Guid IdPublic { get; init; }
 
     [JsonPropertyName("immatriculation")]
     public required string Immatriculation { get; init; }

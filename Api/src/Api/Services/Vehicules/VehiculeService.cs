@@ -30,7 +30,7 @@ public class VehiculeService(BoulangerieContext _context) : IVehiculeService
             .Take(_pagination.NbParPage)
             .Select(x => new VehiculeExport
             {
-                IdPublic = x.IdPublic.ToString("D"),
+                IdPublic = x.IdPublic,
                 Immatriculation = x.Immatriculation,
                 InfoComplementaire = x.InfoComplementaire
 

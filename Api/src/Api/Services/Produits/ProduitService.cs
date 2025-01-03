@@ -31,7 +31,7 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
             .Take(_pagination.NbParPage)
             .Select(x => new ProduitExport
             {
-                IdPublic = x.IdPublic.ToString("D"),
+                IdPublic = x.IdPublic,
                 Nom = x.Nom,
                 CodeInterne = x.CodeInterne,
                 Stock = x.Stock,
@@ -95,7 +95,7 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
             .Take(_pagination.NbParPage)
             .Select(x => new ProduitLegerExport
             {
-                IdPublic = x.IdPublic.ToString("D"),
+                IdPublic = x.IdPublic,
                 Nom = x.Nom,
                 PrixHt = x.PrixHt
             }).ToArrayAsync();

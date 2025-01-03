@@ -138,6 +138,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Livraison (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     IdVehicule INT NOT NULL,
     IdUtilisateur INT NOT NULL,
+    IdPublic CHAR(36) NOT NULL,
 
     Numero CHAR(20) NOT NULL,
     Frais DECIMAL(10, 2) NOT NULL DEFAULT 0,
@@ -151,9 +152,13 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Commande (
     Id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     IdGroupe INT NOT NULL,
     IdClient INT NULL,
+    IdLivraison INT NULL,
+
     Numero VARCHAR(15) NOT NULL,
     PrixTotalHT DECIMAL(10, 2),
     EstLivraison TINYINT(1) NOT NULL DEFAULT 0,
+
+    ordreLivraison INT NULL,
 
     DateCreation DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
     DatePourLe DATETIME NOT NULL,
@@ -162,17 +167,8 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Commande (
     DateAnnulation DATETIME NULL,
 
     FOREIGN KEY (IdClient) REFERENCES Client (Id),
-    FOREIGN KEY (IdGroupe) REFERENCES Groupe (Id)
-);
-
-CREATE TABLE IF NOT EXISTS Boulangerie.LivraisonCommande (
-    IdLivraison INT NOT NULL,
-    IdCommande INT NOT NULL,
-
-    PRIMARY KEY(IdLivraison, IdCommande),
-
-    FOREIGN KEY (IdLivraison) REFERENCES Livraison (Id),
-    FOREIGN KEY (IdCommande) REFERENCES Commande (Id) ON DELETE CASCADE
+    FOREIGN KEY (IdGroupe) REFERENCES Groupe (Id),
+    FOREIGN KEY (IdLivraison) REFERENCES Livraison (Id)
 );
 
 CREATE TABLE IF NOT EXISTS Boulangerie.ProduitCommande (
@@ -225,6 +221,13 @@ INSERT INTO Boulangerie.Client (Id, IdPublic, IdGroupe, Nom, Adresse, AdresseFac
 VALUES 
 (1, "0a1ea0c8-c898-4c54-8492-44d19b4ebcae", 1, "Nicolas", "13 rue du rue", "13 rue du rue");
 
+INSERT INTO Boulangerie.Utilisateur (Id, IdGroupe, IdPublic, Nom, Prenom, Mail, Telephone, Mdp, EstAdmin) VALUES
+(1, 1, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bdd236", "Nom", "Prenom", "nicolas.np63@gmail.com", "0712345678", "yimhFlboLHHjb4ICUsbUWg==$dWw+5jh/V0oSKgCADPba607hO3j+9wLdpqk/Bepm6KM=", 1);
+
+INSERT INTO Boulangerie.Vehicule (Id, IdGroupe, IdPublic, Immatriculation, InfoComplementaire) VALUES 
+(1, 1, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bdd236", "AA-000-AA", null),
+(2, 1, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bad237", "BB-000-BB", "info supp");
+
 INSERT INTO Boulangerie.Tva (Id, Valeur) 
 VALUES 
 (1, 5.5), (2, 10), (3, 20), (4, 8.5), (5, 2.10), (6, 1.75), (7, 1.05);
@@ -251,11 +254,15 @@ INSERT INTO Boulangerie.Produit (
     3, "", "EC", null, 5, 1
 );
 
-INSERT INTO Boulangerie.Commande (Id, IdGroupe, IdClient, PrixTotalHT, Numero, DatePourLe)
+INSERT INTO Boulangerie.Livraison (Id, IdPublic, IdVehicule, IdUtilisateur, Numero, Date, Frais) 
+VALUES
+(1, "c8b114a3-8ab6-485d-9aef-b864371f8504", 1, 1, "Gup447390279311", "2024-12-06", 10);
+
+INSERT INTO Boulangerie.Commande (Id, IdGroupe, IdClient, IdLivraison, PrixTotalHT, Numero, DatePourLe)
 VALUES 
-(1, 1, 1, 10.50, "Gup447390279310", "2024-12-06"),
-(2, 1, 1, 30, "Gup447390279710", "2024-12-06"),
-(3, 1, 1, 30, "Gup447390271710", "2024-12-07");
+(1, 1, 1, 1, 10.50, "Gup447390279310", "2024-12-06"),
+(2, 1, 1, 1, 30, "Gup447390279710", "2024-12-06"),
+(3, 1, 1, null, 30, "Gup447390271710", "2024-12-07");
 
 INSERT INTO Boulangerie.ProduitCommande (IdProduit, IdCommande, Quantite, PrixHT)
 VALUES

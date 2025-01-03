@@ -1,9 +1,20 @@
 ﻿using Api.Models;
+using Api.ModelsExports;
+using Api.ModelsImports;
+using Api.ModelsExports.Utilisateurs;
 
 namespace Api.Services.Utilisateurs;
 
 public interface IUtilisateurService
 {
+    /// <summary>
+    /// Lister et paginer les utilisateurs
+    /// </summary>
+    /// <param name="_pagination">pagination</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns></returns>
+    Task<PaginationExport<UtilisateurLegerExport>> ListerLegerAsync(PaginationImport _pagination, int _idGroupe);
+
     /// <summary>
     /// Recuperer l'utilisateur par son mail
     /// </summary>

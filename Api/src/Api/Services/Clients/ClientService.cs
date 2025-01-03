@@ -28,7 +28,7 @@ public sealed class ClientService(BoulangerieContext _context): IClientService
             .Take(_pagination.NbParPage)
             .Select(x => new ClientExport
             {
-                IdPublic = x.IdPublic.ToString("D"),
+                IdPublic = x.IdPublic,
                 Nom = x.Nom,
                 Adresse = x.Adresse,
                 AdresseFacturation = x.AdresseFacturation,
@@ -68,8 +68,9 @@ public sealed class ClientService(BoulangerieContext _context): IClientService
             .Take(_pagination.NbParPage)
             .Select(x => new ClientLegerExport
             {
-                IdPublic = x.IdPublic.ToString("D"),
-                Nom = x.Nom
+                IdPublic = x.IdPublic,
+                Nom = x.Nom,
+                Adresse = x.Adresse
             }).ToArrayAsync();
 
         PaginationExport<ClientLegerExport> pagination = new()

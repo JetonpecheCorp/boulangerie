@@ -198,6 +198,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
         {
           date: new Date(INFOS.date),
           client: CLIENT,
+          livraison: null,
 
           estLivraison: false,
           numero: numeroCommande,

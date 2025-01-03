@@ -11,11 +11,15 @@ public partial class Commande
 
     public int? IdClient { get; set; }
 
+    public int? IdLivraison { get; set; }
+
     public string Numero { get; set; } = null!;
 
     public decimal? PrixTotalHt { get; set; }
 
     public bool EstLivraison { get; set; }
+
+    public int? OrdreLivraison { get; set; }
 
     public DateTime DateCreation { get; set; }
 
@@ -31,7 +35,7 @@ public partial class Commande
 
     public virtual Groupe IdGroupeNavigation { get; set; } = null!;
 
-    public virtual ICollection<ProduitCommande> ProduitCommandes { get; set; } = new List<ProduitCommande>();
+    public virtual Livraison? IdLivraisonNavigation { get; set; }
 
-    public virtual ICollection<Livraison> IdLivraisons { get; set; } = new List<Livraison>();
+    public virtual ICollection<ProduitCommande> ProduitCommandes { get; set; } = new List<ProduitCommande>();
 }

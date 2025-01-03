@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,6 +13,8 @@ import { ModalCalendrierJourComponent } from '@modal/modal-calendrier-jour/modal
 import { RetourCalendrierMois } from '@model/calendrier/RetourCalendrier';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CommandeFiltreExport } from '@model/exports/CommandeExport';
+import { EStatusCommande } from '../../../enums/EStatusCommande';
 
 enum EModeCalendrier 
 {
@@ -120,9 +122,16 @@ export class TestComponent implements OnInit
     else
     {
       dateJour = dateFin = this.dateJour();
-    }        
+    }
+
+    const INFOS: CommandeFiltreExport =
+    {
+      dateDebut: dateJour,
+      dateFin: dateFin,
+      status: EStatusCommande.Tout
+    };
     
-    this.commandeServ.Lister(dateJour, dateFin).subscribe({
+    this.commandeServ.Lister(INFOS).subscribe({
       next: (liste) =>
       {
         this.listeCommande.set(liste);

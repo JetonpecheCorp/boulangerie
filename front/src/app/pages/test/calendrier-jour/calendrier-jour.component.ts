@@ -1,9 +1,11 @@
-import { Component, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
+import { Component, inject, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { Commande, ProduitCommande } from '@model/Commande';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { ProgrammerLivraisonComponent } from '@modal/programmer-livraison/programmer-livraison.component';
 
 @Component({
   selector: 'app-calendrier-jour',
@@ -24,6 +26,8 @@ export class CalendrierJourComponent implements OnInit, OnChanges
   protected vueAlternatifActiver = signal(false);
   protected jourSemaine = signal<JourSemaine>({ date: "", nom: "" });
 
+  private matDialog = inject(MatDialog);
+
   ngOnInit(): void 
   {
     this.InitJourSemaine();
@@ -36,6 +40,11 @@ export class CalendrierJourComponent implements OnInit, OnChanges
 
     this.InitJourSemaine();
     this.InitListeCommande();
+  }
+
+  protected OuvrirModalProgrammerLivraison(): void
+  {
+    this.matDialog.open(ProgrammerLivraisonComponent, { data: { date: this.dateJour() }}); 
   }
 
   protected Alternatif(): void

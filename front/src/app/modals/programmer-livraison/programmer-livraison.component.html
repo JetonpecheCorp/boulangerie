@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>Programmer livraisons</h2>
+<mat-dialog-content style="padding-top: 10px;">
+    <mat-form-field>
+        <mat-label>Conducteur</mat-label>
+        <input type="text"
+               placeholder="Conducteur"
+               aria-label="Conducteur"
+               matInput
+               [formControl]="autoCompleteFormCtrl"
+               [matAutocomplete]="auto">
+
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            @for (element of dataSourceClientFiltrer(); track element.idPublic) 
+            {
+                <mat-option [value]="element.nomComplet">{{ element.nomComplet }}</mat-option>
+            }
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field style="margin-top: 20px">
+        <mat-label>Date de livraison</mat-label>
+        <input matInput 
+               [matDatepicker]="picker" 
+               [value]="dialogData.date"
+               (dateChange)="Test($event)">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <hr>
+
+    <h2>Commande à ajouter à la livraison</h2>
+
+    <div style="min-height: 50px; overflow-y: auto;">
+    @for (element of listeCommande(); track element.numero) 
+    {
+        <mat-card style="margin-top: 10px;" appearance="outlined">
+            <mat-card-content>
+                Numero: {{ element.numero }} <br>
+                Adresse: {{ element.client!.adresse }}
+
+                <mat-accordion>
+                    <mat-expansion-panel class="mat-elevation-z0" style="border: 1px solid var(--sys-outline-variant)">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title> Produit(s) </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        @for (element2 of element.listeProduit; track $index) 
+                        {
+                            <p>{{ element2.nom }} X{{ element2.quantite }}</p>
+                        }
+                      </mat-expansion-panel>
+                </mat-accordion>
+
+            </mat-card-content>
+            <mat-card-actions align="end">
+                <button mat-mini-fab>
+                    <mat-icon>add</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    }
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-flat-button mat-dialog-close>Fermer</button>
+</mat-dialog-actions>

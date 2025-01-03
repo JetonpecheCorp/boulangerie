@@ -5,8 +5,15 @@ export type Commande =
     estLivraison: boolean,
     
     client: ClientCommande | null,
+    livraison: CommandeLivraison | null,
     listeProduit: ProduitCommande[]
 };
+
+export type CommandeLivraison =
+{
+    idPublic: string,
+    ordre: number
+}
 
 export type ProduitCommande =
 {
@@ -18,5 +25,6 @@ export type ProduitCommande =
 export type ClientCommande = 
 {
     idPublic: string,
-    nom: string
+    nom: string,
+    adresse: string
 };

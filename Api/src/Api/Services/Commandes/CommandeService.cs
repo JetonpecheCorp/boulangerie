@@ -37,7 +37,14 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
             Client = x.IdClientNavigation != null ? new CommandeClientExport
             {
                 IdPublic = x.IdClientNavigation.IdPublic,
-                Nom = x.IdClientNavigation.Nom
+                Nom = x.IdClientNavigation.Nom,
+                Adresse = x.IdClientNavigation.Adresse
+            } : null,
+
+            Livraison = x.IdLivraisonNavigation != null ? new CommandeLivraisonExport
+            {
+                IdPublic = x.IdLivraisonNavigation.IdPublic,
+                Ordre = x.OrdreLivraison.GetValueOrDefault()
             } : null,
 
             ListeProduit = x.ProduitCommandes.Select(y => new CommandeProduitExport

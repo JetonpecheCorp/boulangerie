@@ -97,6 +97,8 @@ public partial class BoulangerieContext : DbContext
 
             entity.HasIndex(e => e.IdGroupe, "IdGroupe");
 
+            entity.HasIndex(e => e.IdLivraison, "IdLivraison");
+
             entity.Property(e => e.DatLivraison).HasColumnType("datetime");
             entity.Property(e => e.DateAnnulation).HasColumnType("datetime");
             entity.Property(e => e.DateCreation)
@@ -105,6 +107,7 @@ public partial class BoulangerieContext : DbContext
             entity.Property(e => e.DatePourLe).HasColumnType("datetime");
             entity.Property(e => e.DateValidation).HasColumnType("datetime");
             entity.Property(e => e.Numero).HasMaxLength(15);
+            entity.Property(e => e.OrdreLivraison).HasColumnName("ordreLivraison");
             entity.Property(e => e.PrixTotalHt)
                 .HasPrecision(10, 2)
                 .HasColumnName("PrixTotalHT");
@@ -117,6 +120,10 @@ public partial class BoulangerieContext : DbContext
                 .HasForeignKey(d => d.IdGroupe)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Commande_ibfk_2");
+
+            entity.HasOne(d => d.IdLivraisonNavigation).WithMany(p => p.Commandes)
+                .HasForeignKey(d => d.IdLivraison)
+                .HasConstraintName("Commande_ibfk_3");
         });
 
         modelBuilder.Entity<Fournisseur>(entity =>
@@ -235,25 +242,6 @@ public partial class BoulangerieContext : DbContext
                 .HasForeignKey(d => d.IdVehicule)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Livraison_ibfk_1");
-
-            entity.HasMany(d => d.IdCommandes).WithMany(p => p.IdLivraisons)
-                .UsingEntity<Dictionary<string, object>>(
-                    "LivraisonCommande",
-                    r => r.HasOne<Commande>().WithMany()
-                        .HasForeignKey("IdCommande")
-                        .HasConstraintName("LivraisonCommande_ibfk_2"),
-                    l => l.HasOne<Livraison>().WithMany()
-                        .HasForeignKey("IdLivraison")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("LivraisonCommande_ibfk_1"),
-                    j =>
-                    {
-                        j.HasKey("IdLivraison", "IdCommande")
-                            .HasName("PRIMARY")
-                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-                        j.ToTable("LivraisonCommande");
-                        j.HasIndex(new[] { "IdCommande" }, "IdCommande");
-                    });
         });
 
         modelBuilder.Entity<Produit>(entity =>

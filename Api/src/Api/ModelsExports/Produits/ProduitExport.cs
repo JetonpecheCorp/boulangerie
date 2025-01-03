@@ -7,7 +7,7 @@ namespace Api.ModelsExports.Produits;
 public sealed record ProduitExport
 {
     [JsonPropertyName("idPublic")]
-    public required string IdPublic { get; init; }
+    public required Guid IdPublic { get; init; }
 
     [JsonPropertyName("nom")]
     public required string Nom { get; init; }

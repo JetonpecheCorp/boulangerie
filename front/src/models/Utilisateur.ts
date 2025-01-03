@@ -4,3 +4,9 @@ export type Utilisateur =
     prenom: string,
     jwt: string
 }
+
+export type UtilisateurLeger =
+{
+    idPublic: string,
+    nomComplet: string
+}

@@ -5,10 +5,10 @@ namespace Api.ModelsExports.Recettes;
 public sealed record RecetteExport
 {
     [JsonPropertyName("idPublicIngredient")]
-    public required string IdPublicIngredient { get; init; }
+    public required Guid IdPublicIngredient { get; init; }
 
     [JsonPropertyName("idPublicProduit")]
-    public required string IdPublicProduit { get; init; }
+    public required Guid IdPublicProduit { get; init; }
 
     [JsonPropertyName("nomProduit")]
     public required string NomProduit { get; init; }

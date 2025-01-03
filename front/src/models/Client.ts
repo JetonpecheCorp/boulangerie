@@ -12,5 +12,6 @@ export type Client =
 export type ClientLeger =
 {
     idPublic: string,
-    nom: string
+    nom: string,
+    adresse: string
 }

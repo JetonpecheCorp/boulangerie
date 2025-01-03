@@ -1,10 +1,48 @@
 ﻿using Api.Models;
+using Api.ModelsExports.Utilisateurs;
+using Api.ModelsExports;
+using Api.ModelsImports;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services.Utilisateurs;
 
 public class UtilisateurService(BoulangerieContext _context) : IUtilisateurService
 {
+    public async Task<PaginationExport<UtilisateurLegerExport>> ListerLegerAsync(PaginationImport _pagination, int _idGroupe)
+    {
+        var requete = _context.Utilisateurs.Where(x => x.IdGroupe == _idGroupe);
+
+        if (_pagination.ThermeRecherche is not null)
+        {
+            requete = requete.Where(x =>
+                x.Nom.Contains(_pagination.ThermeRecherche)
+            );
+        }
+
+        requete = requete.OrderBy(x => x.Nom);
+
+        int total = await requete.CountAsync();
+
+        var liste = await requete
+            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
+            .Take(_pagination.NbParPage)
+            .Select(x => new UtilisateurLegerExport
+            {
+                IdPublic = x.IdPublic,
+                NomComplet = x.Prenom + " " + x.Nom,
+            }).ToArrayAsync();
+
+        PaginationExport<UtilisateurLegerExport> pagination = new()
+        {
+            NumPage = _pagination.NumPage,
+            NbParPage = _pagination.NbParPage,
+            Total = total,
+            Liste = liste
+        };
+
+        return pagination;
+    }
+
     public async Task AjouterAsync(Utilisateur _utilisateur)
     {
         _context.Add(_utilisateur);
