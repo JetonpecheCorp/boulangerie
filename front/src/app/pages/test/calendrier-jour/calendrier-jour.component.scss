@@ -19,7 +19,19 @@ mat-card-content, mat-card-header
     padding: 5px;
 }
 
-.element:not(:last-child)
+.element
 {
-    border-bottom: 1px solid black;
+    position: relative;
+
+    .btnsAction
+    {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+    }
+
+    &:not(:last-child)
+    {
+        border-bottom: 1px solid black;
+    }
 }

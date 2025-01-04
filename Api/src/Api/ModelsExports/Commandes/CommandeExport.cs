@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Api.Enums;
+using System.Text.Json.Serialization;
 
 namespace Api.ModelsExports.Commandes;
 
@@ -21,6 +22,9 @@ public sealed record CommandeExport
 
     [JsonPropertyName("listeProduit")]
     public required CommandeProduitExport[] ListeProduit { get; init; }
+
+    [JsonPropertyName("status")]
+    public required EStatusCommande Status { get; init; }
 }
 
 public sealed record CommandeLivraisonExport

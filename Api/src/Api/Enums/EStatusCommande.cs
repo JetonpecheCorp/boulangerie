@@ -8,3 +8,10 @@ public enum EStatusCommande
     Livrer,
     Tout
 }
+
+public enum EStatusCommandeModifier
+{
+    Valider = 0,
+    Annuler = 2,
+    Livrer = 3
+}

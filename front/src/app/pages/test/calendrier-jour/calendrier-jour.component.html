@@ -33,7 +33,8 @@
             <mat-card-content class="element" (click)="ElementClicker(element)">
                 <p>
                     <b>Nom:</b> {{ element.client == null ? "Interne" : element.client.nom }} <br>
-                    <b>N°</b> {{ element.numero }}
+                    <b>N°</b> {{ element.numero }} <br>
+                    <b>Status:</b> {{ element.nomStatus }}
                 </p>
     
                 <ul style="padding-left: 25px;">
@@ -42,7 +43,23 @@
                         <li>{{ element2.nom }} X{{ element2.quantite }}</li>
                     }
                 </ul>
-    
+
+                <div class="btnsAction">
+                    @if(element.status != eStatusCommande.Valider)
+                    {
+                        <button mat-icon-button stop-propagation (click)="ValiderCommande(element.numero)">
+                            <mat-icon>check_circle</mat-icon>
+                        </button> 
+                        <br>
+                    }
+
+                    @if(element.status != eStatusCommande.Annuler && element.status != eStatusCommande.Livrer)
+                    {
+                        <button mat-icon-button stop-propagation (click)="AnnulerCommande(element.numero)">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                    }
+                </div>
             </mat-card-content>
         }
     }

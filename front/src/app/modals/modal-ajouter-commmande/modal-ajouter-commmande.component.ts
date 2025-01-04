@@ -20,6 +20,7 @@ import { CommandeService } from '@service/Commande.service';
 import { CommandeExport } from '@model/exports/CommandeExport';
 import { ClientService } from '@service/Client.service';
 import { ClientLeger } from '@model/Client';
+import { ConvertionEnum, EStatusCommande } from '../../../enums/EStatusCommande';
 
 type Info = 
 {
@@ -199,6 +200,8 @@ export class ModalAjouterCommmandeComponent implements OnInit
           date: new Date(INFOS.date),
           client: CLIENT,
           livraison: null,
+          status: EStatusCommande.EnAttenteValidation,
+          nomStatus: ConvertionEnum.StatusCommande(EStatusCommande.EnAttenteValidation),
 
           estLivraison: false,
           numero: numeroCommande,

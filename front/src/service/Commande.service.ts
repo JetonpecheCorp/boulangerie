@@ -5,6 +5,7 @@ import { map, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Commande } from '@model/Commande';
 import { CommandeExport, CommandeFiltreExport } from '@model/exports/CommandeExport';
+import { ConvertionEnum, EStatusCommande } from '../enums/EStatusCommande';
 
 export class CommandeService 
 {
@@ -20,7 +21,7 @@ export class CommandeService
 
     const INFOS = { dateDebut, dateFin, status: _filtre.status };
 
-    return this.http.get<any[]>(`${this.BASE_API}/lister`, { params: INFOS }).pipe(
+    return this.http.get<Commande[]>(`${this.BASE_API}/lister`, { params: INFOS }).pipe(
         takeUntilDestroyed(this.destroyRef),
         map(listeCommande => 
         {
@@ -28,7 +29,8 @@ export class CommandeService
             {
               let element = listeCommande[i];
                 
-              element.date = new Date(element.date)
+              element.date = new Date(element.date);
+              element.nomStatus = ConvertionEnum.StatusCommande(element.status);
             }
 
             return listeCommande;
@@ -39,5 +41,15 @@ export class CommandeService
   Ajouter(_commande: CommandeExport): Observable<string>
   {
     return this.http.post<string>(`${this.BASE_API}/ajouter`, _commande).pipe(takeUntilDestroyed(this.destroyRef));
+  }
+
+  ModifierStatus(_numero: string, _status: EStatusCommande): Observable<void>
+  {
+    const INFOS = { 
+      numero: _numero,
+      status: _status
+    };
+
+    return this.http.put<void>(`${this.BASE_API}/modifierStatus`, INFOS).pipe(takeUntilDestroyed(this.destroyRef));
   }
 }

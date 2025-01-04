@@ -1,8 +1,12 @@
+import { EStatusCommande } from "../enums/EStatusCommande";
+
 export type Commande = 
 {
     numero: string,
     date: Date,
     estLivraison: boolean,
+    status: EStatusCommande,
+    nomStatus: string,
     
     client: ClientCommande | null,
     livraison: CommandeLivraison | null,

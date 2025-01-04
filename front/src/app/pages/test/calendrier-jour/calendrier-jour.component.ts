@@ -6,11 +6,16 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ProgrammerLivraisonComponent } from '@modal/programmer-livraison/programmer-livraison.component';
+import { MatIconModule } from '@angular/material/icon';
+import { CommandeService } from '@service/Commande.service';
+import { ConvertionEnum, EStatusCommande } from '@enum/EStatusCommande';
+import { StopPropagationDirective } from '../../../directive/stop-propagation.directive';
+import { ThemeService } from '@service/ThemeService.Service';
 
 @Component({
   selector: 'app-calendrier-jour',
   standalone: true,
-  imports: [MatCardModule, MatSlideToggleModule, MatButtonModule],
+  imports: [StopPropagationDirective, MatIconModule, MatCardModule, MatSlideToggleModule, MatButtonModule],
   templateUrl: './calendrier-jour.component.html',
   styleUrl: './calendrier-jour.component.scss'
 })
@@ -23,10 +28,13 @@ export class CalendrierJourComponent implements OnInit, OnChanges
 
   listeCommandeAlternatif = signal<ProduitCommande[]>([]);
 
+  protected eStatusCommande = EStatusCommande;
   protected vueAlternatifActiver = signal(false);
   protected jourSemaine = signal<JourSemaine>({ date: "", nom: "" });
 
   private matDialog = inject(MatDialog);
+  private commandeServ = inject(CommandeService);
+  private themeServ = inject(ThemeService);
 
   ngOnInit(): void 
   {
@@ -40,6 +48,27 @@ export class CalendrierJourComponent implements OnInit, OnChanges
 
     this.InitJourSemaine();
     this.InitListeCommande();
+  }
+
+  protected ValiderCommande(_numero: string): void
+  {
+    this.ModifierStatusCommande(_numero, EStatusCommande.Valider);
+  }
+
+  protected AnnulerCommande(_numero: string): void
+  {
+    const TITRE = "Annulation de la commande";
+    const MSG = `Confirmez-vous l'annulation de la commande: ${_numero} ?`;
+    this.themeServ.OuvrirConfirmation(TITRE, MSG);
+
+    this.themeServ.retourConfirmation.subscribe(
+      (retour) => 
+      {
+        if(!retour)
+          return;
+
+        this.ModifierStatusCommande(_numero, EStatusCommande.Annuler);
+      });
   }
 
   protected OuvrirModalProgrammerLivraison(): void
@@ -97,6 +126,23 @@ export class CalendrierJourComponent implements OnInit, OnChanges
     this.jourSemaine.set({
       nom: this.dateJour().nomJour(),
       date: this.dateJour().toLocaleDateString()
+    });
+  }
+
+  private ModifierStatusCommande(_numero: string, _status: EStatusCommande): void
+  {
+    this.commandeServ.ModifierStatus(_numero, _status).subscribe({
+      next: () =>
+      {
+        this.listeCommande.update(x =>
+        {
+          const CMD = x.find(x => x.numero == _numero)!;
+          CMD.status = _status;
+          CMD.nomStatus = ConvertionEnum.StatusCommande(CMD.status)
+
+          return x;
+        });
+      }
     });
   }
 }

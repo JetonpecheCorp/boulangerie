@@ -33,6 +33,7 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
             Numero = x.Numero,
             Date = x.DatePourLe,
             EstLivraison = x.EstLivraison,
+            Status = _filtre.Status == EStatusCommande.Tout ? x.DateValidation.HasValue ? EStatusCommande.Valider : x.DateAnnulation.HasValue ? EStatusCommande.Annuler : EStatusCommande.EnAttenteValidation : _filtre.Status,
             
             Client = x.IdClientNavigation != null ? new CommandeClientExport
             {
@@ -118,5 +119,43 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
         }
 
         return true;
+    }
+
+    public async Task<bool> ModifierStatusAsync(string _numero, EStatusCommandeModifier _status, int _idGroupe)
+    {
+        if (_numero is "")
+            return false;
+
+        SetPropertyBuilder<Commande> builder = new();
+
+        switch (_status)
+        {
+            case EStatusCommandeModifier.Valider:
+                builder.SetProperty(x => x.DateValidation, DateTime.UtcNow)
+                    .SetProperty(x => x.DateAnnulation, value: null);
+                break;
+
+            case EStatusCommandeModifier.Annuler:
+                builder.SetProperty(x => x.DateAnnulation, DateTime.UtcNow)
+                    .SetProperty(x => x.DateValidation, value: null);
+                break;
+
+            case EStatusCommandeModifier.Livrer:
+                builder.SetProperty(x => x.DatLivraison, DateTime.UtcNow)
+                    .SetProperty(x => x.DateAnnulation, value: null);
+                break;
+        }
+
+        if(builder.SetPropertyCalls.Parameters.Count == 0) 
+            return false;
+
+        var requete = _context.Commandes.Where(x => x.Numero == _numero && x.IdGroupe == _idGroupe);
+
+        if (_status == EStatusCommandeModifier.Livrer)
+            requete = requete.Where(x => x.EstLivraison);
+
+        int nb = await requete.ExecuteUpdateAsync(builder.SetPropertyCalls);
+
+        return nb > 0;
     }
 }

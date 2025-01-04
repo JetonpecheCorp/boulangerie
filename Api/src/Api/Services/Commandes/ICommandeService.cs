@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using Api.Enums;
+using Api.Models;
 using Api.ModelsExports.Commandes;
 using Api.ModelsImports.Commandes;
 
@@ -21,4 +22,13 @@ public interface ICommandeService
     /// <param name="_listeProduitCommande">liste des produits de la commande</param>
     /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
     Task<bool> AjouterAsync(Commande _commande, ProduitCommandeImport[] _listeProduitCommande);
+
+    /// <summary>
+    /// Modifier le status d'une commande
+    /// </summary>
+    /// <param name="_numero">numero de la commande</param>
+    /// <param name="_status">nouveau status de la commande</param>
+    /// <param name="_idGroupe">id groupe conserner</param>
+    /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
+    Task<bool> ModifierStatusAsync(string _numero, EStatusCommandeModifier _status, int _idGroupe);
 }

@@ -14,7 +14,8 @@ import { RetourCalendrierMois } from '@model/calendrier/RetourCalendrier';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommandeFiltreExport } from '@model/exports/CommandeExport';
-import { EStatusCommande } from '../../../enums/EStatusCommande';
+import { EStatusCommande, ConvertionEnum } from '@enum/EStatusCommande';
+import {MatSelectModule} from '@angular/material/select';
 
 enum EModeCalendrier 
 {
@@ -26,7 +27,7 @@ enum EModeCalendrier
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [MatSidenavModule, MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
+  imports: [MatSelectModule, MatSidenavModule, MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
@@ -37,6 +38,7 @@ export class TestComponent implements OnInit
 
   protected mode = signal(EModeCalendrier.Mois);
   protected eModeCalendrier = EModeCalendrier;
+  protected eStatusCommande = EStatusCommande;
 
   private commandeServ = inject(CommandeService);
   private matDialog = inject(MatDialog);
@@ -50,6 +52,16 @@ export class TestComponent implements OnInit
   ChangerAffichage(_event: MatButtonToggleChange): void
   {
     this.mode.set(_event.value);
+  }
+
+  protected FiltrerParStatus(_status: EStatusCommande)
+  {
+    this.ListerCommande(_status);
+  }
+
+  protected ConvertionEnumCommande(_status: EStatusCommande): string
+  {
+    return ConvertionEnum.StatusCommande(_status);
   }
 
   protected OuvrirModalCalendrierJour(_info: RetourCalendrierMois)
@@ -103,7 +115,7 @@ export class TestComponent implements OnInit
     this.ListerCommande();
   }
 
-  private ListerCommande(): void
+  private ListerCommande(_status: EStatusCommande = EStatusCommande.Tout): void
   {
     let dateJour = undefined;
     let dateFin = undefined;
@@ -128,7 +140,7 @@ export class TestComponent implements OnInit
     {
       dateDebut: dateJour,
       dateFin: dateFin,
-      status: EStatusCommande.Tout
+      status: _status
     };
     
     this.commandeServ.Lister(INFOS).subscribe({

@@ -27,6 +27,11 @@ public static class CommandeRoute
             .ProducesCreated<string>()
             .ProducesBadRequestErreurValidation();
 
+        builder.MapPut("modifierStatus", ModifierStatusAsync)
+            .WithDescription("Modifier le status d'une commande")
+            .ProducesNoContent()
+            .ProducesNotFound();
+
         return builder;
     }
 
@@ -82,5 +87,18 @@ public static class CommandeRoute
         bool retour = await _commandeServ.AjouterAsync(commande, _commandeImport.ListeProduit);
 
         return retour ? Results.Created("", commande.Numero) : Results.BadRequest("Erreur d'ajout");
+    }
+
+    async static Task<IResult> ModifierStatusAsync(
+        HttpContext _httpContext,
+        [FromServices] ICommandeService _commandeServ,
+        [FromBody] CommandeModifierStatusImport _commande
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        bool ok = await _commandeServ.ModifierStatusAsync(_commande.Numero, _commande.Status, idGroupe);
+
+        return ok ? Results.NoContent() : Results.NotFound();
     }
 }
