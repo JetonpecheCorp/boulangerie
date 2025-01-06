@@ -2,14 +2,21 @@
     <mat-card-header>
         <p style="margin-bottom: 5px;"><b>{{ jourSemaine().nom }}</b> <br> {{ jourSemaine().date }}</p>
 
+        <!-- btn vue alternative -->
         <button mat-mini-fab (click)="
             vueAlternatifActiver.set(!vueAlternatifActiver()); 
             Alternatif()
-        ">
+        "
+        matTooltip="Vue Alternative"
+        aria-label="Bouton vuee alternative">
             <mat-icon>compare_arrows</mat-icon>
         </button>&nbsp;
 
-        <button mat-mini-fab (click)="OuvrirModalProgrammerLivraison()">
+        <!-- btn programmer les livraisons -->
+        <button mat-mini-fab 
+                (click)="OuvrirModalProgrammerLivraison()"
+                matTooltip="Programmer les livraisons"
+                aria-label="Bouton programmer les livraisons">
             <mat-icon>local_shipping</mat-icon>
         </button>
     </mat-card-header>

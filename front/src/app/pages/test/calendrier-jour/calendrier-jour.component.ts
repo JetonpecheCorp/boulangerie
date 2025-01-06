@@ -11,11 +11,12 @@ import { CommandeService } from '@service/Commande.service';
 import { ConvertionEnum, EStatusCommande } from '@enum/EStatusCommande';
 import { StopPropagationDirective } from '../../../directive/stop-propagation.directive';
 import { ThemeService } from '@service/ThemeService.Service';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-calendrier-jour',
   standalone: true,
-  imports: [StopPropagationDirective, MatIconModule, MatCardModule, MatSlideToggleModule, MatButtonModule],
+  imports: [MatTooltipModule, StopPropagationDirective, MatIconModule, MatCardModule, MatSlideToggleModule, MatButtonModule],
   templateUrl: './calendrier-jour.component.html',
   styleUrl: './calendrier-jour.component.scss'
 })

@@ -1,7 +1,10 @@
-import { Component, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
+import { Component, inject, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ProgrammerLivraisonComponent } from '@modal/programmer-livraison/programmer-livraison.component';
 import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { Commande, ProduitCommande } from '@model/Commande';
 
@@ -14,7 +17,7 @@ type CommandeAlternatif =
 @Component({
   selector: 'app-calendrier-semaine',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, MatIconModule],
+  imports: [MatTooltipModule, MatCardModule, MatButtonModule, MatIconModule],
   templateUrl: './calendrier-semaine.component.html',
   styleUrl: './calendrier-semaine.component.scss'
 })
@@ -28,6 +31,8 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
   protected listeJourSemaine = signal<JourSemaine[]>([]);
   protected info = signal<any[]>([]);
   protected infoAlterntif = signal<CommandeAlternatif[]>([]);
+
+  private matDialog = inject(MatDialog);
 
   ngOnInit(): void 
   {
@@ -46,6 +51,16 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
   protected ElementClicker(_commande: Commande): void
   {
     this.commandeClicker.emit(_commande);
+  }
+
+  protected OuvrirModalProgrammerLivraison(_date: string): void
+  {
+    if(_date.includes("/"))
+      _date = _date.split("/").reverse().join("-");
+
+    const DATE = new Date(_date);
+
+    this.matDialog.open(ProgrammerLivraisonComponent, { data: { date: DATE }});
   }
 
   protected AfficherVueAlternatif(_indexJour: number): void

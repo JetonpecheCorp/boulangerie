@@ -7,8 +7,18 @@
                 <p><b>{{ element.nom }}</b> <br> {{ element.date }}</p>
 
                 <div>
-                    <button mat-mini-fab (click)="AfficherVueAlternatif($index)">
+                    <button mat-mini-fab 
+                            (click)="AfficherVueAlternatif($index)"
+                            matTooltip="Vue alternative"
+                            aria-label="Bouton vue alternative">
                         <mat-icon>compare_arrows</mat-icon>
+                    </button>&nbsp;
+
+                    <button mat-mini-fab 
+                            (click)="OuvrirModalProgrammerLivraison(element.date)"
+                            matTooltip="Programmer les livraisons"
+                            aria-label="Bouton programmer les livraisons">
+                        <mat-icon>local_shipping</mat-icon>
                     </button>
                 </div>
                 
@@ -35,7 +45,8 @@
                     <mat-card-content class="element" (click)="ElementClicker(element2)">
                         <p>
                             <b>Nom:</b> {{ element2.client == null ? "Interne" : element2.client.nom }} <br>
-                            <b>N°</b> {{ element2.numero }}
+                            <b>N°</b> {{ element2.numero }} <br>
+                            <b>Status:</b> {{ element2.nomStatus }}
                         </p>
 
                         <ul style="padding-left: 25px;">

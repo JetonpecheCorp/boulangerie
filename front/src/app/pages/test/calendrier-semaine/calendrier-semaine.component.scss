@@ -12,17 +12,21 @@ mat-card
 
 mat-card-header
 {
-    position: relative;
+    display: block;
     background-color: var(--sys-primary);
     color: var(--sys-on-primary);
     border-top-left-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
     border-top-right-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
     padding: 0;
 
-    div
+    p, div
     {
-        position: absolute; 
-        right: 5px;
+        text-align: center;
+    }
+
+    p
+    {
+        margin-bottom: 0px;
     }
 }
 
