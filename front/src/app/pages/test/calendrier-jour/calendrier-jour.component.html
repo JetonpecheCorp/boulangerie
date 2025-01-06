@@ -2,15 +2,15 @@
     <mat-card-header>
         <p style="margin-bottom: 5px;"><b>{{ jourSemaine().nom }}</b> <br> {{ jourSemaine().date }}</p>
 
-        <button mat-raised-button (click)="
+        <button mat-mini-fab (click)="
             vueAlternatifActiver.set(!vueAlternatifActiver()); 
             Alternatif()
         ">
-            {{ vueAlternatifActiver() ? 'Normal' : 'Alternatif' }}
+            <mat-icon>compare_arrows</mat-icon>
         </button>&nbsp;
 
-        <button mat-raised-button (click)="OuvrirModalProgrammerLivraison()">
-            Livraison
+        <button mat-mini-fab (click)="OuvrirModalProgrammerLivraison()">
+            <mat-icon>local_shipping</mat-icon>
         </button>
     </mat-card-header>
 
