@@ -18,7 +18,10 @@ public static class CommandeRoute
         builder.WithOpenApi().ProducesServiceUnavailable();
 
         builder.MapGet("lister", ListerAsync)
-            .WithDescription("Lister les commandes (Status: 0 => Valider, 1 => En attente de validation, 2 => Annuler, 3 => Livrer (terminer), 4 => Tout")
+            .WithDescription("""
+                Lister les commandes (Status: 0 => Valider, 1 => En attente de validation, 2 => Annuler, 3 => Livrer (terminer), 4 => Tout)  
+                ATTENTION: IdPublicLivraison et sansLivraison NE SONT PAS CUMULABLES
+            """)
             .Produces<CommandeExport[]>()
             .ProducesBadRequest();
 

@@ -1,8 +1,12 @@
 <h2 mat-dialog-title>{{ labelBtn() }} un véhicule</h2>
-<mat-dialog-content>
+<mat-dialog-content style="padding-top: 10px;">
     <app-input [controle]="form.controls['immatriculation']" 
                label="Immatriculation"
                [maxLength]="15" />
+
+    <app-input [controle]="form.controls['nom']" 
+               label="Nom"
+               [maxLength]="100" />
 
     <mat-form-field>
         <mat-label>Info complementaire</mat-label>
@@ -11,6 +15,7 @@
                   rows="5"
                   [formControl]="$any(form.controls['infoComplementaire'])"></textarea>
     </mat-form-field>
+    
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button [mat-dialog-close]="null">Fermer</button>&nbsp;

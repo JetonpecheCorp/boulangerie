@@ -11,6 +11,8 @@ public partial class Vehicule
 
     public Guid IdPublic { get; set; }
 
+    public string Nom { get; set; } = null!;
+
     public string Immatriculation { get; set; } = null!;
 
     public string? InfoComplementaire { get; set; }

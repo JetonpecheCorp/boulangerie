@@ -31,6 +31,7 @@ public class VehiculeService(BoulangerieContext _context) : IVehiculeService
             .Select(x => new VehiculeExport
             {
                 IdPublic = x.IdPublic,
+                Nom = x.Nom,
                 Immatriculation = x.Immatriculation,
                 InfoComplementaire = x.InfoComplementaire
 
@@ -47,6 +48,14 @@ public class VehiculeService(BoulangerieContext _context) : IVehiculeService
         return pagination;
     }
 
+    public async Task<int> RecupererId(Guid _idPublic, int _idGroupe)
+    {
+        return await _context.Vehicules
+            .Where(x => x.IdPublic == _idPublic && x.IdGroupe == _idGroupe)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<bool> AjouterAsync(Vehicule _vehicule)
     {
         _context.Vehicules.Add(_vehicule);
@@ -55,7 +64,7 @@ public class VehiculeService(BoulangerieContext _context) : IVehiculeService
         return nb > 0;
     }
 
-    public async Task<bool> ModifierAsync(string _immatriculation, string? _infoSup, string _idPublicVehicule, int _idGroupe)
+    public async Task<bool> ModifierAsync(string _nom, string _immatriculation, string? _infoSup, string _idPublicVehicule, int _idGroupe)
     {
         int nb = 0;
 
@@ -66,11 +75,17 @@ public class VehiculeService(BoulangerieContext _context) : IVehiculeService
                 .ExecuteUpdateAsync(x =>
                     x.SetProperty(y => y.Immatriculation, _immatriculation)
                     .SetProperty(y => y.InfoComplementaire, _infoSup)
+                    .SetProperty(y => y.Nom, _nom)
                 );
 
             return nb > 0;
         }
 
         return false;
+    }
+
+    public async Task<bool> ExisteAsync(Guid _idPublic, int _idGroupe)
+    {
+        return await _context.Vehicules.AnyAsync(x => x.IdPublic == _idPublic && x.IdGroupe == _idGroupe);
     }
 }

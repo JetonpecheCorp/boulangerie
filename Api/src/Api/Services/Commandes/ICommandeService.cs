@@ -31,4 +31,12 @@ public interface ICommandeService
     /// <param name="_idGroupe">id groupe conserner</param>
     /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
     Task<bool> ModifierStatusAsync(string _numero, EStatusCommandeModifier _status, int _idGroupe);
+
+    /// <summary>
+    /// Verifier si une commande existe
+    /// </summary>
+    /// <param name="_numero">numero de la commande conserné</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns><see langword="true"/> si existe, sinon <see langword="false"/></returns>
+    Task<bool> ExisteAsync(string _numero, int _idGroupe);
 }

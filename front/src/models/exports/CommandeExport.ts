@@ -12,5 +12,7 @@ export type CommandeFiltreExport =
 {
     dateDebut: Date,
     dateFin: Date,
-    status: EStatusCommande
+    status: EStatusCommande,
+    sansLivraison?: boolean,
+    idPublicLivraison?: string
 }

@@ -42,7 +42,7 @@
             {
                 @for (element2 of info()[$index]; track element2.numero)
                 {
-                    <mat-card-content class="element" (click)="ElementClicker(element2)">
+                    <mat-card-content class="element element-clickable" (click)="ElementClicker(element2)">
                         <p>
                             <b>Nom:</b> {{ element2.client == null ? "Interne" : element2.client.nom }} <br>
                             <b>N°</b> {{ element2.numero }} <br>

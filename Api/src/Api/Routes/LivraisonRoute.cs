@@ -1,9 +1,15 @@
 ﻿using Api.Extensions;
+using Api.Models;
 using Api.ModelsExports;
 using Api.ModelsExports.Livraisons;
 using Api.ModelsImports.Livraisons;
+using Api.Services.Groupes;
 using Api.Services.Livraisons;
+using Api.Services.Utilisateurs;
+using Api.Services.Vehicules;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Services.Mdp;
 
 namespace Api.Routes;
 
@@ -16,6 +22,10 @@ public static class LivraisonRoute
         builder.MapGet("lister", ListerAsync)
             .WithDescription("Lister les livraisons")
             .Produces<PaginationExport<LivraisonExport>>();
+
+        builder.MapPost("ajouter", AjouterAsync)
+            .WithDescription("Ajouter une livraison")
+            .ProducesCreated<string>();
 
         return builder;
     }
@@ -31,5 +41,43 @@ public static class LivraisonRoute
         var retour = await _livraisonServ.ListerAsync(_filtre, idGroupe);
 
         return Results.Extensions.OK(retour, PaginationExportContext.Default);
+    }
+
+    async static Task<IResult> AjouterAsync(
+        HttpContext _httpContext,
+        [FromServices] IValidator<LivraisonImport> _validator,
+        [FromServices] ILivraisonService _livraisonServ,
+        [FromServices] IUtilisateurService _utilisateurServ,
+        [FromServices] IVehiculeService _vehiculeServ,
+        [FromServices] IMdpService _mdpServ,
+        [FromServices] IGroupeService _groupeServ,
+        [FromBody] LivraisonImport _livraison
+    )
+    {
+        var validate = await _validator.ValidateAsync(_livraison);
+
+        if (!validate.IsValid)
+            return Results.Extensions.ErreurValidator(validate.Errors);
+
+        int idGroupe = _httpContext.RecupererIdGroupe();
+        string prefix = await _groupeServ.PrefixAsync(idGroupe);
+
+        var info = await Task.WhenAll(
+            _utilisateurServ.RecupererId(_livraison.IdPublicConducteur, idGroupe),
+            _vehiculeServ.RecupererId(_livraison.IdPublicVehicule, idGroupe)
+        );
+
+        Livraison livraison = new()
+        {
+            Date = _livraison.Date,
+            IdPublic = Guid.NewGuid(),
+            IdUtilisateur = info[0],
+            IdVehicule = info[1],
+            Numero = prefix + _mdpServ.Generer(17, false)
+        };
+
+        int id = await _livraisonServ.AjouterAsync(livraison, _livraison.Liste);
+
+        return Results.Created("", livraison.IdPublic);
     }
 }

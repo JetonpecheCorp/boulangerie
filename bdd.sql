@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Vehicule (
     IdGroupe INT NOT NULL,
 
     IdPublic CHAR(36) NOT NULL,
+    Nom VARCHAR(100) NOT NULL,
     Immatriculation VARCHAR(15) NOT NULL,
     InfoComplementaire VARCHAR(1000) NULL,
 
@@ -224,9 +225,9 @@ VALUES
 INSERT INTO Boulangerie.Utilisateur (Id, IdGroupe, IdPublic, Nom, Prenom, Mail, Telephone, Mdp, EstAdmin) VALUES
 (1, 1, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bdd236", "Nom", "Prenom", "nicolas.np63@gmail.com", "0712345678", "yimhFlboLHHjb4ICUsbUWg==$dWw+5jh/V0oSKgCADPba607hO3j+9wLdpqk/Bepm6KM=", 1);
 
-INSERT INTO Boulangerie.Vehicule (Id, IdGroupe, IdPublic, Immatriculation, InfoComplementaire) VALUES 
-(1, 1, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bdd236", "AA-000-AA", null),
-(2, 1, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bad237", "BB-000-BB", "info supp");
+INSERT INTO Boulangerie.Vehicule (Id, IdGroupe, Nom, IdPublic, Immatriculation, InfoComplementaire) VALUES 
+(1, 1, "Renault 4", "d41a0aa9-7f45-4e11-9e5c-3c1ef2bdd236", "AA-000-AA", null),
+(2, 1, "Clio 6", "d41a0aa9-7f45-4e11-9e5c-3c1ef2bad237", "BB-000-BB", "info supp");
 
 INSERT INTO Boulangerie.Tva (Id, Valeur) 
 VALUES 

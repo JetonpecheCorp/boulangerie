@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Api.Models;
 
@@ -43,7 +40,6 @@ public partial class BoulangerieContext : DbContext
     public virtual DbSet<Vehicule> Vehicules { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -369,6 +365,7 @@ public partial class BoulangerieContext : DbContext
 
             entity.Property(e => e.Immatriculation).HasMaxLength(15);
             entity.Property(e => e.InfoComplementaire).HasMaxLength(1000);
+            entity.Property(e => e.Nom).HasMaxLength(100);
 
             entity.HasOne(d => d.IdGroupeNavigation).WithMany(p => p.Vehicules)
                 .HasForeignKey(d => d.IdGroupe)

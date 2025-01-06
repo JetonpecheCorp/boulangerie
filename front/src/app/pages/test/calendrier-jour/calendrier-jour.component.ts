@@ -74,7 +74,10 @@ export class CalendrierJourComponent implements OnInit, OnChanges
 
   protected OuvrirModalProgrammerLivraison(): void
   {
-    this.matDialog.open(ProgrammerLivraisonComponent, { data: { date: this.dateJour() }}); 
+    this.matDialog.open(ProgrammerLivraisonComponent, { 
+      data: { date: this.dateJour() },
+      maxWidth: 1000
+    }); 
   }
 
   protected Alternatif(): void

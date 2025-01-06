@@ -60,7 +60,10 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
 
     const DATE = new Date(_date);
 
-    this.matDialog.open(ProgrammerLivraisonComponent, { data: { date: DATE }});
+    this.matDialog.open(ProgrammerLivraisonComponent, { 
+      data: { date: DATE },
+      minWidth: "700px"
+    });
   }
 
   protected AfficherVueAlternatif(_indexJour: number): void

@@ -35,6 +35,11 @@ mat-card-content, mat-card-header
     padding: 5px;
 }
 
+.element-clickable
+{
+    cursor: pointer;
+}
+
 .element:not(:last-child)
 {
     border-bottom: 1px solid black;

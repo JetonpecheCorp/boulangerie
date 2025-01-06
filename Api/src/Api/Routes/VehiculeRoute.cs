@@ -71,6 +71,7 @@ public static class VehiculeRoute
         {
             IdGroupe = idGroupe,
             IdPublic = Guid.NewGuid(),
+            Nom = _vehiculeImport.Nom.XSS(),
             Immatriculation = _vehiculeImport.Immatriculation.XSS(),
             InfoComplementaire = _vehiculeImport.InfoComplementaire?.XSS()
         };
@@ -96,6 +97,7 @@ public static class VehiculeRoute
         int idGroupe = _httpContext.RecupererIdGroupe();
 
         bool estModifier = await _vehiculeServ.ModifierAsync(
+            _vehiculeImport.Nom.XSS(),
             _vehiculeImport.Immatriculation.XSS(),
             _vehiculeImport.InfoComplementaire?.XSS(),
             _idPublicVehicule, idGroupe

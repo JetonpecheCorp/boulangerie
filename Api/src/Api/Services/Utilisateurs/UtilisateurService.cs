@@ -54,6 +54,19 @@ public class UtilisateurService(BoulangerieContext _context) : IUtilisateurServi
         return await _context.Utilisateurs.Where(x => x.Mail == _mail).FirstOrDefaultAsync();
     }
 
+    public async Task<int> RecupererId(Guid _idPublic, int _idGroupe)
+    {
+        return await _context.Utilisateurs
+            .Where(x => x.IdPublic == _idPublic && x.IdGroupe == _idGroupe)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<bool> ExisteAsync(Guid _idPublic, int _idGroupe)
+    {
+        return await _context.Utilisateurs.AnyAsync(x => x.IdPublic == _idPublic && x.IdGroupe == _idGroupe);
+    }
+
     public async Task<bool> MailExisteAsync(string _mail, int _idGroupe = 0)
     {
         if(string.IsNullOrWhiteSpace(_mail))

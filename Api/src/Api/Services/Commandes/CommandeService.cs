@@ -15,6 +15,22 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
         var requete = _context.Commandes
             .Where(x => x.IdGroupe == _idGroupe);
 
+        if (_filtre.IdPublicLivraison is not null)
+#pragma warning disable CS8602 // Déréférencement d'une éventuelle référence null.
+            requete = requete.Where(x => x.IdLivraisonNavigation.IdPublic == _filtre.IdPublicLivraison);
+#pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null.
+
+        else if (_filtre.SansLivraison.HasValue)
+        {
+            // commande sans livraison
+            if (_filtre.SansLivraison.Value)
+                requete = requete.Where(x => x.IdLivraison == null && x.EstLivraison);
+
+            // commande avec livraison
+            else
+                requete = requete.Where(x => x.IdLivraison != null);
+        }
+
         requete = _filtre.Status switch
         {
             EStatusCommande.Valider => requete.Where(x => x.DateValidation.HasValue),
@@ -157,5 +173,10 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
         int nb = await requete.ExecuteUpdateAsync(builder.SetPropertyCalls);
 
         return nb > 0;
+    }
+
+    public async Task<bool> ExisteAsync(string _numero, int _idGroupe)
+    {
+        return await _context.Commandes.AnyAsync(x => x.Numero == _numero && x.IdGroupe == _idGroupe);
     }
 }

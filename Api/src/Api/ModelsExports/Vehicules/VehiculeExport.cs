@@ -7,6 +7,9 @@ public sealed record VehiculeExport
     [JsonPropertyName("idPublic")]
     public required Guid IdPublic { get; init; }
 
+    [JsonPropertyName("nom")]
+    public required string Nom { get; init; }
+
     [JsonPropertyName("immatriculation")]
     public required string Immatriculation { get; init; }
 

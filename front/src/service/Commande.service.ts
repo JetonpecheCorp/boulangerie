@@ -19,7 +19,10 @@ export class CommandeService
     let dateDebut = _filtre.dateDebut.toISOFormat();
     let dateFin = _filtre.dateFin.toISOFormat();
 
-    const INFOS = { dateDebut, dateFin, status: _filtre.status };
+    const INFOS: any = { dateDebut, dateFin, status: _filtre.status };
+
+    if(_filtre.sansLivraison != undefined && _filtre.sansLivraison != null)
+      INFOS.sansLivraison = _filtre.sansLivraison ? "true" : "false"
 
     return this.http.get<Commande[]>(`${this.BASE_API}/lister`, { params: INFOS }).pipe(
         takeUntilDestroyed(this.destroyRef),

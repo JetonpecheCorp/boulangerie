@@ -26,7 +26,7 @@ import { AjouterModifierVehiculeComponent } from '@modal/ajouter-modifier-vehicu
 })
 export class VehiculeComponent 
 {
-  displayedColumns: string[] = ["immatriculation", "info", "action"];
+  displayedColumns: string[] = ["nom", "immatriculation", "info", "action"];
   dataSource = signal<MatTableDataSource<Vehicule>>(new MatTableDataSource());
   estEnChargement = signal(false);
 

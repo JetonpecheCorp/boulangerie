@@ -54,4 +54,34 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
             NbParPage = _filtre.NbParPage
         };
     }
+
+    public async Task<int> AjouterAsync(Livraison _livraison, LivraisonCommande[] _listeCommande)
+    {
+        string[] listeNumeroCommande = _listeCommande.Select(x => x.Numero).ToArray();
+
+        Commande[] liste = await _context.Commandes
+            .Where(x => listeNumeroCommande.Contains(x.Numero))
+            .ToArrayAsync();
+
+        _livraison.Commandes = liste;
+
+        _context.Livraisons.Add(_livraison);
+        int nb = await _context.SaveChangesAsync();
+
+        if (nb is 0)
+            return 0;
+
+        for (int i = 0; i < liste.Length; i++)
+        {
+            var element = liste[i];
+
+            int ordre = _listeCommande.First(x => x.Numero == element.Numero).Ordre;
+
+            element.OrdreLivraison = ordre;
+        }
+
+        nb = await _context.SaveChangesAsync();
+
+        return _livraison.Id; 
+    }
 }

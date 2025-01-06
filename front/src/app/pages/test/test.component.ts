@@ -81,6 +81,12 @@ export class TestComponent implements OnInit
     });
   }
 
+  protected OuvrirModalRecette(_e:any): void
+  {
+    console.log(_e);
+    
+  }
+
   protected Suivant(): void
   {
     this.dateJour.update(x => 
