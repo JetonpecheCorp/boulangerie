@@ -4,7 +4,7 @@ import { environment } from '../environments/environment';
 import { map, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LivraisonExport } from '@model/exports/LivraisonExport';
-import { Livraison } from '@model/Livraison';
+import { Livraison, LivraisonDetail } from '@model/Livraison';
 import { Pagination } from '@model/Pagination';
 import { PaginationExport } from '@model/exports/PaginationExport';
 
@@ -28,6 +28,11 @@ export class LivraisonService
           return retour;
         })
       );
+  }
+
+  Detail(_idPublicLivraison: string): Observable<LivraisonDetail>
+  {
+    return this.http.get<LivraisonDetail>(`${this.BASE_API}/detail/${_idPublicLivraison}`).pipe(takeUntilDestroyed(this.destroyRef));
   }
 
   Ajouter(_livraison: LivraisonExport): Observable<string>
