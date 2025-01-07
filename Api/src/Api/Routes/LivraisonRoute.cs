@@ -23,6 +23,11 @@ public static class LivraisonRoute
             .WithDescription("Lister les livraisons")
             .Produces<PaginationExport<LivraisonExport>>();
 
+        builder.MapGet("detail/{idPublicLivraison:guid}", DetailAsync)
+            .WithDescription("Detail de la livraison")
+            .ProducesNotFound()
+            .Produces<LivraisonDetailExport>();
+
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter une livraison")
             .ProducesCreated<string>();
@@ -41,6 +46,17 @@ public static class LivraisonRoute
         var retour = await _livraisonServ.ListerAsync(_filtre, idGroupe);
 
         return Results.Extensions.OK(retour, PaginationExportContext.Default);
+    }
+
+    async static Task<IResult> DetailAsync(
+        HttpContext _httpContext,
+        [FromServices] ILivraisonService _livraisonServ,
+        [FromRoute(Name = "idPublicLivraison")] Guid _idPublicLivraison
+    )
+    {
+        var info = await _livraisonServ.RecupererDetailAsync(_idPublicLivraison);
+
+        return info is not null ? Results.Extensions.OK(info, LivraisonDetailExportContext.Default) : Results.NotFound("La livraison n'existe pas");
     }
 
     async static Task<IResult> AjouterAsync(

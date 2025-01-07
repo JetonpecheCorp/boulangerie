@@ -1,9 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { DestroyRef, inject } from '@angular/core';
 import { environment } from '../environments/environment';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LivraisonExport } from '@model/exports/LivraisonExport';
+import { Livraison } from '@model/Livraison';
+import { Pagination } from '@model/Pagination';
+import { PaginationExport } from '@model/exports/PaginationExport';
 
 export class LivraisonService 
 {
@@ -12,8 +15,23 @@ export class LivraisonService
   private http: HttpClient = inject(HttpClient);
   private destroyRef: DestroyRef = inject(DestroyRef);
 
-  Ajouter(_livraison: LivraisonExport): Observable<any>
+  Lister(_pagination: PaginationExport): Observable<Pagination<Livraison>>
   {
-    return this.http.post<any>(`${this.BASE_API}/ajouter`, _livraison).pipe(takeUntilDestroyed(this.destroyRef));
+    return this.http.get<Pagination<Livraison>>(`${this.BASE_API}/lister`, { params: _pagination })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        map(retour =>  
+        {
+          for (let element of retour.liste) 
+            element.date = new Date(element.date);  
+
+          return retour;
+        })
+      );
+  }
+
+  Ajouter(_livraison: LivraisonExport): Observable<string>
+  {
+    return this.http.post<string>(`${this.BASE_API}/ajouter`, _livraison).pipe(takeUntilDestroyed(this.destroyRef));
   }
 }

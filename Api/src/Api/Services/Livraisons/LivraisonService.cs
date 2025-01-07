@@ -3,6 +3,7 @@ using Api.ModelsExports;
 using Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Api.ModelsImports.Livraisons;
+using Api.ModelsExports.Commandes;
 
 namespace Api.Services.Livraisons;
 
@@ -32,18 +33,7 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
                 IdPublic = x.IdPublic,
                 FraisHT = x.Frais,
                 Numero = x.Numero,
-                Date = x.Date,
-                Vehicule = new LivraisonVehiculeExport 
-                { 
-                    IdPublic = x.IdVehiculeNavigation.IdPublic,
-                    Immatriculation = x.IdVehiculeNavigation.Immatriculation,
-                    InfoComplementaire = x.IdVehiculeNavigation.InfoComplementaire
-                },
-                Conducteur = new LivraisonConducteurExport 
-                {
-                    Nom = x.IdUtilisateurNavigation.Nom,
-                    Prenom = x.IdUtilisateurNavigation.Prenom
-                }
+                Date = x.Date
             }).ToArrayAsync();
 
         return new PaginationExport<LivraisonExport>
@@ -53,6 +43,54 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
             NumPage = _filtre.NumPage,
             NbParPage = _filtre.NbParPage
         };
+    }
+
+    public async Task<LivraisonDetailExport?> RecupererDetailAsync(Guid _idPublicLivraison)
+    {
+        if (_idPublicLivraison == Guid.Empty)
+            return null;
+
+        var detail = await _context.Livraisons
+            .Where(x => x.IdPublic == _idPublicLivraison)
+            .Select(x => new LivraisonDetailExport
+            {
+                Conducteur = new LivraisonConducteurExport
+                {
+                    IdPublic = x.IdPublic,
+                    NomComplet = x.IdUtilisateurNavigation.Prenom + " " + x.IdUtilisateurNavigation.Nom
+                },
+
+                Vehicule = new LivraisonVehiculeExport
+                {
+                    IdPublic = x.IdVehiculeNavigation.IdPublic,
+                    Immatriculation = x.IdVehiculeNavigation.Immatriculation,
+                    Nom = x.IdVehiculeNavigation.Nom
+                },
+
+                ListeCommande = x.Commandes.Select(y => new CommandeExport
+                {
+                    Date = y.DatePourLe,
+                    EstLivraison = true,
+                    Numero = y.Numero,
+                    Status = Enums.EStatusCommande.Valider,
+                    Client = y.IdClientNavigation != null ? new CommandeClientExport
+                    {
+                        Adresse = y.IdClientNavigation.Adresse,
+                        IdPublic = y.IdClientNavigation.IdPublic,
+                        Nom = y.IdClientNavigation.Nom
+                    } : null,
+
+                    ListeProduit = y.ProduitCommandes.Select(z => new CommandeProduitExport
+                    {
+                        IdPublic = z.IdProduitNavigation.IdPublic,
+                        Nom = z.IdProduitNavigation.Nom,
+                        Quantite = z.Quantite
+                    }).ToArray()
+                }).ToArray()
+            })
+            .FirstOrDefaultAsync();
+
+        return detail;
     }
 
     public async Task<int> AjouterAsync(Livraison _livraison, LivraisonCommande[] _listeCommande)
