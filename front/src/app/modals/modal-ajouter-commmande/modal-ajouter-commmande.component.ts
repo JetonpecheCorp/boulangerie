@@ -39,12 +39,14 @@ export class ModalAjouterCommmandeComponent implements OnInit
 {
   private inputQte = viewChild.required<ElementRef>("inputQte");
 
+  protected titre = signal("Nouvelle commande");
   protected btnClicker = signal(false);
   protected form: FormGroup;
 
   protected dataSourceFiltrer = signal<ProduitLeger[]>([]);
   protected dataSourceClientFiltrer = signal<ClientLeger[]>([]);
-  protected dialogData: Info = inject(MAT_DIALOG_DATA);
+
+  private dialogData: Info = inject(MAT_DIALOG_DATA);
 
   private dataSource = signal<ProduitLeger[]>([]);
   private dataSourceClient = signal<ClientLeger[]>([]);
@@ -58,13 +60,16 @@ export class ModalAjouterCommmandeComponent implements OnInit
 
   ngOnInit(): void 
   {
+    if(this.dialogData.commande)
+      this.titre.set("Modifier commande");
+
     this.ListerProduit();
     this.ListerClient();
 
     this.form = new FormGroup({
       autoComplete: new FormControl(""),
-      autoCompleteClient: new FormControl<string | null>(null),
-      listeProduit: new FormControl<ProduitCommande[]>([], [Validators.required]),
+      autoCompleteClient: new FormControl<string | null>(this.dialogData.commande?.client?.nom ?? null),
+      listeProduit: new FormControl<ProduitCommande[]>(this.dialogData.commande?.listeProduit ?? [], [Validators.required]),
       date: new FormControl<Date>(this.dialogData.date, [Validators.required])
     }); 
     
@@ -186,34 +191,46 @@ export class ModalAjouterCommmandeComponent implements OnInit
 
     this.btnClicker.set(true);
 
-    this.commandeServ.Ajouter(INFOS).subscribe({
-      next: (numeroCommande) => 
-      {
-        const CLIENT = INFOS.idPublicClient ? 
+    if(this.dialogData.commande)
+    {
+      this.commandeServ.modifierAdmin(this.dialogData.commande.numero, INFOS).subscribe({
+        next: () =>
         {
-          idPublic: INFOS.idPublicClient, 
-          nom: ""
-        } as ClientCommande : null;
 
-        const CMD: Commande = 
+        }
+      })
+    }
+    else
+    {
+      this.commandeServ.Ajouter(INFOS).subscribe({
+        next: (numeroCommande) => 
         {
-          date: new Date(INFOS.date),
-          client: CLIENT,
-          livraison: null,
-          status: EStatusCommande.EnAttenteValidation,
-          nomStatus: ConvertionEnum.StatusCommande(EStatusCommande.EnAttenteValidation),
-
-          estLivraison: false,
-          numero: numeroCommande,
-          listeProduit: this.form.controls["listeProduit"].value
-        };
-
-        this.btnClicker.set(false);
-
-        this.dialogRef.close(CMD);
-      },
-      error: () => this.btnClicker.set(false)
-    });
+          const CLIENT = INFOS.idPublicClient ? 
+          {
+            idPublic: INFOS.idPublicClient, 
+            nom: ""
+          } as ClientCommande : null;
+  
+          const CMD: Commande = 
+          {
+            date: new Date(INFOS.date),
+            client: CLIENT,
+            livraison: null,
+            status: EStatusCommande.EnAttenteValidation,
+            nomStatus: ConvertionEnum.StatusCommande(EStatusCommande.EnAttenteValidation),
+  
+            estLivraison: false,
+            numero: numeroCommande,
+            listeProduit: this.form.controls["listeProduit"].value
+          };
+  
+          this.btnClicker.set(false);
+  
+          this.dialogRef.close(CMD);
+        },
+        error: () => this.btnClicker.set(false)
+      });
+    }
   }
 
   private ListerProduit(): void
@@ -228,6 +245,29 @@ export class ModalAjouterCommmandeComponent implements OnInit
       {
         this.dataSource.set(retour.liste);
         this.dataSourceFiltrer.set(retour.liste);
+
+        if(!this.dialogData.commande)
+          return;
+
+        let liste: ProduitLeger[] = [];
+        let listeProduitCommande = this.dialogData.commande.listeProduit;
+
+        for (const element of retour.liste) 
+        {
+          const INDEX = listeProduitCommande.findIndex(x => x.idPublic == element.idPublic);
+
+          if(INDEX != -1)
+            continue;
+
+          liste.push({
+            idPublic: element.idPublic,
+            nom: element.nom,
+            prixHt: element.prixHt
+          });
+        }
+
+        this.dataSource.set(liste);
+        this.dataSourceFiltrer.set(liste);
       }
     });
   }

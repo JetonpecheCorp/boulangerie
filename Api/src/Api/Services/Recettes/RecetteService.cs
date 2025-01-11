@@ -6,15 +6,13 @@ namespace Api.Services.Recettes;
 
 public sealed class RecetteService(BoulangerieContext _context) : IRecetteService
 {
-    public async Task<RecetteExport[]> ListerAsync(string _idPublicProduit, int _idGroupe)
+    public async Task<RecetteExport[]> ListerAsync(Guid _idPublicProduit, int _idGroupe)
     {
-        bool ok = Guid.TryParse(_idPublicProduit, out Guid idPublicProduit);
-
-        if (!ok)
+        if (_idPublicProduit == Guid.Empty)
             return [];
 
         var liste = await _context.Recettes
-            .Where(x => x.IdProduitNavigation.IdPublic == idPublicProduit)
+            .Where(x => x.IdProduitNavigation.IdPublic == _idPublicProduit)
             .Select(x => new RecetteExport
             {
                 IdPublicIngredient = x.IdIngredientNavigation.IdPublic,
@@ -37,22 +35,19 @@ public sealed class RecetteService(BoulangerieContext _context) : IRecetteServic
     }
 
     public async Task<bool> ModifierQteAsync(
-        string _idPublicProduit,
-        string _idPublicIngredient,
+        Guid _idPublicProduit,
+        Guid _idPublicIngredient,
         decimal _quantite,
         int _idGroupe
     )
     {
         int nb = 0;
 
-        if(
-            Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient) &&
-            Guid.TryParse(_idPublicProduit, out Guid idPublicProduit)
-        )
+        if(_idPublicIngredient != Guid.Empty && _idPublicProduit != Guid.Empty)
         {
             nb = await _context.Recettes.Where(x =>
-                x.IdIngredientNavigation.IdPublic == idPublicIngredient &&
-                x.IdProduitNavigation.IdPublic == idPublicProduit &&
+                x.IdIngredientNavigation.IdPublic == _idPublicIngredient &&
+                x.IdProduitNavigation.IdPublic == _idPublicProduit &&
                 x.IdProduitNavigation.IdGroupe == _idGroupe &&
                 x.IdIngredientNavigation.IdGroupe == _idGroupe
             )
@@ -62,47 +57,31 @@ public sealed class RecetteService(BoulangerieContext _context) : IRecetteServic
         return nb > 0;
     }
 
-    public async Task<bool> SupprimerAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe)
+    public async Task<bool> SupprimerAsync(Guid _idPublicProduit, Guid _idPublicIngredient, int _idGroupe)
     {
-        if (string.IsNullOrWhiteSpace(_idPublicIngredient) || string.IsNullOrWhiteSpace(_idPublicProduit))
+        if (_idPublicIngredient == Guid.Empty || _idPublicProduit == Guid.Empty)
             return false;
 
-        if (
-            Guid.TryParse(_idPublicProduit, out Guid idPublicProduit) &&
-            Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient)
-        )
-        {
-            int nb = await _context.Recettes.Where(x =>
-                x.IdIngredientNavigation.IdPublic == idPublicIngredient &&
-                x.IdProduitNavigation.IdPublic == idPublicProduit &&
-                x.IdProduitNavigation.IdGroupe == _idGroupe &&
-                x.IdIngredientNavigation.IdGroupe == _idGroupe
-            ).ExecuteDeleteAsync();
+        int nb = await _context.Recettes.Where(x =>
+            x.IdIngredientNavigation.IdPublic == _idPublicIngredient &&
+            x.IdProduitNavigation.IdPublic == _idPublicProduit &&
+            x.IdProduitNavigation.IdGroupe == _idGroupe &&
+            x.IdIngredientNavigation.IdGroupe == _idGroupe
+        ).ExecuteDeleteAsync();
 
-            return nb > 0;
-        }
-
-        return false;
+        return nb > 0;
     }
 
-    public async Task<bool> ExisteAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe)
+    public async Task<bool> ExisteAsync(Guid _idPublicProduit, Guid _idPublicIngredient, int _idGroupe)
     {
-        if (string.IsNullOrWhiteSpace(_idPublicIngredient) || string.IsNullOrWhiteSpace(_idPublicProduit))
+        if (_idPublicIngredient == Guid.Empty || _idPublicProduit == Guid.Empty)
             return false;
 
-        if (
-            Guid.TryParse(_idPublicProduit, out Guid idPublicProduit) &&
-            Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient)
-        )
-        {
-            return await _context.Recettes.AnyAsync(x =>
-                x.IdIngredientNavigation.IdPublic == idPublicIngredient &&
-                x.IdProduitNavigation.IdPublic == idPublicProduit &&
-                x.IdProduitNavigation.IdGroupe == _idGroupe &&
-                x.IdIngredientNavigation.IdGroupe == _idGroupe
-            );
-        }
-
-        return false;
+        return await _context.Recettes.AnyAsync(x =>
+            x.IdIngredientNavigation.IdPublic == _idPublicIngredient &&
+            x.IdProduitNavigation.IdPublic == _idPublicProduit &&
+            x.IdProduitNavigation.IdGroupe == _idGroupe &&
+            x.IdIngredientNavigation.IdGroupe == _idGroupe
+        );
     }
 }

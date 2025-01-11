@@ -11,7 +11,7 @@ public class CategorieImportValidator: AbstractValidator<CategorieImport>
 
         RuleFor(x => x).Custom((x, context) =>
         {
-            if (x.Mode == Enums.EModeImport.Modifier && string.IsNullOrEmpty(x.IdPublic))
+            if (x.Mode == Enums.EModeImport.Modifier && x.IdPublic == Guid.Empty)
                 context.AddFailure("idPublic", "'idPublic' ne peut pas être vide ou null");
         });
     }

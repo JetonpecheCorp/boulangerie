@@ -40,7 +40,7 @@ public static class RecetteRoute
 
     async static Task<IResult> ListerAsync(
         HttpContext _httpContext,
-        [FromRoute(Name = "idPublicProduit")] string _idPublicProduit,
+        [FromRoute(Name = "idPublicProduit")] Guid _idPublicProduit,
         IRecetteService _recetteServ
     )
     {

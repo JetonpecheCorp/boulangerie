@@ -27,8 +27,8 @@ namespace Api.Services.Clients
         /// </summary>
         /// <param name="_idPublicClient">id public conserné</param>
         /// <param name="_idGroupe">id groupe conserné</param>
-        /// <returns><see langword="int"/>id, sinon <see langword="null"/></returns>
-        Task<int?> RecupererIdAsync(string _idPublicClient, int _idGroupe);
+        /// <returns><see langword="int"/>id, sinon 0</returns>
+        Task<int> RecupererIdAsync(Guid _idPublicClient, int _idGroupe);
 
         /// <summary>
         /// Vérifier que la catégorie exite
@@ -36,6 +36,6 @@ namespace Api.Services.Clients
         /// <param name="_idPublicClient">id public client a vérifier</param>
         /// <param name="_idGroupe">id groupe du client a vérifier</param>
         /// <returns><see langword="true"/> si existe, sinon <see langword="false"/></returns>
-        Task<bool> ExisteAsync(string _idPublicClient, int _idGroupe);
+        Task<bool> ExisteAsync(Guid _idPublicClient, int _idGroupe);
     }
 }

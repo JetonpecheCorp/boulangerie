@@ -86,7 +86,7 @@ public static class CategorieRoute
         if(idPublic != Guid.Empty)
         {
             await _cache.EvictByTagAsync(NomCache.Categorie, default);
-            return Results.Created("", idPublic.ToString("D"));
+            return Results.Created("", idPublic);
         }
 
         return Results.BadRequest("Erreur d'ajout de la categorie");
@@ -111,7 +111,7 @@ public static class CategorieRoute
 
         bool estModifier = await _categorieServ.ModifierAsync(
             _categorieImport.Nom,
-            _categorieImport.IdPublic!,
+            _categorieImport.IdPublic!.Value,
             idGroupe
         );
 

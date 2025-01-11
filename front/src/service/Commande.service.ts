@@ -46,6 +46,11 @@ export class CommandeService
     return this.http.post<string>(`${this.BASE_API}/ajouter`, _commande).pipe(takeUntilDestroyed(this.destroyRef));
   }
 
+  modifierAdmin(_numeroCommande: string, _commande: CommandeExport): Observable<void>
+  {
+    return this.http.post<void>(`${this.BASE_API}/modifierAdmin/${_numeroCommande}`, _commande).pipe(takeUntilDestroyed(this.destroyRef));
+  }
+
   ModifierStatus(_numero: string, _status: EStatusCommande): Observable<void>
   {
     const INFOS = { 

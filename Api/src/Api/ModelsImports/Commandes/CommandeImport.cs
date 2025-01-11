@@ -4,14 +4,14 @@ namespace Api.ModelsImports.Commandes;
 
 public sealed record CommandeImport
 {
-    public string? IdPublicClient { get; init; }
+    public Guid? IdPublicClient { get; init; }
     public DateOnly Date { get; init; }
     public required ProduitCommandeImport[] ListeProduit { get; init; }
 }
 
 public sealed record ProduitCommandeImport
 {
-    public required string IdPublic { get; init; }
+    public required Guid IdPublic { get; init; }
     public required int Quantite { get; init; }
 }
 

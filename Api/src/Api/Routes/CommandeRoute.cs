@@ -30,6 +30,11 @@ public static class CommandeRoute
             .ProducesCreated<string>()
             .ProducesBadRequestErreurValidation();
 
+        builder.MapPut("modifierAdmin/{numeroCommande}", ModifierAsync)
+            .WithDescription("Modifier une commande")
+            .ProducesNoContent()
+            .ProducesBadRequestErreurValidation();
+
         builder.MapPut("modifierStatus", ModifierStatusAsync)
             .WithDescription("Modifier le status d'une commande")
             .ProducesNoContent()
@@ -69,27 +74,45 @@ public static class CommandeRoute
         if (!validate.IsValid)
             return Results.Extensions.ErreurValidator(validate.Errors);
 
-        string idPublicClient = _commandeImport.IdPublicClient ?? "";
+        Guid idPublicClient = _commandeImport.IdPublicClient ?? Guid.Empty;
 
         int idGroupe = _httpContext.RecupererIdGroupe();
         string prefixGrp = await _groupeServ.PrefixAsync(idGroupe);
-        int? idClient = await _clientServ.RecupererIdAsync(idPublicClient, idGroupe);
+        int idClient = await _clientServ.RecupererIdAsync(idPublicClient, idGroupe);
         string numero = _mdpServ.Generer(12, false);
 
         Commande commande = new()
         {
-            IdClient = idClient,
+            IdClient = idClient == 0 ? null : idClient,
             IdGroupe = idGroupe,
             Numero = $"{prefixGrp}{numero}",
             DatePourLe = _commandeImport.Date.ToDateTime(TimeOnly.MinValue)
         };
 
-        if(idClient is null)
+        if(idClient is 0)
             commande.DateValidation = DateTime.UtcNow;
 
         bool retour = await _commandeServ.AjouterAsync(commande, _commandeImport.ListeProduit);
 
         return retour ? Results.Created("", commande.Numero) : Results.BadRequest("Erreur d'ajout");
+    }
+
+    async static Task<IResult> ModifierAsync(
+        HttpContext _httpContext,
+        [FromServices] IValidator<CommandeImport> _validator,
+        [FromServices] ICommandeService _commandeServ,
+        [FromRoute(Name = "numeroCommande")] string _numeroCommande,
+        [FromBody] CommandeImport _commandeImport
+    )
+    {
+        var validate = await _validator.ValidateAsync(_commandeImport);
+
+        if (!validate.IsValid)
+            return Results.Extensions.ErreurValidator(validate.Errors);
+
+        bool ok = await _commandeServ.ModifierAsync(_numeroCommande, _commandeImport);
+
+        return ok ? Results.NoContent() : Results.BadRequest();
     }
 
     async static Task<IResult> ModifierStatusAsync(

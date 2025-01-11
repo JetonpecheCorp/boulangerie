@@ -18,7 +18,7 @@ namespace Api.Validators.Commandes
             int idGroupe = _httpContextAccessor.HttpContext!.RecupererIdGroupe();
 
             RuleFor(x => x.IdPublicClient)
-                .MustAsync(async (idPublic, _) => idPublic != null ? await _clientServ.ExisteAsync(idPublic, idGroupe) : true)
+                .MustAsync(async (idPublic, _) => idPublic.HasValue ? await _clientServ.ExisteAsync(idPublic.Value, idGroupe) : true)
                 .WithMessage("Le client n'existe pas");
 
             RuleForEach(x => x.ListeProduit).NotEmpty().ChildRules(x =>

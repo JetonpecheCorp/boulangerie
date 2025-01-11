@@ -148,7 +148,7 @@ public static class ProduitRoute
             .SetProperty(x => x.Stock, _produitImport.Stock)
             .SetProperty(x => x.StockAlert, _produitImport.StockAlert);
 
-        bool estModifier = await _produitServ.ModifierAsync(idGroupe, _produitImport.IdPublic!, builder);
+        bool estModifier = await _produitServ.ModifierAsync(idGroupe, _produitImport.IdPublic!.Value, builder);
 
         return estModifier ? Results.NoContent() : Results.NotFound("Le produit n'existe pas");
     }

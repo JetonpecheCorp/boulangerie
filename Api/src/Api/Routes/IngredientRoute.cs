@@ -108,7 +108,7 @@ public static class IngredientRoute
             .SetProperty(x => x.Nom, _ingredientImport.Nom)
             .SetProperty(x => x.CodeInterne, _ingredientImport.CodeInterne);
 
-        bool estModifier = await _ingredientServ.ModifierAsync(idGroupe, _ingredientImport.IdPublic!, builder);
+        bool estModifier = await _ingredientServ.ModifierAsync(idGroupe, _ingredientImport.IdPublic!.Value, builder);
 
         return estModifier ? Results.NoContent() : Results.NotFound("La ressource n'existe pas");
     }

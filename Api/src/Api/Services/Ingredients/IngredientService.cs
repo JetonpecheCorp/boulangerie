@@ -51,13 +51,13 @@ public class IngredientService(BoulangerieContext _context): IIngredientService
         return pagination;
     }
 
-    public async Task<int> RecupererIdAsync(string _idPublicIngredient, int _idGroupe)
+    public async Task<int> RecupererIdAsync(Guid _idPublicIngredient, int _idGroupe)
     {
         int id = 0;
 
-        if(Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient))
+        if(_idPublicIngredient != Guid.Empty)
         {
-            id = await _context.Ingredients.Where(x => x.IdPublic == idPublicIngredient && x.IdGroupe == _idGroupe)
+            id = await _context.Ingredients.Where(x => x.IdPublic == _idPublicIngredient && x.IdGroupe == _idGroupe)
                     .Select(x => x.Id)
                     .FirstOrDefaultAsync();
         }
@@ -73,25 +73,25 @@ public class IngredientService(BoulangerieContext _context): IIngredientService
         return nb > 0;
     }
 
-    public async Task<bool> ModifierAsync(int _idGroupe, string _idPublic, SetPropertyBuilder<Ingredient> _builder)
+    public async Task<bool> ModifierAsync(int _idGroupe, Guid _idPublic, SetPropertyBuilder<Ingredient> _builder)
     {
         int nb = 0;
         
-        if(Guid.TryParse(_idPublic, out Guid idPublic))
+        if(_idPublic != Guid.Empty)
         {
             nb = await _context.Ingredients
-                .Where(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublic)
+                .Where(x => x.IdGroupe == _idGroupe && x.IdPublic == _idPublic)
                 .ExecuteUpdateAsync(_builder.SetPropertyCalls);
         }
 
         return nb > 0;
     }
 
-    public async Task<bool> ExisteAsync(string _idPublicIngredient, int _idGroupe)
+    public async Task<bool> ExisteAsync(Guid _idPublicIngredient, int _idGroupe)
     {
-        if (Guid.TryParse(_idPublicIngredient, out Guid idPublicIngredient))
-            return await _context.Ingredients.AnyAsync(x => x.IdPublic == idPublicIngredient);
+        if (_idPublicIngredient == Guid.Empty)
+            return false;
 
-        return false;
+        return await _context.Ingredients.AnyAsync(x => x.IdPublic == _idPublicIngredient);
     }
 }

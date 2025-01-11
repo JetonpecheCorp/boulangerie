@@ -30,7 +30,7 @@ public interface IProduitService
     /// <param name="_idPublicProduit">id public de id produit conserné</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns>id produit, sinon 0</returns>
-    Task<int> RecupererIdAsync(string _idPublicProduit, int _idGroupe);
+    Task<int> RecupererIdAsync(Guid _idPublicProduit, int _idGroupe);
 
     /// <summary>
     /// Ajouter une nouveau produit
@@ -46,7 +46,7 @@ public interface IProduitService
     /// <param name="_idPublic">id public du produit</param>
     /// <param name="_builder">les infos modifier</param>
     /// <returns><see langword="true"/> si modifié, sinon <see langword="false"/></returns>
-    Task<bool> ModifierAsync(int _idGroupe, string _idPublic, SetPropertyBuilder<Produit> _builder);
+    Task<bool> ModifierAsync(int _idGroupe, Guid _idPublic, SetPropertyBuilder<Produit> _builder);
 
     /// <summary>
     /// Verifier que le produit existe dans le groupe
@@ -54,5 +54,5 @@ public interface IProduitService
     /// <param name="_idPublicProduit">id public du produit</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns><see langword="true"/> si existe, sinon <see langword="false"/></returns>
-    Task<bool> ExisteAsync(string _idPublicProduit, int _idGroupe);
+    Task<bool> ExisteAsync(Guid _idPublicProduit, int _idGroupe);
 }

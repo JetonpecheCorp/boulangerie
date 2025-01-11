@@ -77,7 +77,8 @@ export class ModalCalendrierJourComponent implements OnInit
   {
     const DIALOG_REF = this.matDialog.open(ModalAjouterCommmandeComponent, { 
       data: {
-        date: this.info.date
+        date: this.info.date,
+        commande: _commande
       }
     });
 

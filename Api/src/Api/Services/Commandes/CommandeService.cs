@@ -85,46 +85,12 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
         if (nb == 0)
             return false;
 
-        List<ProduitCommande> listeProduitCommande = [];
-        decimal prixTotalHt = 0;
+        List<ProduitCommande> listeProduitCommande = await FormaterListeProduitCommandeAsync(_commande.Id, _listeProduitCommande);
 
-        // construction des where SQL pour recuperer les produits
-        var predicat = PredicateBuilder.False<Produit>();
+        foreach (var element in listeProduitCommande)
+            _commande.PrixTotalHt += element.Quantite * element.Quantite;
 
-        for (int i = 0; i < _listeProduitCommande.Length; i++)
-        {
-            var element = _listeProduitCommande[i];
-
-            if(Guid.TryParse(element.IdPublic, out Guid idPublic))
-                predicat = predicat.Or(x => x.IdPublic == idPublic);
-        }
-
-        ProduitPrix[] produit = await _context.Produits
-            .Where(predicat)
-            .Select(x => new ProduitPrix(x.IdPublic, x.Id, x.PrixHt))
-            .ToArrayAsync();
-
-        // ajout des produits dans la commande
-        for (int i = 0; i < produit.Length; i++)
-        {
-            var element = produit[i];
-
-            var quantite = _listeProduitCommande
-                .First(x => x.IdPublic == element.IdPublic.ToString("D"))
-                .Quantite;
-
-            _context.ProduitCommandes.Add(new()
-            {
-                IdCommande = _commande.Id,
-                IdProduit = element.Id,
-                Quantite = quantite,
-                PrixHt = element.PrixHt
-            });
-
-            prixTotalHt += element.PrixHt * quantite;
-        }
-
-        _commande.PrixTotalHt = prixTotalHt;
+        _commande.ProduitCommandes = listeProduitCommande;
 
         nb = await _context.SaveChangesAsync();
 
@@ -135,6 +101,38 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
         }
 
         return true;
+    }
+
+    public async Task<bool> ModifierAsync(string _numero, CommandeImport _commande)
+    {
+        var commande = await _context.Commandes.Where(x => x.Numero == _numero).FirstOrDefaultAsync();
+
+        if (commande is null)
+            return false;
+
+        decimal totalPrixTotalHt = 0;
+        int idClient = await _context.Clients
+            .Where(x => x.IdPublic == _commande.IdPublicClient)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync();
+
+        commande.IdClient = idClient == 0 ? null : idClient;
+        commande.DatePourLe = _commande.Date.ToDateTime(TimeOnly.MinValue);
+
+        await _context.ProduitCommandes.Where(x => x.IdCommande == commande.Id).ExecuteDeleteAsync();
+
+        var listeProduitCommande = await FormaterListeProduitCommandeAsync(commande.Id, _commande.ListeProduit);
+
+        commande.ProduitCommandes = listeProduitCommande;
+
+        foreach (var element in listeProduitCommande)
+            totalPrixTotalHt += element.Quantite * element.Quantite;
+
+        commande.PrixTotalHt = totalPrixTotalHt;
+
+        int nb = await _context.SaveChangesAsync();
+
+        return nb > 0;
     }
 
     public async Task<bool> ModifierStatusAsync(string _numero, EStatusCommandeModifier _status, int _idGroupe)
@@ -178,5 +176,49 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
     public async Task<bool> ExisteAsync(string _numero, int _idGroupe)
     {
         return await _context.Commandes.AnyAsync(x => x.Numero == _numero && x.IdGroupe == _idGroupe);
+    }
+
+    private async Task<List<ProduitCommande>> FormaterListeProduitCommandeAsync(
+        int _idCommande, 
+        ProduitCommandeImport[] _listeProduitCommande
+    )
+    {
+        List<ProduitCommande> listeProduitCommande = [];
+
+        // construction des where SQL pour recuperer les produits
+        var predicat = PredicateBuilder.False<Produit>();
+
+        for (int i = 0; i < _listeProduitCommande.Length; i++)
+        {
+            var element = _listeProduitCommande[i];
+
+            if (element.IdPublic != Guid.Empty)
+                predicat = predicat.Or(x => x.IdPublic == element.IdPublic);
+        }
+
+        ProduitPrix[] produit = await _context.Produits
+            .Where(predicat)
+            .Select(x => new ProduitPrix(x.IdPublic, x.Id, x.PrixHt))
+            .ToArrayAsync();
+
+        // ajout des produits dans la commande
+        for (int i = 0; i < produit.Length; i++)
+        {
+            var element = produit[i];
+
+            var quantite = _listeProduitCommande
+                .First(x => x.IdPublic == element.IdPublic)
+                .Quantite;
+
+            listeProduitCommande.Add(new ProduitCommande
+            {
+                IdCommande = _idCommande,
+                IdProduit = element.Id,
+                Quantite = quantite,
+                PrixHt = element.PrixHt
+            });
+        }
+
+        return listeProduitCommande;
     }
 }

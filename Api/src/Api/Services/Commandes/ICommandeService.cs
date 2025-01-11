@@ -24,6 +24,14 @@ public interface ICommandeService
     Task<bool> AjouterAsync(Commande _commande, ProduitCommandeImport[] _listeProduitCommande);
 
     /// <summary>
+    /// Modifier une commande
+    /// </summary>
+    /// <param name="_numero"></param>
+    /// <param name="_commande"></param>
+    /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
+    Task<bool> ModifierAsync(string _numero, CommandeImport _commande);
+
+    /// <summary>
     /// Modifier le status d'une commande
     /// </summary>
     /// <param name="_numero">numero de la commande</param>

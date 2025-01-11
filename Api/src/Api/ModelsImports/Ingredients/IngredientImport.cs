@@ -5,7 +5,7 @@ namespace Api.ModelsImports.Ingredients;
 
 public sealed record IngredientImport
 {
-    public string? IdPublic { get; init; } = null;
+    public Guid? IdPublic { get; init; } = null;
     public required string Nom { get; init; }
     public string? CodeInterne { get; init; }
     public decimal Stock { get; init; }

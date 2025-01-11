@@ -5,7 +5,7 @@ namespace Api.ModelsImports.Categories;
 
 public sealed record CategorieImport
 {
-    public string? IdPublic { get; init; } = null;
+    public Guid? IdPublic { get; init; } = null;
     public required string Nom { get; init; }
 
     [JsonIgnore]
