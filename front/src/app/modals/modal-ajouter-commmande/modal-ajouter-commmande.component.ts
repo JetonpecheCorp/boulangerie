@@ -39,7 +39,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
 {
   private inputQte = viewChild.required<ElementRef>("inputQte");
 
-  protected titre = signal("Nouvelle commande");
+  protected estModeAjouter = signal(true);
   protected btnClicker = signal(false);
   protected form: FormGroup;
 
@@ -61,7 +61,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
   ngOnInit(): void 
   {
     if(this.dialogData.commande)
-      this.titre.set("Modifier commande");
+      this.estModeAjouter.set(false);
 
     this.ListerProduit();
     this.ListerClient();
@@ -196,9 +196,10 @@ export class ModalAjouterCommmandeComponent implements OnInit
       this.commandeServ.modifierAdmin(this.dialogData.commande.numero, INFOS).subscribe({
         next: () =>
         {
-
-        }
-      })
+          this.btnClicker.set(false);
+        },
+        error: () => this.btnClicker.set(false)
+      });
     }
     else
     {
