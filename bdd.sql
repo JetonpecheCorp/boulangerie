@@ -255,15 +255,11 @@ INSERT INTO Boulangerie.Produit (
     3, "", "EC", null, 5, 1
 );
 
-INSERT INTO Boulangerie.Livraison (Id, IdPublic, IdVehicule, IdUtilisateur, Numero, Date, Frais) 
-VALUES
-(1, "c8b114a3-8ab6-485d-9aef-b864371f8504", 1, 1, "Gup447390279311", "2024-12-06", 10);
-
-INSERT INTO Boulangerie.Commande (Id, IdGroupe, IdClient, IdLivraison, PrixTotalHT, Numero, DatePourLe)
+INSERT INTO Boulangerie.Commande (Id, IdGroupe, IdClient, PrixTotalHT, Numero, DatePourLe, EstLivraison, DateValidation)
 VALUES 
-(1, 1, 1, 1, 10.50, "Gup447390279310", "2024-12-06"),
-(2, 1, 1, 1, 30, "Gup447390279710", "2024-12-06"),
-(3, 1, 1, null, 30, "Gup447390271710", "2024-12-07");
+(1, 1, 1, 10.50, "Gup447390279310", "2024-12-06", 1, "2024-12-06"),
+(2, 1, 1, 30, "Gup447390279710", "2024-12-06", 1, "2024-12-06"),
+(3, 1, null, 30, "Gup447390271710", "2024-12-07", 0, "2024-12-07");
 
 INSERT INTO Boulangerie.ProduitCommande (IdProduit, IdCommande, Quantite, PrixHT)
 VALUES

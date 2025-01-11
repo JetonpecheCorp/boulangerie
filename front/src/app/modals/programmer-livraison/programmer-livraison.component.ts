@@ -24,6 +24,7 @@ import { Vehicule } from '@model/Vehicule';
 import { LivraisonService } from '@service/Livraison.service';
 import { LivraisonCommandeExport, LivraisonExport } from '@model/exports/LivraisonExport';
 import { VehiculeService } from '@service/Vehicule.service';
+import { StopPropagationDirective } from '../../directive/stop-propagation.directive';
 
 type Info =
 {
@@ -33,7 +34,7 @@ type Info =
 @Component({
   selector: 'app-programmer-livraison',
   standalone: true,
-  imports: [MatSelectModule, DragDropModule, MatIconModule, MatCardModule, MatDatepickerModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatInputModule, MatAutocompleteModule, MatFormFieldModule, ButtonComponent],
+  imports: [StopPropagationDirective, MatSelectModule, DragDropModule, MatIconModule, MatCardModule, MatDatepickerModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatInputModule, MatAutocompleteModule, MatFormFieldModule, ButtonComponent],
   templateUrl: './programmer-livraison.component.html',
   styleUrl: './programmer-livraison.component.scss'
 })

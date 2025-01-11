@@ -65,10 +65,31 @@
                 @for (element of listeCommande(); track element.numero) 
                 {
                     <div class="example-box" cdkDrag>
-                        <p>
-                            <b>N°</b> {{ element.numero }} <br>
-                            <b>Adresse:</b> {{ element.client!.adresse }} <br>
-                        </p>
+                        <div class="test">
+                            <p>
+                                <b>N°</b> {{ element.numero }} <br>
+                                <b>Adresse:</b> {{ element.client!.adresse }} <br>
+                            </p>
+    
+                            <button mat-icon-button 
+                                    stop-propagation
+                                    (click)="listeProduit.style.display = listeProduit.style.display == 'block' ? 'none' : 'block'">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                        </div>
+
+                        <div class="listeProduit" #listeProduit>
+                            <p><b>Produit(s)</b></p>
+
+                            <div class="row">
+                                @for (element2 of element.listeProduit; track $index) 
+                                {
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <p>- {{ element2.nom }} X{{ element2.quantite }}</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
                 }
             </div>
@@ -85,11 +106,32 @@
                 @for (element of listeCommandeLivraison(); track element.numero) 
                 {
                     <div class="example-box" cdkDrag>
-                        <p>
-                            <b>N°</b> {{ element.numero }} <br>
-                            <b>Adresse:</b> {{ element.client!.adresse }} <br>
-                            <b>Ordre de livraison:</b> {{ $index }}
-                        </p>
+                        <div class="test">
+                            <p>
+                                <b>N°</b> {{ element.numero }} <br>
+                                <b>Adresse:</b> {{ element.client!.adresse }} <br>
+                                <b>Ordre de livraison:</b> {{ $index }}
+                            </p>
+    
+                            <button mat-icon-button 
+                                    stop-propagation
+                                    (click)="listeProduit.style.display = listeProduit.style.display == 'block' ? 'none' : 'block'">
+                                <mat-icon>info</mat-icon>
+                            </button>
+                        </div>
+
+                        <div class="listeProduit" #listeProduit>
+                            <p><b>Produit(s)</b></p>
+
+                            <div class="row">
+                                @for (element2 of element.listeProduit; track $index) 
+                                {
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <p>- {{ element2.nom }} X{{ element2.quantite }}</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
                 }
             </div>

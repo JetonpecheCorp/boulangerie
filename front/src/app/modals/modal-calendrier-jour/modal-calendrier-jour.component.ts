@@ -82,8 +82,11 @@ export class ModalCalendrierJourComponent implements OnInit
     });
 
     DIALOG_REF.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (retour: Commande) =>
+      next: (retour?: Commande) =>
       {
+        if(!retour)
+          return;
+
         const INDEX = this.info.listeCommande.findIndex(x => x.numero == _commande.numero);
         this.info.listeCommande[INDEX] = retour;
 
