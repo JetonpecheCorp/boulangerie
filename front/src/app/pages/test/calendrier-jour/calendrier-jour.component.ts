@@ -76,7 +76,7 @@ export class CalendrierJourComponent implements OnInit, OnChanges
   {
     this.matDialog.open(ProgrammerLivraisonComponent, { 
       data: { date: this.dateJour() },
-      maxWidth: 1000
+      maxWidth: 1200
     }); 
   }
 

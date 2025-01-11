@@ -62,7 +62,7 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
 
     this.matDialog.open(ProgrammerLivraisonComponent, { 
       data: { date: DATE },
-      minWidth: "700px"
+      maxWidth: 1200
     });
   }
 
