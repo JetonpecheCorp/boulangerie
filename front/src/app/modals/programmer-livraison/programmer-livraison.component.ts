@@ -24,7 +24,7 @@ import { Vehicule } from '@model/Vehicule';
 import { LivraisonService } from '@service/Livraison.service';
 import { LivraisonCommandeExport, LivraisonExport } from '@model/exports/LivraisonExport';
 import { VehiculeService } from '@service/Vehicule.service';
-import { StopPropagationDirective } from '../../directive/stop-propagation.directive';
+import { StopPropagationDirective } from '@directive/stop-propagation.directive';
 
 type Info =
 {

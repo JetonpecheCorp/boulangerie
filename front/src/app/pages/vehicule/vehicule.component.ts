@@ -12,7 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { StopPropagationDirective } from '../../directive/stop-propagation.directive';
+import { StopPropagationDirective } from '@directive/stop-propagation.directive';
 import { Vehicule } from '@model/Vehicule';
 import { VehiculeService } from '@service/Vehicule.service';
 import { AjouterModifierVehiculeComponent } from '@modal/ajouter-modifier-vehicule/ajouter-modifier-vehicule.component';

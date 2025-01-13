@@ -30,6 +30,7 @@
       "@model/*": ["./src/models/*"],
       "@enum/*": ["./src/enums/*"],
       "@component/*": ["./src/app/components/*"],
+      "@directive/*": ["./src/app/directive/*"]
     }
   },
   "angularCompilerOptions": {

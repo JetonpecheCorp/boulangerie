@@ -2,7 +2,7 @@ import { Component, input, model, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { StopPropagationDirective } from '../../directive/stop-propagation.directive';
+import { StopPropagationDirective } from '@directive/stop-propagation.directive';
 
 @Component({
   selector: 'app-button',

@@ -9,7 +9,7 @@ import { ProgrammerLivraisonComponent } from '@modal/programmer-livraison/progra
 import { MatIconModule } from '@angular/material/icon';
 import { CommandeService } from '@service/Commande.service';
 import { ConvertionEnum, EStatusCommande } from '@enum/EStatusCommande';
-import { StopPropagationDirective } from '../../../directive/stop-propagation.directive';
+import { StopPropagationDirective } from '@directive/stop-propagation.directive';
 import { ThemeService } from '@service/ThemeService.Service';
 import {MatTooltipModule} from '@angular/material/tooltip';
 

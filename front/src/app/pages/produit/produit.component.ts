@@ -16,7 +16,7 @@ import { ProduitService } from '@service/Produit.service';
 import { Produit } from '@model/Produit';
 import { AjouterModifierProduitComponent } from '@modal/ajouter-modifier-produit/ajouter-modifier-produit.component';
 import { RecetteProduitComponent } from '@modal/recette-produit/recette-produit.component';
-import { StopPropagationDirective } from '../../directive/stop-propagation.directive';
+import { StopPropagationDirective } from '@directive/stop-propagation.directive';
 
 @Component({
   selector: 'app-produit',
