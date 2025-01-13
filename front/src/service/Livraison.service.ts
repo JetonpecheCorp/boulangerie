@@ -6,7 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LivraisonExport } from '@model/exports/LivraisonExport';
 import { Livraison, LivraisonDetail } from '@model/Livraison';
 import { Pagination } from '@model/Pagination';
-import { PaginationExport } from '@model/exports/PaginationExport';
+import { PaginationFiltreLivraisonExport } from '@model/exports/PaginationExport';
 
 export class LivraisonService 
 {
@@ -15,9 +15,26 @@ export class LivraisonService
   private http: HttpClient = inject(HttpClient);
   private destroyRef: DestroyRef = inject(DestroyRef);
 
-  Lister(_pagination: PaginationExport): Observable<Pagination<Livraison>>
+  Lister(_paginationFiltre: PaginationFiltreLivraisonExport): Observable<Pagination<Livraison>>
   {
-    return this.http.get<Pagination<Livraison>>(`${this.BASE_API}/lister`, { params: _pagination })
+    const INFOS: any = {
+      nbParPage: _paginationFiltre.nbParPage,
+      numPage: _paginationFiltre.numPage
+    };
+
+    if(_paginationFiltre.idPublicClient)
+      INFOS.idPublicClient = _paginationFiltre.idPublicClient;
+
+    if(_paginationFiltre.thermeRecherche)
+      INFOS.thermeRecherche = _paginationFiltre.thermeRecherche;
+
+    if(_paginationFiltre.dateDebut)
+      INFOS.dateDebut = _paginationFiltre.dateDebut.toISOFormat();
+
+    if(_paginationFiltre.dateFin)
+      INFOS.dateFin = _paginationFiltre.dateFin.toISOFormat();
+
+    return this.http.get<Pagination<Livraison>>(`${this.BASE_API}/lister`, { params: INFOS })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         map(retour =>  

@@ -20,8 +20,16 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
             );
         }
 
-        if(_filtre.Date != null)
-            requete = requete.Where(x => x.Date == _filtre.Date);
+        if(_filtre.DateDebut is not null)
+            requete = requete.Where(x => x.Date >= _filtre.DateDebut);
+
+        if(_filtre.DateFin is not null)
+            requete = requete.Where(x => x.Date <= _filtre.DateFin);
+
+        if (_filtre.IdPublicClient is not null && _filtre.IdPublicClient != Guid.Empty)
+#pragma warning disable CS8602 // Déréférencement d'une éventuelle référence null.
+            requete = requete.Where(x => x.Commandes.Any(y => y.IdClientNavigation.IdPublic == _filtre.IdPublicClient));
+#pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null.
 
         int total = await requete.CountAsync();
 

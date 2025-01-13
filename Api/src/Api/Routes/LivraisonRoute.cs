@@ -41,6 +41,12 @@ public static class LivraisonRoute
         [AsParameters] LivraisonFiltreImport _filtre
     )
     {
+        if (_filtre.NbParPage <= 0)
+            _filtre.NbParPage = 20;
+
+        if(_filtre.NumPage <= 0)
+            _filtre.NumPage = 1;
+
         int idGroupe = _httpContext.RecupererIdGroupe();
 
         var retour = await _livraisonServ.ListerAsync(_filtre, idGroupe);

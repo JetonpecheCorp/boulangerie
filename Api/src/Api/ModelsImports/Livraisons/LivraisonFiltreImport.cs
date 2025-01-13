@@ -4,7 +4,9 @@ namespace Api.ModelsImports.Livraisons;
 
 public sealed class LivraisonFiltreImport: PaginationImport
 {
-    public DateOnly? Date { get; init; }
+    public DateOnly? DateDebut { get; init; }
+    public DateOnly? DateFin { get; init; }
+    public Guid? IdPublicClient { get; init; }
 }
 
 [JsonSerializable(typeof(LivraisonFiltreImport))]
