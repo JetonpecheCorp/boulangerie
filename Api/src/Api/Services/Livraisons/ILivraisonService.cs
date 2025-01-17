@@ -29,4 +29,13 @@ public interface ILivraisonService
     /// <param name="_listeCommande">liste des commandes de la livraison</param>
     /// <returns>id livraison si OK / 0 => erreur</returns>
     Task<int> AjouterAsync(Livraison _livraison, LivraisonCommande[] _listeCommande);
+
+    /// <summary>
+    /// Modifier une livraison
+    /// </summary>
+    /// <param name="_idPublicLivraison">Id public livraison conserné</param>
+    /// <param name="_idGroupe">id groupe livraison</param>
+    /// <param name="_livraison">infos livraison a modifier</param>
+    /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
+    Task<bool> ModifierAsync(Guid _idPublicLivraison, int _idGroupe, LivraisonImport _livraison);
 }

@@ -10,6 +10,8 @@ export type LivraisonExport =
     frais: number
 }
 
+export type LivraisonModifierExport = Omit<LivraisonExport, "date">;
+
 export type LivraisonCommandeExport =
 {
     numero: string,

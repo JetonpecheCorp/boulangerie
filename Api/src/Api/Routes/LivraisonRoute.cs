@@ -32,6 +32,11 @@ public static class LivraisonRoute
             .WithDescription("Ajouter une livraison")
             .ProducesCreated<string>();
 
+        builder.MapPut("modifier/{idPublicLivraison:guid}", ModifierAsync)
+            .WithDescription("Modifier une livraison")
+            .ProducesBadRequestErreurValidation()
+            .ProducesNoContent();
+
         return builder;
     }
 
@@ -100,5 +105,25 @@ public static class LivraisonRoute
         int id = await _livraisonServ.AjouterAsync(livraison, _livraison.Liste);
 
         return Results.Created("", new { idPublic = livraison.IdPublic, numero = livraison.Numero });
+    }
+
+    async static Task<IResult> ModifierAsync(
+        HttpContext _httpContext,
+        [FromServices] IValidator<LivraisonImport> _validator,
+        [FromServices] ILivraisonService _livraisonServ,
+        [FromBody] LivraisonImport _livraison,
+        [FromRoute(Name = "idPublicLivraison")] Guid _idPublicLivraison
+    )
+    {
+        var validate = await _validator.ValidateAsync(_livraison);
+
+        if (!validate.IsValid)
+            return Results.Extensions.ErreurValidator(validate.Errors);
+
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        await _livraisonServ.ModifierAsync(_idPublicLivraison, idGroupe, _livraison);
+
+        return Results.NoContent();
     }
 }
