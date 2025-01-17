@@ -6,7 +6,8 @@ export type LivraisonExport =
 
     /** format ISO AAAA-MM-JJ */
     date: string,
-    liste: LivraisonCommandeExport[]
+    liste: LivraisonCommandeExport[],
+    frais: number
 }
 
 export type LivraisonCommandeExport =

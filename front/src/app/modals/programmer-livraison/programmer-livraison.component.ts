@@ -1,10 +1,10 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PaginationExport } from '@model/exports/PaginationExport';
@@ -25,10 +25,12 @@ import { LivraisonService } from '@service/Livraison.service';
 import { LivraisonCommandeExport, LivraisonExport } from '@model/exports/LivraisonExport';
 import { VehiculeService } from '@service/Vehicule.service';
 import { StopPropagationDirective } from '@directive/stop-propagation.directive';
+import { Livraison } from '@model/Livraison';
 
 type Info =
 {
-  date?: Date | null
+  date?: Date | null,
+  livraison?: Livraison | null
 }
 
 @Component({
@@ -40,18 +42,19 @@ type Info =
 })
 export class ProgrammerLivraisonComponent implements OnInit
 {
-  protected dataSourceClientFiltrer = signal<UtilisateurLeger[]>([]);
-  protected autoCompleteFormCtrl = new FormControl<string>("", [Validators.required]);
-  protected vehiculeFormCtrl = new FormControl<string>("", [Validators.required]);
-
   protected dialogData: Info = inject(MAT_DIALOG_DATA);
 
+  protected form: FormGroup;
+
+  protected dataSourceClientFiltrer = signal<UtilisateurLeger[]>([]);
+  
   private dataSourceClient = signal<UtilisateurLeger[]>([]);
   protected listeVehicule = signal<Vehicule[]>([]);
   protected listeCommande = signal<Commande[]>([]);
   protected listeCommandeLivraison = signal<Commande[]>([]);
   protected btnClicker = signal<boolean>(false);
 
+  private dialogRef = inject(MatDialogRef<ProgrammerLivraisonComponent>);
   private destroyRef = inject(DestroyRef);
   private utilisateurServ = inject(UtilisateurService);
   private commandeServ = inject(CommandeService);
@@ -63,18 +66,29 @@ export class ProgrammerLivraisonComponent implements OnInit
   {
     if(!this.dialogData?.date)
       this.dialogData = { date: null };
+
+    if(!this.dialogData?.date)
+      this.dialogData = { ...this.dialogData, livraison: null };
     
-    else
-      this.ListerCommande();
+    this.form = new FormGroup({
+      autoCompleteConducteur: new FormControl<string>("", [Validators.required]),
+      idPublicVehicule: new FormControl<string>("", [Validators.required]),
+      fraisHt: new FormControl<number>(this.dialogData.livraison?.fraisHt ?? 0, [Validators.required, Validators.min(0)])
+    });
+
+    this.ListerCommande();
+
+    if(this.dialogData?.livraison)
+      this.DetailLivraison();
 
     this.ListerUtilisateur();
     this.ListerVehicule();
 
-    this.autoCompleteFormCtrl.valueChanges
+    this.form.controls["autoCompleteConducteur"].valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (valeur?: string | null) =>
-        {
+        {          
           let liste = this.dataSourceClient()
             .filter(option => option.nomComplet.toLowerCase().includes(valeur?.toLocaleLowerCase() || ''));
 
@@ -107,26 +121,20 @@ export class ProgrammerLivraisonComponent implements OnInit
   }
 
   protected Ajouter(): void
-  {
+  {    
     if(this.listeCommandeLivraison().length == 0)
     {
       this.toastrServ.error("", "La liste des livraisons est vide");
       return;
     }
 
-    if(this.btnClicker() || this.vehiculeFormCtrl.invalid || this.autoCompleteFormCtrl.invalid)
+    if(this.btnClicker() || this.form.invalid)
       return; 
 
-    const CONDUCTEUR = this.dataSourceClient().find(x => x.nomComplet == this.autoCompleteFormCtrl.value);
+    const CONDUCTEUR = this.dataSourceClient().find(x => x.nomComplet == this.form.value.autoCompleteConducteur);
 
     if(!CONDUCTEUR)
-    {
-      this.autoCompleteFormCtrl.setErrors({
-        required: true
-      });
-
       return;
-    }
 
     this.btnClicker.set(true);
 
@@ -146,23 +154,41 @@ export class ProgrammerLivraisonComponent implements OnInit
     {
       date: this.dialogData.date!.toISOFormat(),
       idPublicConducteur: CONDUCTEUR.idPublic,
-      idPublicVehicule: this.vehiculeFormCtrl.value!,
-      liste: listeCommande
+      idPublicVehicule: this.form.value.idPublicVehicule,
+      liste: listeCommande,
+      frais: this.form.value.fraisHt
     };
 
-    this.livraisonServ.Ajouter(INFOS).subscribe({
-      next: () =>
-      {
-        this.btnClicker.set(false);
-        this.listeCommandeLivraison.set([]);
+    if(this.dialogData.livraison)
+    {
+      
+    }
+    else
+    {
+      this.livraisonServ.Ajouter(INFOS).subscribe({
+        next: (retour) =>
+        {
+          this.btnClicker.set(false);
+          this.listeCommandeLivraison.set([]);
+  
+          this.toastrServ.success("La livraison a été ajouté");
+  
+          const LIVRAISON: Livraison = {
+            numero: retour.numero,
+            date: this.dialogData.date!,
+            fraisHt: this.form.value.fraisHt,
+            idPublic: retour.idPublic
+          };
+  
+          this.dialogRef.close(LIVRAISON);
+        },
+        error: () => this.btnClicker.set(false)
+      });
+    }
 
-        this.toastrServ.success("La livraison a été ajouté");
-      },
-      error: () => this.btnClicker.set(false)
-    });
   }
 
-  private ListerVehicule(): void
+  private ListerVehicule(_idPublicVehiculeDefaut?: string): void
   {
     const INFOS: PaginationExport = {
       numPage: 1,
@@ -172,13 +198,19 @@ export class ProgrammerLivraisonComponent implements OnInit
     this.vehiculeServ.Lister(INFOS).subscribe({
       next: (retour) => 
       {
-        this.listeVehicule.set(retour.liste);
+        this.listeVehicule.set(retour.liste);        
+
+        if(_idPublicVehiculeDefaut)
+          this.form.controls["idPublicVehicule"].setValue(_idPublicVehiculeDefaut);
       }
     });
   }
 
   private ListerCommande(): void
   {
+    if(!this.dialogData.date)
+      return;
+
     const INFOS: CommandeFiltreExport = 
     {
       dateDebut: this.dialogData.date!,
@@ -190,7 +222,19 @@ export class ProgrammerLivraisonComponent implements OnInit
     this.commandeServ.Lister(INFOS).subscribe({
       next: (retour) =>
       {
-        this.listeCommande.set(retour);        
+        this.listeCommande.set(retour);  
+      }
+    });
+  }
+
+  private DetailLivraison(): void
+  {    
+    this.livraisonServ.Detail(this.dialogData.livraison!.idPublic).subscribe({
+      next: (retour) =>
+      {        
+        this.listeCommandeLivraison.set(retour.listeCommande); 
+        this.form.controls["autoCompleteConducteur"].setValue(retour.conducteur.nomComplet);   
+        this.form.controls["idPublicVehicule"].setValue(retour.vehicule.idPublic);   
       }
     });
   }

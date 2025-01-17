@@ -4,7 +4,7 @@ import { environment } from '../environments/environment';
 import { map, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LivraisonExport } from '@model/exports/LivraisonExport';
-import { Livraison, LivraisonDetail } from '@model/Livraison';
+import { Livraison, LivraisonAjoutReponse, LivraisonDetail } from '@model/Livraison';
 import { Pagination } from '@model/Pagination';
 import { PaginationFiltreLivraisonExport } from '@model/exports/PaginationExport';
 
@@ -40,7 +40,12 @@ export class LivraisonService
         map(retour =>  
         {
           for (let element of retour.liste) 
-            element.date = new Date(element.date);  
+          {
+            let date = new Date(element.date);
+            
+            date.setHours(0, 0, 0, 0);
+            element.date = new Date(date);  
+          }
 
           return retour;
         })
@@ -52,8 +57,18 @@ export class LivraisonService
     return this.http.get<LivraisonDetail>(`${this.BASE_API}/detail/${_idPublicLivraison}`).pipe(takeUntilDestroyed(this.destroyRef));
   }
 
-  Ajouter(_livraison: LivraisonExport): Observable<string>
+  Ajouter(_livraison: LivraisonExport): Observable<LivraisonAjoutReponse>
   {
-    return this.http.post<string>(`${this.BASE_API}/ajouter`, _livraison).pipe(takeUntilDestroyed(this.destroyRef));
+    return this.http.post<LivraisonAjoutReponse>(`${this.BASE_API}/ajouter`, _livraison).pipe(takeUntilDestroyed(this.destroyRef));
+  }
+
+  Modifier(_idPublicLivraison: string, _livraison: LivraisonExport): Observable<void>
+  {
+    return this.http.put<void>(`${this.BASE_API}/modifier/${_idPublicLivraison}`, _livraison).pipe(takeUntilDestroyed(this.destroyRef));
+  }
+
+  Supprimer(_idPublicLivraison: string): Observable<void>
+  {
+    return this.http.delete<void>(`${this.BASE_API}/supprimer/${_idPublicLivraison}`).pipe(takeUntilDestroyed(this.destroyRef));
   }
 }

@@ -19,7 +19,7 @@ public sealed record LivraisonConducteurExport
     [JsonPropertyName("idPublic")]
     public required Guid IdPublic { get; init; }
 
-    [JsonPropertyName("nom")]
+    [JsonPropertyName("nomComplet")]
     public required string NomComplet { get; init; }
 }
 

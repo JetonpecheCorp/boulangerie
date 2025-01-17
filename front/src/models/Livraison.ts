@@ -1,11 +1,11 @@
-import { Commande, CommandeLivraison, ProduitCommande } from "./Commande"
+import { Commande } from "./Commande"
 
 export type Livraison =
 {
     idPublic: string,
     numero: string,
     date: Date,
-    frais: number
+    fraisHt: number
 }
 
 export type LivraisonDetail =
@@ -26,4 +26,10 @@ export type LivraisonConducteur =
 {
     idPublic: string,
     nomComplet: string
+}
+
+export type LivraisonAjoutReponse =
+{
+    numero: string,
+    idPublic: string
 }

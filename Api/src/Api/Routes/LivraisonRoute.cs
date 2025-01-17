@@ -84,22 +84,21 @@ public static class LivraisonRoute
         int idGroupe = _httpContext.RecupererIdGroupe();
         string prefix = await _groupeServ.PrefixAsync(idGroupe);
 
-        var info = await Task.WhenAll(
-            _utilisateurServ.RecupererId(_livraison.IdPublicConducteur, idGroupe),
-            _vehiculeServ.RecupererId(_livraison.IdPublicVehicule, idGroupe)
-        );
+        int idUtilisateur = await _utilisateurServ.RecupererId(_livraison.IdPublicConducteur, idGroupe);
+        int idVehicule = await _vehiculeServ.RecupererId(_livraison.IdPublicVehicule, idGroupe);
 
         Livraison livraison = new()
         {
             Date = _livraison.Date,
             IdPublic = Guid.NewGuid(),
-            IdUtilisateur = info[0],
-            IdVehicule = info[1],
+            IdUtilisateur = idUtilisateur,
+            IdVehicule = idVehicule,
+            Frais = _livraison.Frais,
             Numero = prefix + _mdpServ.Generer(17, false)
         };
 
         int id = await _livraisonServ.AjouterAsync(livraison, _livraison.Liste);
 
-        return Results.Created("", livraison.IdPublic);
+        return Results.Created("", new { idPublic = livraison.IdPublic, numero = livraison.Numero });
     }
 }

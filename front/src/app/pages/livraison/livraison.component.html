@@ -1,7 +1,7 @@
 <h1>Gestion des livraisons</h1>
 
 <div style="text-align: center; margin-bottom: 10px;">
-    <button mat-flat-button>
+    <button mat-flat-button (click)="OuvrirModalProgammerLivraison()">
         <mat-icon>add</mat-icon>
         Nouvelle livraison
     </button>
@@ -15,7 +15,7 @@
         </div>
     }
 
-    <div [formGroup]="form" class="row">
+    <div [formGroup]="form" style="margin-right: 0;" class="row">
 
         <!-- date interval -->
         <div class="col-lg-4 col-md-4 col-xs-12">
@@ -73,40 +73,35 @@
         </div>
     </div>
 
-
     <table mat-table [dataSource]="dataSource()" matSort>
 
-        <!-- nom Column -->
-        <ng-container matColumnDef="nom">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
-            <td mat-cell *matCellDef="let row"> {{row.nom}} </td>
+        <!-- numero Column -->
+        <ng-container matColumnDef="numero">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Numero </th>
+            <td mat-cell *matCellDef="let row"> {{ row.numero }} </td>
         </ng-container>
 
-        <!-- code interne -->
-        <ng-container matColumnDef="codeInterne">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Code </th>
-            <td mat-cell *matCellDef="let row"> {{row.codeInterne}}</td>
+        <!-- date interne -->
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+            <td mat-cell *matCellDef="let row"> {{ row.date.toLocaleDateString() }}</td>
         </ng-container>
 
-        <!-- stock interne -->
-        <ng-container matColumnDef="stock">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock </th>
-            <td mat-cell *matCellDef="let row"> {{row.stock}}</td>
-        </ng-container>
-
-        <!-- stock alerte interne -->
-        <ng-container matColumnDef="stockAlert">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock d'alerte </th>
-            <td mat-cell *matCellDef="let row"> {{row.stockAlert}}</td>
+        <!-- frais HT interne -->
+        <ng-container matColumnDef="fraisHt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Frais HT </th>
+            <td mat-cell *matCellDef="let row"> {{ row.fraisHt }} €</td>
         </ng-container>
 
         <!-- action interne -->
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> Action </th>
             <td mat-cell *matCellDef="let row">
-                <button mat-mini-fab>
-                    <mat-icon>edit</mat-icon>
-                </button>
+                @if(row.date >= dateJour || true)
+                {
+                    <app-button (onClick)="OuvrirModalModifierLivraison(row)" icon="edit" [style]="'miniFab'" />&nbsp;
+                    <app-button (onClick)="OuvrirModalSupprimerLivraison(row)" icon="delete" [style]="'miniFab'" />
+                }
             </td>
         </ng-container>
 
