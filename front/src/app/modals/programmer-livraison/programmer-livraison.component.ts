@@ -73,7 +73,7 @@ export class ProgrammerLivraisonComponent implements OnInit
     this.form = new FormGroup({
       autoCompleteConducteur: new FormControl<string>("", [Validators.required]),
       idPublicVehicule: new FormControl<string>("", [Validators.required]),
-      fraisHt: new FormControl<number>(this.dialogData.livraison?.fraisHt ?? 0, [Validators.required, Validators.min(0)])
+      fraisHT: new FormControl<number>(this.dialogData.livraison?.fraisHT ?? 0, [Validators.required, Validators.min(0)])
     });
 
     this.ListerCommande();
@@ -120,7 +120,7 @@ export class ProgrammerLivraisonComponent implements OnInit
     this.ListerCommande();
   }
 
-  protected Ajouter(): void
+  protected AjouterOuModifier(): void
   {    
     if(this.listeCommandeLivraison().length == 0)
     {
@@ -156,12 +156,30 @@ export class ProgrammerLivraisonComponent implements OnInit
       idPublicConducteur: CONDUCTEUR.idPublic,
       idPublicVehicule: this.form.value.idPublicVehicule,
       liste: listeCommande,
-      frais: this.form.value.fraisHt
+      frais: this.form.value.fraisHT
     };
 
     if(this.dialogData.livraison)
     {
-      
+      this.livraisonServ.Modifier(this.dialogData.livraison.idPublic, INFOS).subscribe({
+        next: () =>
+        {
+          this.btnClicker.set(false);
+          this.listeCommandeLivraison.set([]);
+  
+          this.toastrServ.success("La livraison a été modifié");
+
+          const LIVRAISON: Livraison = {
+            numero: this.dialogData.livraison!.numero,
+            date: this.dialogData.date!,
+            fraisHT: this.form.value.fraisHT,
+            idPublic: this.dialogData.livraison!.idPublic
+          };
+  
+          this.dialogRef.close(LIVRAISON);
+        },
+        error: () => this.btnClicker.set(false)
+      });
     }
     else
     {
@@ -176,7 +194,7 @@ export class ProgrammerLivraisonComponent implements OnInit
           const LIVRAISON: Livraison = {
             numero: retour.numero,
             date: this.dialogData.date!,
-            fraisHt: this.form.value.fraisHt,
+            fraisHT: this.form.value.fraisHT,
             idPublic: retour.idPublic
           };
   
@@ -185,7 +203,6 @@ export class ProgrammerLivraisonComponent implements OnInit
         error: () => this.btnClicker.set(false)
       });
     }
-
   }
 
   private ListerVehicule(_idPublicVehiculeDefaut?: string): void

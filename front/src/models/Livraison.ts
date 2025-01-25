@@ -5,7 +5,7 @@ export type Livraison =
     idPublic: string,
     numero: string,
     date: Date,
-    fraisHt: number
+    fraisHT: number
 }
 
 export type LivraisonDetail =

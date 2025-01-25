@@ -4,8 +4,8 @@ using Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Api.ModelsImports.Livraisons;
 using Api.ModelsExports.Commandes;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Api.Extensions;
+using LivraisonInfoId = (int Id, System.Guid IdPublicUtilisateur, System.Guid IdPublicVehicule);
 
 namespace Api.Services.Livraisons;
 
@@ -141,12 +141,17 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
 
         var livraison = await _context.Livraisons
             .Where(x => x.IdPublic == _idPublicLivraison && x.IdVehiculeNavigation.IdGroupe == _idGroupe)
+            .Select(x => new LivraisonInfoId(
+                x.Id,
+                x.IdUtilisateurNavigation.IdPublic,
+                x.IdVehiculeNavigation.IdPublic
+            ))
             .FirstOrDefaultAsync();
 
-        if(livraison is null)
+        if(livraison == default)
             return false;
 
-        if(livraison.IdUtilisateurNavigation.IdPublic != _livraison.IdPublicConducteur)
+        if(livraison.IdPublicUtilisateur != _livraison.IdPublicConducteur)
         {
             idUtilisateur = await _context.Utilisateurs
                 .Where(x => x.IdPublic == _livraison.IdPublicConducteur)
@@ -156,7 +161,7 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
             builder.SetProperty(x => x.IdUtilisateur, idUtilisateur);
         }
 
-        if(livraison.IdVehiculeNavigation.IdPublic != _livraison.IdPublicVehicule)
+        if(livraison.IdPublicVehicule != _livraison.IdPublicVehicule)
         {
             idVehicule = await _context.Vehicules
                .Where(x => x.IdPublic == _livraison.IdPublicVehicule)
@@ -181,7 +186,10 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
             var element = _livraison.Liste[i];
 
             await _context.Commandes.Where(x => x.Numero == element.Numero)
-                .ExecuteUpdateAsync(x => x.SetProperty(y => y.OrdreLivraison, element.Ordre));
+                .ExecuteUpdateAsync(x =>
+                    x.SetProperty(y => y.OrdreLivraison, element.Ordre)
+                    .SetProperty(y => y.IdLivraison, livraison.Id)
+                );
         }
 
         return true;

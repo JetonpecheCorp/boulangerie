@@ -34,7 +34,7 @@ export class LivraisonComponent implements OnInit, AfterContentInit
 {
   autoCompleteClientFormCtrl = new FormControl<string | null>(null);
 
-  displayedColumns: string[] = ["numero", "date", "fraisHt", "action"];
+  displayedColumns: string[] = ["numero", "date", "fraisHT", "action"];
   dataSource = signal<MatTableDataSource<Livraison>>(new MatTableDataSource());
   estEnChargement = signal(false);
 
