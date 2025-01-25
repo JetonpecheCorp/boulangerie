@@ -4,21 +4,17 @@ namespace Api.ModelsExports.Recettes;
 
 public sealed record RecetteExport
 {
-    [JsonPropertyName("idPublicIngredient")]
     public required Guid IdPublicIngredient { get; init; }
 
-    [JsonPropertyName("idPublicProduit")]
     public required Guid IdPublicProduit { get; init; }
 
-    [JsonPropertyName("nomProduit")]
     public required string NomProduit { get; init; }
 
-    [JsonPropertyName("nomIngredient")]
     public required string NomIngredient { get; init; }
 
-    [JsonPropertyName("quantite")]
     public required decimal Quantite { get; init; }
 }
 
 [JsonSerializable(typeof(RecetteExport[]))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class RecetteExportContext: JsonSerializerContext { }

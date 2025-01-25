@@ -12,19 +12,14 @@ namespace Api.ModelsExports;
 
 public sealed record PaginationExport<T> where T : class
 {
-    [JsonPropertyName("liste")]
     public required T[] Liste { get; init; }
 
-    [JsonPropertyName("numPage")]
     public int NumPage { get; init; }
 
-    [JsonPropertyName("nbParPage")]
     public int NbParPage { get; init; }
 
-    [JsonPropertyName("total")]
     public int Total { get; init; }
 
-    [JsonPropertyName("aUneProchainePage")]
     public bool AUneProchainePage => Total > (NumPage * NbParPage);
 }
 
@@ -38,4 +33,5 @@ public sealed record PaginationExport<T> where T : class
 [JsonSerializable(typeof(PaginationExport<ClientLegerExport>))]
 [JsonSerializable(typeof(PaginationExport<UtilisateurLegerExport>))]
 [JsonSerializable(typeof(PaginationExport<LivraisonExport>))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class PaginationExportContext: JsonSerializerContext { }

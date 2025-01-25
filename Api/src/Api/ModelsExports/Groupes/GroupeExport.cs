@@ -9,4 +9,5 @@ public sealed record GroupeExport
 }
 
 [JsonSerializable(typeof(GroupeExport[]))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class GroupeExportContext: JsonSerializerContext { }
