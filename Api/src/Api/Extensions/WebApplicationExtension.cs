@@ -19,6 +19,7 @@ public static class WebApplicationExtension
         _app.MapGroup("commande").AjouterRouteCommande();
         _app.MapGroup("client").AjouterRouteClient();
         _app.MapGroup("livraison").AjouterRouteLivraison();
+        _app.MapGroup("export").AjouterRouteExport();
 
         return _app;
     }

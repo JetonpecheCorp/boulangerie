@@ -13,6 +13,14 @@ public interface IUtilisateurService
     /// <param name="_pagination">pagination</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns></returns>
+    Task<PaginationExport<UtilisateurExport>> ListerAsync(PaginationImport _pagination, int _idGroupe);
+
+    /// <summary>
+    /// Lister et paginer les utilisateurs
+    /// </summary>
+    /// <param name="_pagination">pagination</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns></returns>
     Task<PaginationExport<UtilisateurLegerExport>> ListerLegerAsync(PaginationImport _pagination, int _idGroupe);
 
     /// <summary>

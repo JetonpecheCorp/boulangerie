@@ -11,13 +11,14 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="ClosedXML" Version="0.104.2" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
 		<Folder Include="Rsa\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MailKit" Version="4.8.0" />
+		<PackageReference Include="MailKit" Version="4.10.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
 		<PackageReference Include="QRCoder" Version="1.6.0" />
 		<PackageReference Include="TwoFactorAuth.Net" Version="1.4.0" />

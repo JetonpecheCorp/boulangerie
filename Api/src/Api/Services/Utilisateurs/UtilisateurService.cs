@@ -8,6 +8,44 @@ namespace Api.Services.Utilisateurs;
 
 public class UtilisateurService(BoulangerieContext _context) : IUtilisateurService
 {
+    public async Task<PaginationExport<UtilisateurExport>> ListerAsync(PaginationImport _pagination, int _idGroupe)
+    {
+        var requete = _context.Utilisateurs.Where(x => x.IdGroupe == _idGroupe);
+
+        if (_pagination.ThermeRecherche is not null)
+        {
+            requete = requete.Where(x =>
+                x.Nom.Contains(_pagination.ThermeRecherche)
+            );
+        }
+
+        requete = requete.OrderBy(x => x.Nom);
+
+        int total = await requete.CountAsync();
+
+        var liste = await requete
+            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
+            .Take(_pagination.NbParPage)
+            .Select(x => new UtilisateurExport
+            {
+                EstAdmin = x.EstAdmin,
+                Mail = x.Mail,
+                Nom = x.Nom,
+                Prenom = x.Prenom,
+                Telephone = x.Telephone
+            }).ToArrayAsync();
+
+        PaginationExport<UtilisateurExport> pagination = new()
+        {
+            NumPage = _pagination.NumPage,
+            NbParPage = _pagination.NbParPage,
+            Total = total,
+            Liste = liste
+        };
+
+        return pagination;
+    }
+
     public async Task<PaginationExport<UtilisateurLegerExport>> ListerLegerAsync(PaginationImport _pagination, int _idGroupe)
     {
         var requete = _context.Utilisateurs.Where(x => x.IdGroupe == _idGroupe);

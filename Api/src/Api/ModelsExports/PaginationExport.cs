@@ -32,6 +32,7 @@ public sealed record PaginationExport<T> where T : class
 [JsonSerializable(typeof(PaginationExport<ClientExport>))]
 [JsonSerializable(typeof(PaginationExport<ClientLegerExport>))]
 [JsonSerializable(typeof(PaginationExport<UtilisateurLegerExport>))]
+[JsonSerializable(typeof(PaginationExport<UtilisateurExport>))]
 [JsonSerializable(typeof(PaginationExport<LivraisonExport>))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class PaginationExportContext: JsonSerializerContext { }
