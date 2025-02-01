@@ -28,6 +28,7 @@ public class UtilisateurService(BoulangerieContext _context) : IUtilisateurServi
             .Take(_pagination.NbParPage)
             .Select(x => new UtilisateurExport
             {
+                IdPublic = x.IdPublic,
                 EstAdmin = x.EstAdmin,
                 Mail = x.Mail,
                 Nom = x.Nom,

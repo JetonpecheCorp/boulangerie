@@ -4,6 +4,8 @@ namespace Api.ModelsExports.Utilisateurs;
 
 public sealed record UtilisateurExport
 {
+    public required Guid IdPublic { get; init; }
+
     public required string Nom { get; init; }
 
     public required string Prenom { get; init; }
