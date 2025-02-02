@@ -1,5 +1,4 @@
-﻿using Api.Extensions;
-using Api.Models;
+﻿using Api.Models;
 using Api.ModelsExports.Recettes;
 
 namespace Api.Services.Recettes;

@@ -14,6 +14,13 @@ public interface IGroupeService
     Task<GroupeExport[]> ListerAsync();
 
     /// <summary>
+    /// Recuperer un groupe
+    /// </summary>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns></returns>
+    Task<GroupeExport?> InfoAsync(int _idGroupe);
+
+    /// <summary>
     /// Ajouter un nouveau groupe
     /// </summary>
     /// <param name="_groupe">info du groupe</param>

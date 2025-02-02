@@ -11,8 +11,23 @@ public sealed class GroupeService(BoulangerieContext _context) : IGroupeService
         return await _context.Groupes.Select(x => new GroupeExport
         {
             Id = x.Id,
-            Nom = x.Nom
+            Nom = x.Nom,
+            Adresse = x.Adresse,
+            ConnexionBloquer = x.ConnexionBloquer
         }).ToArrayAsync();
+    }
+
+    public async Task<GroupeExport?> InfoAsync(int _idGroupe)
+    {
+        return await _context.Groupes
+            .Where(x => x.Id == _idGroupe)
+            .Select(x => new GroupeExport
+        {
+            Id = x.Id,
+            Nom = x.Nom,
+            Adresse = x.Adresse,
+            ConnexionBloquer = x.ConnexionBloquer
+        }).FirstOrDefaultAsync();
     }
 
     public async Task<string> PrefixAsync(int _idGroupe)

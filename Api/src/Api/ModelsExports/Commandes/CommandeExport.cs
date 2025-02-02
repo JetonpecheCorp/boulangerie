@@ -42,9 +42,14 @@ public sealed record CommandeProduitExport
 
     public required string Nom { get; init; }
 
+    public required decimal PrixHT { get; init; }
+
+    public required decimal Tva {  get; init; }
+
     public required int Quantite { get; init; }
 }
 
 [JsonSerializable(typeof(CommandeExport[]))]
+[JsonSerializable(typeof(CommandeExport))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class CommandeExportContext: JsonSerializerContext { }

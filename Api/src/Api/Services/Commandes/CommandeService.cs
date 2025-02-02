@@ -68,13 +68,53 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
             {
                 IdPublic = y.IdProduitNavigation.IdPublic,
                 Nom = y.IdProduitNavigation.Nom,
-                Quantite = y.Quantite
+                Quantite = y.Quantite,
+                PrixHT = y.PrixHt,
+                Tva = y.IdProduitNavigation.IdTvaNavigation.Valeur
             }).ToArray()
         })
         .OrderBy(x => x.Date)
         .ToArrayAsync();
 
         return liste;
+    }
+
+    public async Task<CommandeExport?> InfoAsync(string _numero, int _idGroupe)
+    {
+        var commande = await _context.Commandes
+            .Where(x => x.Numero == _numero && x.IdGroupe == _idGroupe)
+            .Select(x => new CommandeExport
+            {
+                Numero = x.Numero,
+                Date = x.DatePourLe,
+                EstLivraison = x.EstLivraison,
+                Status = x.DateValidation.HasValue ? EStatusCommande.Valider : x.DateAnnulation.HasValue ? EStatusCommande.Annuler : EStatusCommande.EnAttenteValidation,
+
+                Client = x.IdClientNavigation != null ? new CommandeClientExport
+                {
+                    IdPublic = x.IdClientNavigation.IdPublic,
+                    Nom = x.IdClientNavigation.Nom,
+                    Adresse = x.IdClientNavigation.Adresse
+                } : null,
+
+                Livraison = x.IdLivraisonNavigation != null ? new CommandeLivraisonExport
+                {
+                    IdPublic = x.IdLivraisonNavigation.IdPublic,
+                    Ordre = x.OrdreLivraison.GetValueOrDefault()
+                } : null,
+
+                ListeProduit = x.ProduitCommandes.Select(y => new CommandeProduitExport
+                {
+                    IdPublic = y.IdProduitNavigation.IdPublic,
+                    Nom = y.IdProduitNavigation.Nom,
+                    Quantite = y.Quantite,
+                    PrixHT = y.PrixHt,
+                    Tva = y.IdProduitNavigation.IdTvaNavigation.Valeur
+                }).ToArray()
+            })
+            .FirstOrDefaultAsync();
+
+        return commande;
     }
 
     public async Task<bool> AjouterAsync(Commande _commande, ProduitCommandeImport[] _listeProduitCommande)

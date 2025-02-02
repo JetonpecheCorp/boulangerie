@@ -5,6 +5,8 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
 var builder = WebApplication.CreateBuilder(args);
 
 string cheminCleRsa = builder.Configuration.GetValue<string>("cheminCleRsa")!;

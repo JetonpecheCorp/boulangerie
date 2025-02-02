@@ -94,7 +94,9 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
                     {
                         IdPublic = z.IdProduitNavigation.IdPublic,
                         Nom = z.IdProduitNavigation.Nom,
-                        Quantite = z.Quantite
+                        Quantite = z.Quantite,
+                        PrixHT = z.PrixHt,
+                        Tva = z.IdProduitNavigation.IdTvaNavigation.Valeur
                     }).ToArray()
                 }).ToArray()
             })

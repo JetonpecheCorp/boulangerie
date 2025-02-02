@@ -7,6 +7,9 @@ using Api.Services.Commandes;
 using Api.Services.Groupes;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 using Services.Mdp;
 
 namespace Api.Routes;
@@ -25,6 +28,10 @@ public static class CommandeRoute
             .Produces<CommandeExport[]>()
             .ProducesBadRequest();
 
+        builder.MapGet("facture/{numero}", GenererFactureAsync)
+            .WithDescription("Ajouter une nouvelle commande")
+            .Produces(StatusCodes.Status200OK, contentType: "application/pdf");
+
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter une nouvelle commande")
             .ProducesCreated<string>()
@@ -41,6 +48,127 @@ public static class CommandeRoute
             .ProducesNotFound();
 
         return builder;
+    }
+
+    static async Task<IResult> GenererFactureAsync(
+        HttpContext _httpContext,
+        [FromServices] ICommandeService _commandeServ,
+        [FromServices] IGroupeService _groupeServ,
+        [FromRoute(Name = "numero")] string _numero
+    )
+    {
+        if (string.IsNullOrWhiteSpace(_numero))
+            return Results.BadRequest("pas de numero de commande");
+
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        await Task.Delay(1);
+
+        var commande = await _commandeServ.InfoAsync(_numero, idGroupe);
+        var groupe = await _groupeServ.InfoAsync(idGroupe);
+
+        if (commande is null || groupe is null)
+            return Results.NotFound();
+
+        var doc = Document.Create(doc =>
+        {
+            doc.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(10);
+
+                page.Header()
+                    .BorderBottom(2)
+                    .BorderColor(Colors.Black)
+                    .Text("Facture")
+                    .FontSize(25);
+
+                page.Content().PaddingTop(3, Unit.Centimetre).Column(x =>
+                {
+                    x.Item().Text($"Numero: {_numero}");
+
+                    if(commande.Client is not null)
+                        x.Item().Text($"Adresse: {commande.Client.Adresse}");
+                });
+
+                page.Content().Table(table =>
+                {
+                    IContainer HeaderStyle(IContainer container, string backgroundColor)
+                    {
+                        return container
+                            .BorderBottom(2)
+                            .BorderColor(Colors.Black)
+                            .Background(backgroundColor)
+                            .PaddingVertical(5)
+                            .PaddingHorizontal(10);
+                    }
+
+                    IContainer CellStyle(IContainer container)
+                    {
+                        return container
+                            .BorderBottom(1)
+                            .BorderColor(Colors.Grey.Lighten1)
+                            .PaddingVertical(5)
+                            .PaddingHorizontal(10);
+                    }
+
+                    table.ColumnsDefinition(x =>
+                    {
+                        x.RelativeColumn();
+                        x.RelativeColumn();
+                        x.RelativeColumn();
+                        x.RelativeColumn();
+                        x.RelativeColumn();
+                    });
+
+                    IContainer Style(IContainer container) => HeaderStyle(container, Colors.Grey.Lighten3);
+
+                    table.Header(header =>
+                    {
+                        table.Cell().Element(Style).Text("Produit");
+                        table.Cell().Element(Style).Text("Quantité");
+                        table.Cell().Element(Style).Text("Prix HT");
+                        table.Cell().Element(Style).Text("TVA");
+                        table.Cell().Element(Style).Text("Total HT");
+                    });
+
+                    decimal totalHt = 0;
+                    uint nbLigne = (uint)commande.ListeProduit.Length + 2;
+                     
+                    foreach (var element in commande.ListeProduit)
+                    {
+                        table.Cell().Element(StyleCell).Text(element.Nom);
+                        table.Cell().Element(StyleCell).Text(element.Quantite.ToString());
+                        table.Cell().Element(StyleCell).Text($"{element.PrixHT} €");
+                        table.Cell().Element(StyleCell).Text($"{element.Tva} %");
+                        table.Cell().Element(StyleCell).Text($"{element.Quantite * element.PrixHT} €");
+
+                        IContainer StyleCell(IContainer container) => CellStyle(container).ShowOnce();
+                    }
+
+                    table.Cell().Row(nbLigne).Column(4)
+                    .Border(1)
+                    .Background(Colors.Grey.Lighten3)
+                    .BorderColor(Colors.Black)
+                    .PaddingVertical(5)
+                    .PaddingHorizontal(10)
+                    .Text("Total HT");
+
+                    table.Cell().Row(nbLigne)
+                        .Column(5).Border(1)
+                        .PaddingVertical(5)
+                        .PaddingHorizontal(10)
+                        .BorderColor(Colors.Black)
+                        .Text($"{totalHt} €");
+                });
+            });
+        });
+
+        return Results.File(
+            doc.GeneratePdf(),
+            "application/pdf",
+            $"facture_commande.pdf"
+        );
     }
 
     async static Task<IResult> ListerAsync(

@@ -16,6 +16,14 @@ public interface ICommandeService
     Task<CommandeExport[]> ListerAsync(CommandeFiltreImport _filtre, int _idGroupe);
 
     /// <summary>
+    /// Recuperer une commande
+    /// </summary>
+    /// <param name="_numero">numero de la commande conserné</param>
+    /// <param name="_idGroupe">id groupe de la commande conserné</param>
+    /// <returns></returns>
+    Task<CommandeExport?> InfoAsync(string _numero, int _idGroupe);
+
+    /// <summary>
     /// Ajouter une commande
     /// </summary>
     /// <param name="_commande">infos de la comamande</param>
