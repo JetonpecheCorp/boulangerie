@@ -56,6 +56,11 @@ export class CalendrierJourComponent implements OnInit, OnChanges
     this.ModifierStatusCommande(_numero, EStatusCommande.Valider);
   }
 
+  protected TelechargerFacture(_numero: string): void
+  {
+    this.commandeServ.TelechargerFacture(_numero);
+  }
+
   protected AnnulerCommande(_numero: string): void
   {
     const TITRE = "Annulation de la commande";

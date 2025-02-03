@@ -41,6 +41,27 @@ export class CommandeService
     );
   }
 
+  TelechargerFacture(_numero: string): void
+  {
+    this.http.get(`${this.BASE_API}/facture/${_numero}`,
+      {observe: "response", responseType: "blob"}
+    )
+    .subscribe(reponse => 
+    {
+      const NOM_FICHIER = reponse.headers.get("content-disposition")!
+        .replace("filename=", "")
+        .split(";")[1];
+      
+      let a = document.createElement("a");
+      a.download = NOM_FICHIER;
+      let url = URL.createObjectURL(reponse.body as Blob);
+      a.href = url;
+      a.click();
+
+      URL.revokeObjectURL(url);
+    });
+  }
+
   Ajouter(_commande: CommandeExport): Observable<string>
   {
     return this.http.post<string>(`${this.BASE_API}/ajouter`, _commande).pipe(takeUntilDestroyed(this.destroyRef));

@@ -65,7 +65,12 @@
                         <button mat-icon-button stop-propagation (click)="AnnulerCommande(element.numero)">
                             <mat-icon>clear</mat-icon>
                         </button>
+                        <br>
                     }
+
+                    <button mat-icon-button stop-propagation (click)="TelechargerFacture(element.numero)">
+                        <mat-icon>download</mat-icon>
+                    </button>
                 </div>
             </mat-card-content>
         }
