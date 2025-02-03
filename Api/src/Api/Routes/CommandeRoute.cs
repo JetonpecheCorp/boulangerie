@@ -62,8 +62,6 @@ public static class CommandeRoute
 
         int idGroupe = _httpContext.RecupererIdGroupe();
 
-        await Task.Delay(1);
-
         var commande = await _commandeServ.InfoAsync(_numero, idGroupe);
         var groupe = await _groupeServ.InfoAsync(idGroupe);
 
@@ -83,83 +81,118 @@ public static class CommandeRoute
                     .Text("Facture")
                     .FontSize(25);
 
-                page.Content().PaddingTop(3, Unit.Centimetre).Column(x =>
+                page.Content().Column(x =>
                 {
-                    x.Item().Text($"Numero: {_numero}");
+                    x.Spacing(10);
 
-                    if(commande.Client is not null)
-                        x.Item().Text($"Adresse: {commande.Client.Adresse}");
-                });
-
-                page.Content().Table(table =>
-                {
-                    IContainer HeaderStyle(IContainer container, string backgroundColor)
+                    x.Item().Row(row =>
                     {
-                        return container
-                            .BorderBottom(2)
+                        row.RelativeItem().Text($"""
+                           Numéro de commande: {_numero}
+                           {(commande.Client is null ? "" : "Adresse: " + commande.Client.Adresse)}   
+                           {(commande.Client is null ? "" : "Nom: " + commande.Client.Nom)}
+                           Date: {commande.Date.ToString("d")}
+                           Livraison: {(commande.EstLivraison ? "Oui" : "Non")}
+                        """);
+
+                        row.RelativeItem().Text($"""
+                            De:
+                            Nom: {groupe.Nom}
+                            Adresse: {groupe.Adresse}
+                        """);
+                    });
+
+                    x.Item().Table(table =>
+                    {
+                        IContainer HeaderStyle(IContainer container, string backgroundColor)
+                        {
+                            return container
+                                .BorderBottom(2)
+                                .BorderColor(Colors.Black)
+                                .Background(backgroundColor)
+                                .PaddingVertical(5)
+                                .PaddingHorizontal(10);
+                        }
+
+                        IContainer CellStyle(IContainer container)
+                        {
+                            return container
+                                .BorderBottom(1)
+                                .BorderColor(Colors.Grey.Lighten1)
+                                .PaddingVertical(5)
+                                .PaddingHorizontal(10);
+                        }
+
+                        table.ColumnsDefinition(x =>
+                        {
+                            x.RelativeColumn();
+                            x.RelativeColumn();
+                            x.RelativeColumn();
+                            x.RelativeColumn();
+                            x.RelativeColumn();
+                        });
+
+                        IContainer Style(IContainer container) => HeaderStyle(container, Colors.Grey.Lighten3);
+
+                        table.Header(header =>
+                        {
+                            table.Cell().Element(Style).Text("Produit");
+                            table.Cell().Element(Style).Text("Quantité");
+                            table.Cell().Element(Style).Text("Prix HT");
+                            table.Cell().Element(Style).Text("TVA");
+                            table.Cell().Element(Style).Text("Total HT");
+                        });
+
+                        decimal totalHt = 0;
+                        decimal totalTtc = 0;
+                        uint nbLigne = (uint)commande.ListeProduit.Length + 2;
+
+                        foreach (var element in commande.ListeProduit)
+                        {
+                            totalHt += element.Quantite * element.PrixHT;
+
+                            decimal tvaParUnite = element.PrixHT * (element.Tva / 100);
+                            totalTtc += (element.PrixHT + tvaParUnite) * element.Quantite;
+
+                            table.Cell().Element(StyleCell).Text(element.Nom);
+                            table.Cell().Element(StyleCell).Text(element.Quantite.ToString());
+                            table.Cell().Element(StyleCell).Text($"{element.PrixHT} €");
+                            table.Cell().Element(StyleCell).Text($"{element.Tva} %");
+                            table.Cell().Element(StyleCell).Text($"{element.Quantite * element.PrixHT} €");
+
+                            IContainer StyleCell(IContainer container) => CellStyle(container).ShowOnce();
+                        }
+
+                        table.Cell().Row(nbLigne).Column(4)
+                            .Border(1)
+                            .Background(Colors.Grey.Lighten3)
                             .BorderColor(Colors.Black)
-                            .Background(backgroundColor)
                             .PaddingVertical(5)
-                            .PaddingHorizontal(10);
-                    }
+                            .PaddingHorizontal(10)
+                            .Text("Total HT");
 
-                    IContainer CellStyle(IContainer container)
-                    {
-                        return container
-                            .BorderBottom(1)
-                            .BorderColor(Colors.Grey.Lighten1)
+                        table.Cell().Row(nbLigne)
+                            .Column(5).Border(1)
                             .PaddingVertical(5)
-                            .PaddingHorizontal(10);
-                    }
+                            .PaddingHorizontal(10)
+                            .BorderColor(Colors.Black)
+                            .Text($"{totalHt} €");
 
-                    table.ColumnsDefinition(x =>
-                    {
-                        x.RelativeColumn();
-                        x.RelativeColumn();
-                        x.RelativeColumn();
-                        x.RelativeColumn();
-                        x.RelativeColumn();
+                        table.Cell().Row(nbLigne + 1).Column(4)
+                            .Border(1)
+                            .Background(Colors.Grey.Lighten3)
+                            .BorderColor(Colors.Black)
+                            .PaddingVertical(5)
+                            .PaddingHorizontal(10)
+                            .Text("Total TTC");
+
+                        table.Cell().Row(nbLigne + 1)
+                            .Column(5).Border(1)
+                            .PaddingVertical(5)
+                            .PaddingHorizontal(10)
+                            .BorderColor(Colors.Black)
+                            .Text($"{string.Format("{0:F2}", totalTtc)} €");
                     });
-
-                    IContainer Style(IContainer container) => HeaderStyle(container, Colors.Grey.Lighten3);
-
-                    table.Header(header =>
-                    {
-                        table.Cell().Element(Style).Text("Produit");
-                        table.Cell().Element(Style).Text("Quantité");
-                        table.Cell().Element(Style).Text("Prix HT");
-                        table.Cell().Element(Style).Text("TVA");
-                        table.Cell().Element(Style).Text("Total HT");
-                    });
-
-                    decimal totalHt = 0;
-                    uint nbLigne = (uint)commande.ListeProduit.Length + 2;
-                     
-                    foreach (var element in commande.ListeProduit)
-                    {
-                        table.Cell().Element(StyleCell).Text(element.Nom);
-                        table.Cell().Element(StyleCell).Text(element.Quantite.ToString());
-                        table.Cell().Element(StyleCell).Text($"{element.PrixHT} €");
-                        table.Cell().Element(StyleCell).Text($"{element.Tva} %");
-                        table.Cell().Element(StyleCell).Text($"{element.Quantite * element.PrixHT} €");
-
-                        IContainer StyleCell(IContainer container) => CellStyle(container).ShowOnce();
-                    }
-
-                    table.Cell().Row(nbLigne).Column(4)
-                    .Border(1)
-                    .Background(Colors.Grey.Lighten3)
-                    .BorderColor(Colors.Black)
-                    .PaddingVertical(5)
-                    .PaddingHorizontal(10)
-                    .Text("Total HT");
-
-                    table.Cell().Row(nbLigne)
-                        .Column(5).Border(1)
-                        .PaddingVertical(5)
-                        .PaddingHorizontal(10)
-                        .BorderColor(Colors.Black)
-                        .Text($"{totalHt} €");
                 });
             });
         });
