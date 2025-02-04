@@ -1,59 +1,11 @@
-mat-card
-{
-    width: calc(100% / 7);
-}
-
 .container-flex
 {
     display: flex;
-    flex-direction: row;
     gap: 5px;
 }
 
-mat-card-header
+app-calendrier-jour
 {
-    display: block;
-    background-color: var(--sys-primary);
-    color: var(--sys-on-primary);
-    border-top-left-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
-    border-top-right-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
-    padding: 0;
-
-    p, div
-    {
-        text-align: center;
-    }
-
-    p
-    {
-        margin-bottom: 0px;
-    }
-}
-
-mat-card-content, mat-card-header
-{
-    padding: 5px;
-}
-
-.element-clickable
-{
-    cursor: pointer;
-}
-
-.element:not(:last-child)
-{
-    border-bottom: 1px solid black;
-}
-
-@media screen and (max-width: 800px) 
-{
-    mat-card
-    {
-        width: 100%;
-    }
-
-    .container-flex
-    {
-        flex-direction: column;
-    }
+    display: inline;
+    width: calc(100% / 7);
 }

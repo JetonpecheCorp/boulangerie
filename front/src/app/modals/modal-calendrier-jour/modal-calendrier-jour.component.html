@@ -21,8 +21,7 @@
     <br>
 
     <app-calendrier-jour [dateJour]="info.date" 
-                         [listeCommande]="listeCommandeFiltrer()"
-                         (commandeClicker)="OuvrirModalModifierCommande($event)" />
+                         [listeCommande]="listeCommandeFiltrer()" />
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-flat-button (click)="Fermer()">Fermer</button>&nbsp;

@@ -55,8 +55,7 @@
     }
     @default 
     {
-        <app-calendrier-semaine (commandeClicker)="OuvrirModalRecette($event)"
-                                [dateJour]="dateJour()" 
+        <app-calendrier-semaine [dateJour]="dateJour()" 
                                 [listeCommande]="listeCommande()" />
     }
 }

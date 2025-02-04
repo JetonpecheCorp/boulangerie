@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { CalendrierJourComponent } from "../../pages/test/calendrier-jour/calendrier-jour.component";
@@ -67,29 +67,6 @@ export class ModalCalendrierJourComponent implements OnInit
 
         this.listeCommandeAjouter.update(x => [...x, retour]);
         this.info.listeCommande.push(retour);
-
-        this.FiltrerParStatus(this.status());
-      }
-    });
-  }
-
-  protected OuvrirModalModifierCommande(_commande: Commande): void
-  {
-    const DIALOG_REF = this.matDialog.open(ModalAjouterCommmandeComponent, { 
-      data: {
-        date: this.info.date,
-        commande: _commande
-      }
-    });
-
-    DIALOG_REF.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (retour?: Commande) =>
-      {
-        if(!retour)
-          return;
-
-        const INDEX = this.info.listeCommande.findIndex(x => x.numero == _commande.numero);
-        this.info.listeCommande[INDEX] = retour;
 
         this.FiltrerParStatus(this.status());
       }

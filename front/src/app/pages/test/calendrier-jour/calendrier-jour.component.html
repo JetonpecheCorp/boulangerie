@@ -1,6 +1,6 @@
 <mat-card appearance="outlined">
     <mat-card-header>
-        <p style="margin-bottom: 5px;"><b>{{ jourSemaine().nom }}</b> <br> {{ jourSemaine().date }}</p>
+        <p style="margin-bottom: 5px;"><b>{{ jourSemaine().nom }}</b> <br> {{ jourSemaine().date.toLocaleDateString() }}</p>
 
         <!-- btn vue alternative -->
         <button mat-mini-fab (click)="
@@ -37,7 +37,7 @@
     {
         @for (element of listeCommande(); track element.numero)
         {
-            <mat-card-content class="element" (click)="ElementClicker(element)">
+            <mat-card-content class="element" (click)="OuvrirModalModifierCommande(element)">
                 <p>
                     <b>Nom:</b> {{ element.client == null ? "Interne" : element.client.nom }} <br>
                     <b>N°</b> {{ element.numero }} <br>

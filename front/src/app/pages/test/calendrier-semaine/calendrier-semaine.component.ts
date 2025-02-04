@@ -1,12 +1,11 @@
-import { Component, inject, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
+import { Component, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ProgrammerLivraisonComponent } from '@modal/programmer-livraison/programmer-livraison.component';
 import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { Commande, ProduitCommande } from '@model/Commande';
+import { CalendrierJourComponent } from "../calendrier-jour/calendrier-jour.component";
 
 type CommandeAlternatif =
 {
@@ -17,7 +16,7 @@ type CommandeAlternatif =
 @Component({
   selector: 'app-calendrier-semaine',
   standalone: true,
-  imports: [MatTooltipModule, MatCardModule, MatButtonModule, MatIconModule],
+  imports: [MatTooltipModule, MatCardModule, MatButtonModule, MatIconModule, CalendrierJourComponent],
   templateUrl: './calendrier-semaine.component.html',
   styleUrl: './calendrier-semaine.component.scss'
 })
@@ -31,8 +30,6 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
   protected listeJourSemaine = signal<JourSemaine[]>([]);
   protected info = signal<any[]>([]);
   protected infoAlterntif = signal<CommandeAlternatif[]>([]);
-
-  private matDialog = inject(MatDialog);
 
   ngOnInit(): void 
   {
@@ -53,31 +50,6 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
     this.commandeClicker.emit(_commande);
   }
 
-  protected OuvrirModalProgrammerLivraison(_date: string): void
-  {
-    if(_date.includes("/"))
-      _date = _date.split("/").reverse().join("-");
-
-    const DATE = new Date(_date);
-
-    this.matDialog.open(ProgrammerLivraisonComponent, { 
-      data: { date: DATE },
-      maxWidth: 1200
-    });
-  }
-
-  protected AfficherVueAlternatif(_indexJour: number): void
-  {
-    this.infoAlterntif.update(x => 
-    {     
-      const INFO = x[_indexJour];      
-
-      INFO.estActif = !INFO.estActif;
-        
-      return x;
-    });    
-  }
-
   private InitListeCommande(): void
   {
     this.infoAlterntif.set([]);
@@ -91,40 +63,10 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
       const LISTE = this.listeCommande().filter(x => x.date.getDay() == (i == 7 ? 0 : i) && date.toLocaleDateString() == x.date.toLocaleDateString());
       liste.push(LISTE);
 
-      this.InitListeCommandeAlternatif(LISTE);
-
       date.ajouterJour(1);
     }
 
     this.info.set(liste);    
-  }
-
-  private InitListeCommandeAlternatif(_listeCommande: Commande[]): void
-  {
-    let listeCommandeAlternatif: ProduitCommande[] = [];
-    
-    for (const element of _listeCommande) 
-    {
-      for (const element2 of element.listeProduit) 
-      {
-        let info = listeCommandeAlternatif.find(x => x.idPublic == element2.idPublic);
-        
-        if(info)
-          info.quantite += element2.quantite;
-
-        else
-          listeCommandeAlternatif.push({
-            idPublic: element2.idPublic,
-            nom: element2.nom,
-            quantite: element2.quantite
-          }); 
-      }
-    }
-
-    this.infoAlterntif.update(x => [...x,{
-      estActif: false,
-      liste: listeCommandeAlternatif
-    }]);
   }
 
   private InitSemaine(): JourSemaine[]
@@ -140,7 +82,7 @@ export class CalendrierSemaineComponent implements OnInit, OnChanges
       
       listeJour.push({
         nom: date.nomJour(),
-        date: date.toLocaleDateString()
+        date: date
       });
     }
     

@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommandeFiltreExport } from '@model/exports/CommandeExport';
 import { EStatusCommande, ConvertionEnum } from '@enum/EStatusCommande';
 import {MatSelectModule} from '@angular/material/select';
+import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/modal-ajouter-commmande.component';
 
 enum EModeCalendrier 
 {
@@ -79,12 +80,6 @@ export class TestComponent implements OnInit
         this.listeCommande.set(liste.concat(this.listeCommande(), retour));
       }
     });
-  }
-
-  protected OuvrirModalRecette(_e:any): void
-  {
-    console.log(_e);
-    
   }
 
   protected Suivant(): void

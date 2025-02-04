@@ -5,7 +5,9 @@ import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { RetourCalendrierMois } from '@model/calendrier/RetourCalendrier';
 import { Commande } from '@model/Commande';
 
-type JourMois = JourSemaine & {
+type JourMois = {
+  nom: string,
+  date: string,
   nbCommande: number;
 };
 

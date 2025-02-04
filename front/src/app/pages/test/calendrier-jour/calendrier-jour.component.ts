@@ -1,4 +1,4 @@
-import { Component, inject, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
+import { Component, DestroyRef, inject, model, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { JourSemaine } from '@model/calendrier/JourSemaine';
 import { Commande, ProduitCommande } from '@model/Commande';
@@ -12,6 +12,8 @@ import { ConvertionEnum, EStatusCommande } from '@enum/EStatusCommande';
 import { StopPropagationDirective } from '@directive/stop-propagation.directive';
 import { ThemeService } from '@service/ThemeService.Service';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/modal-ajouter-commmande.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-calendrier-jour',
@@ -22,8 +24,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 })
 export class CalendrierJourComponent implements OnInit, OnChanges
 {
-  commandeClicker = output<Commande>();
-
   dateJour = model.required<Date>();
   listeCommande = model.required<Commande[]>();
 
@@ -31,8 +31,9 @@ export class CalendrierJourComponent implements OnInit, OnChanges
 
   protected eStatusCommande = EStatusCommande;
   protected vueAlternatifActiver = signal(false);
-  protected jourSemaine = signal<JourSemaine>({ date: "", nom: "" });
+  protected jourSemaine = signal<JourSemaine>({ date: new Date(), nom: "" });
 
+  private destroyRef = inject(DestroyRef);
   private matDialog = inject(MatDialog);
   private commandeServ = inject(CommandeService);
   private themeServ = inject(ThemeService);
@@ -77,6 +78,27 @@ export class CalendrierJourComponent implements OnInit, OnChanges
       });
   }
 
+  protected OuvrirModalModifierCommande(_commande: Commande): void
+  {
+    const DIALOG_REF = this.matDialog.open(ModalAjouterCommmandeComponent, { 
+      data: {
+        date: _commande.date,
+        commande: _commande
+      }
+    });
+
+    DIALOG_REF.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (retour?: Commande) =>
+      {
+        if(!retour)
+          return;
+
+        const INDEX = this.listeCommande().findIndex(x => x.numero == _commande.numero);
+        this.listeCommande()[INDEX] = retour;
+      }
+    });
+  }
+
   protected OuvrirModalProgrammerLivraison(): void
   {
     this.matDialog.open(ProgrammerLivraisonComponent, { 
@@ -115,11 +137,6 @@ export class CalendrierJourComponent implements OnInit, OnChanges
     }
   }
 
-  protected ElementClicker(_commande: Commande): void
-  {
-    this.commandeClicker.emit(_commande);
-  }
-
   private InitListeCommande(): void
   {    
     const LISTE = this.listeCommande().filter(x => x.date.getDay() == this.dateJour().getDay());
@@ -134,7 +151,7 @@ export class CalendrierJourComponent implements OnInit, OnChanges
   {
     this.jourSemaine.set({
       nom: this.dateJour().nomJour(),
-      date: this.dateJour().toLocaleDateString()
+      date: this.dateJour()
     });
   }
 
