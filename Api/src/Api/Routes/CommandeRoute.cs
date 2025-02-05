@@ -1,4 +1,5 @@
 ﻿using Api.Extensions;
+using Api.Extensions.PdfStyle;
 using Api.Models;
 using Api.ModelsExports.Commandes;
 using Api.ModelsImports.Commandes;
@@ -9,7 +10,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
 using Services.Mdp;
 
 namespace Api.Routes;
@@ -104,25 +104,6 @@ public static class CommandeRoute
 
                     x.Item().Table(table =>
                     {
-                        IContainer HeaderStyle(IContainer container, string backgroundColor)
-                        {
-                            return container
-                                .BorderBottom(2)
-                                .BorderColor(Colors.Black)
-                                .Background(backgroundColor)
-                                .PaddingVertical(5)
-                                .PaddingHorizontal(10);
-                        }
-
-                        IContainer CellStyle(IContainer container)
-                        {
-                            return container
-                                .BorderBottom(1)
-                                .BorderColor(Colors.Grey.Lighten1)
-                                .PaddingVertical(5)
-                                .PaddingHorizontal(10);
-                        }
-
                         table.ColumnsDefinition(x =>
                         {
                             x.RelativeColumn();
@@ -132,15 +113,13 @@ public static class CommandeRoute
                             x.RelativeColumn();
                         });
 
-                        IContainer Style(IContainer container) => HeaderStyle(container, Colors.Grey.Lighten3);
-
                         table.Header(header =>
                         {
-                            table.Cell().Element(Style).Text("Produit");
-                            table.Cell().Element(Style).Text("Quantité");
-                            table.Cell().Element(Style).Text("Prix HT");
-                            table.Cell().Element(Style).Text("TVA");
-                            table.Cell().Element(Style).Text("Total HT");
+                            table.CellStyleHeaderTableau().Text("Produit");
+                            table.CellStyleHeaderTableau().Text("Quantité");
+                            table.CellStyleHeaderTableau().Text("Prix HT");
+                            table.CellStyleHeaderTableau().Text("TVA");
+                            table.CellStyleHeaderTableau().Text("Total HT");
                         });
 
                         decimal totalHt = 0;
@@ -154,13 +133,11 @@ public static class CommandeRoute
                             decimal tvaParUnite = element.PrixHT * (element.Tva / 100);
                             totalTtc += (element.PrixHT + tvaParUnite) * element.Quantite;
 
-                            table.Cell().Element(StyleCell).Text(element.Nom);
-                            table.Cell().Element(StyleCell).Text(element.Quantite.ToString());
-                            table.Cell().Element(StyleCell).Text($"{element.PrixHT} €");
-                            table.Cell().Element(StyleCell).Text($"{element.Tva} %");
-                            table.Cell().Element(StyleCell).Text($"{element.Quantite * element.PrixHT} €");
-
-                            IContainer StyleCell(IContainer container) => CellStyle(container).ShowOnce();
+                            table.CellStyle().Text(element.Nom);
+                            table.CellStyle().Text(element.Quantite.ToString());
+                            table.CellStyle().Text($"{element.PrixHT} €");
+                            table.CellStyle().Text($"{element.Tva} %");
+                            table.CellStyle().Text($"{element.Quantite * element.PrixHT} €");
                         }
 
                         table.Cell().Row(nbLigne).Column(4)
