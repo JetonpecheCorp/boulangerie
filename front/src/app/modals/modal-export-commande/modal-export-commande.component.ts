@@ -1,6 +1,6 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ButtonComponent } from "../../components/button/button.component";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -29,8 +29,6 @@ export class ModalExportCommandeComponent implements OnInit
   protected dialogData: DateInterval = inject(MAT_DIALOG_DATA);
   protected btnClicker = signal<boolean>(false);
   
-  private matDialog = inject(MatDialog);
-  private destroyRef = inject(DestroyRef);
   private exportServ = inject(ExportService);
 
   ngOnInit(): void 
