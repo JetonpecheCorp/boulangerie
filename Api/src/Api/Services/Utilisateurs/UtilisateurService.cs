@@ -3,6 +3,7 @@ using Api.ModelsExports.Utilisateurs;
 using Api.ModelsExports;
 using Api.ModelsImports;
 using Microsoft.EntityFrameworkCore;
+using Api.Extensions;
 
 namespace Api.Services.Utilisateurs;
 
@@ -88,6 +89,17 @@ public class UtilisateurService(BoulangerieContext _context) : IUtilisateurServi
         await _context.SaveChangesAsync();
     }
 
+    public async Task<bool> ModifierAsync(SetPropertyBuilder<Utilisateur> _builder, int _idGroupe, Guid _idPublicUtilisateur)
+    {
+        if (_idPublicUtilisateur == Guid.Empty)
+            return false;
+
+        int nb = await _context.Utilisateurs.Where(x => x.IdPublic == _idPublicUtilisateur && x.IdGroupe == _idGroupe)
+            .ExecuteUpdateAsync(_builder.SetPropertyCalls);
+
+        return nb > 0;
+    }
+
     public async Task<Utilisateur?> InfoAsync(string _mail)
     {
         return await _context.Utilisateurs.Where(x => x.Mail == _mail).FirstOrDefaultAsync();
@@ -106,15 +118,15 @@ public class UtilisateurService(BoulangerieContext _context) : IUtilisateurServi
         return await _context.Utilisateurs.AnyAsync(x => x.IdPublic == _idPublic && x.IdGroupe == _idGroupe);
     }
 
-    public async Task<bool> MailExisteAsync(string _mail, int _idGroupe = 0)
+    public async Task<bool> MailExisteAsync(string _mail, Guid? _idPublicUtilisateur = null)
     {
         if(string.IsNullOrWhiteSpace(_mail))
             return false;
 
         var requete = _context.Utilisateurs.Where(x => x.Mail == _mail);
 
-        if(_idGroupe > 0)
-            requete = requete.Where(x => x.IdGroupe == _idGroupe);
+        if(_idPublicUtilisateur is not null && _idPublicUtilisateur != Guid.Empty)
+            requete = requete.Where(x => x.IdPublic != _idPublicUtilisateur);
 
         return await requete.AnyAsync();
     }

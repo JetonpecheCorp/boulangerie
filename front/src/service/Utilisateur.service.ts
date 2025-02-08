@@ -32,6 +32,6 @@ export class UtilisateurService
 
   Modifier(_idPublicUtilisateur: string, _utilisateur: UtilisateurModifierExport): Observable<void>
   {
-    return this.http.post<void>(`${this.BASE_API}/modifier/${_idPublicUtilisateur}`, _utilisateur).pipe(takeUntilDestroyed(this.destroyRef));
+    return this.http.put<void>(`${this.BASE_API}/modifier/${_idPublicUtilisateur}`, _utilisateur).pipe(takeUntilDestroyed(this.destroyRef));
   }
 }

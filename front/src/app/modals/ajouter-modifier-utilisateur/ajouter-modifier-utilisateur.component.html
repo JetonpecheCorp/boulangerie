@@ -22,9 +22,12 @@
             <app-input type="phone" [maxLength]="20" label="Téléphone" [controle]="form.controls['telephone']" />
         </div>
 
-        <div class="col-12">
-            <app-input type="password" label="Mot de passe" [controle]="form.controls['mdp']" />
-        </div>
+        @if(form.controls['mdp'])
+        {
+            <div class="col-12">
+                <app-input type="password" label="Mot de passe" [controle]="form.controls['mdp']" />
+            </div>
+        }
     </div>
 
 </mat-dialog-content>

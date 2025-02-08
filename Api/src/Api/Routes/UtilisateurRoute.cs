@@ -32,6 +32,12 @@ public static class UtilisateurRoute
             .ProducesBadRequestErreurValidation()
             .ProducesCreated<string>();
 
+        builder.MapPut("modifier/{idPublicUtilisateur:guid}", ModifierAsync)
+            .WithDescription("Modifier un utilisateur")
+            .ProducesBadRequestErreurValidation()
+            .ProducesNotFound()
+            .ProducesNoContent();
+
         return builder;
     }
 
@@ -104,6 +110,46 @@ public static class UtilisateurRoute
             await _utilisateurServ.AjouterAsync(utilisateur);
 
             return Results.Created("", utilisateur.IdPublic);
+        }
+        catch
+        {
+            return Results.Extensions.ErreurConnexionBdd();
+        }
+    }
+
+    async static Task<IResult> ModifierAsync(
+        HttpContext _httpContext,
+        [FromServices] IValidator<UtilisateurModifierImport> validator,
+        [FromServices] IUtilisateurService _utilisateurServ,
+        [FromRoute(Name = "idPublicUtilisateur")] Guid _idPublicUtilisateur,
+        [FromBody] UtilisateurModifierImport _utilisateurImport
+    )
+    {
+        try
+        {
+            _utilisateurImport.IdPublic = _idPublicUtilisateur;
+
+            var validate = await validator.ValidateAsync(_utilisateurImport);
+
+            if (!validate.IsValid)
+                return Results.Extensions.ErreurValidator(validate.Errors);
+
+            var builder = new SetPropertyBuilder<Utilisateur>();
+
+            builder.SetProperty(x => x.Nom, _utilisateurImport.Nom.XSS())
+                .SetProperty(x => x.Prenom, _utilisateurImport.Prenom.XSS())
+                .SetProperty(x => x.Mail, _utilisateurImport.Mail.XSS());
+
+            if (_utilisateurImport.Telephone is not null)
+                builder.SetProperty(x => x.Telephone, _utilisateurImport.Telephone.XSS());
+
+            var ok = await _utilisateurServ.ModifierAsync(
+                builder,
+                _httpContext.RecupererIdGroupe(),
+                _utilisateurImport.IdPublic
+            );
+
+            return ok ? Results.NoContent() : Results.NotFound();
         }
         catch
         {

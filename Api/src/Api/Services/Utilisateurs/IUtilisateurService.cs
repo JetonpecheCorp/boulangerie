@@ -2,6 +2,7 @@
 using Api.ModelsExports;
 using Api.ModelsImports;
 using Api.ModelsExports.Utilisateurs;
+using Api.Extensions;
 
 namespace Api.Services.Utilisateurs;
 
@@ -46,12 +47,21 @@ public interface IUtilisateurService
     Task AjouterAsync(Utilisateur _utilisateur);
 
     /// <summary>
+    /// Modifier un utilisateur
+    /// </summary>
+    /// <param name="_builder">info a modifier</param>
+    /// <param name="_idGroupe">id groupe de l'utilisateur conserné</param>
+    /// <param name="_idPublicUtilisateur">id public utilisateur conserné</param>
+    /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
+    Task<bool> ModifierAsync(SetPropertyBuilder<Utilisateur> _builder, int _idGroupe, Guid _idPublicUtilisateur);
+
+    /// <summary>
     /// Verifier qu'un mail existe
     /// </summary>
     /// <param name="_mail">mail conserné</param>
-    /// <param name="_idGroupe">id groupe du mail conserné</param>
+    /// <param name="_idPublicUtilisateur">id public utilisateur a exclure de la vérif</param>
     /// <returns><see langword="true"/> si existe, sinon <see langword="false"/></returns>
-    Task<bool> MailExisteAsync(string _mail, int _idGroupe = 0);
+    Task<bool> MailExisteAsync(string _mail, Guid? _idPublicUtilisateur = null);
 
     /// <summary>
     /// Verifier si un utilisateur existe

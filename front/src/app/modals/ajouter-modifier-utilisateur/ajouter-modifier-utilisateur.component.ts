@@ -37,8 +37,18 @@ export class AjouterModifierUtilisateurComponent implements OnInit
       mail: new FormControl(this.matDialogData?.mail ?? "", [Validators.required, Validators.email]),
       telephone: new FormControl(this.matDialogData?.telephone ?? "", [Validators.maxLength(20)]),
       estAdmin: new FormControl(this.matDialogData?.estAdmin ?? false, [Validators.required]),
-      mdp: new FormControl("", [Validators.required, Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\-_=+;.,§£§]).{8,}$"), Validators.minLength(8)])
     });
+
+    if(!this.matDialogData)
+    {
+      this.form.addControl<string>(
+        "mdp", new FormControl("", [
+          Validators.required, 
+          Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\-_=+;.,§£§]).{8,}$"), 
+          Validators.minLength(8)
+        ])
+      );
+    }
   }
 
   protected Valider(): void
