@@ -17,8 +17,13 @@ public static class UtilisateurRoute
     {
         builder.WithOpenApi().ProducesServiceUnavailable();
 
+        builder.MapGet("lister", ListerAsync)
+           .WithDescription("Lister les utilisateurs")
+           .ProducesBadRequestErreurValidation()
+           .Produces<PaginationExport<UtilisateurExport>>();
+
         builder.MapGet("listerLeger", ListerLegerAsync)
-            .WithDescription("Lister les utilisiateurs de façon allégé")
+            .WithDescription("Lister les utilisateurs de façon allégé")
             .ProducesBadRequestErreurValidation()
             .Produces<PaginationExport<UtilisateurLegerExport>>();
 
@@ -30,6 +35,25 @@ public static class UtilisateurRoute
         return builder;
     }
 
+    async static Task<IResult> ListerAsync(
+    HttpContext _httpContext,
+    [FromServices] IUtilisateurService _utilisateurServ,
+    [AsParameters] PaginationImport _pagination
+)
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        if(_pagination.NumPage <= 0)
+            _pagination.NumPage = 1;
+
+        if(_pagination.NbParPage <= 0)
+            _pagination.NbParPage = 10;
+
+        var retour = await _utilisateurServ.ListerAsync(_pagination, idGroupe);
+
+        return Results.Extensions.OK(retour, PaginationExportContext.Default);
+    }
+
     async static Task<IResult> ListerLegerAsync(
         HttpContext _httpContext,
         [FromServices] IUtilisateurService _utilisateurServ,
@@ -37,6 +61,12 @@ public static class UtilisateurRoute
     )
     {
         int idGroupe = _httpContext.RecupererIdGroupe();
+
+        if (_pagination.NumPage <= 0)
+            _pagination.NumPage = 1;
+
+        if (_pagination.NbParPage <= 0)
+            _pagination.NbParPage = 10;
 
         var retour = await _utilisateurServ.ListerLegerAsync(_pagination, idGroupe);
 

@@ -40,5 +40,10 @@ export const routes: Routes = [
         path: "livraison",
         loadComponent: () => import('./pages/livraison/livraison.component').then(x => x.LivraisonComponent),
         title: "Livraison"
+    },
+    {
+        path: "employe",
+        loadComponent: () => import('./pages/utilisateur/utilisateur.component').then(x => x.UtilisateurComponent),
+        title: "Employe"
     }
 ];
