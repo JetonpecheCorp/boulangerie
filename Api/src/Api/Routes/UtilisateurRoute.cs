@@ -36,10 +36,10 @@ public static class UtilisateurRoute
     }
 
     async static Task<IResult> ListerAsync(
-    HttpContext _httpContext,
-    [FromServices] IUtilisateurService _utilisateurServ,
-    [AsParameters] PaginationImport _pagination
-)
+        HttpContext _httpContext,
+        [FromServices] IUtilisateurService _utilisateurServ,
+        [AsParameters] PaginationImport _pagination
+    )
     {
         int idGroupe = _httpContext.RecupererIdGroupe();
 
