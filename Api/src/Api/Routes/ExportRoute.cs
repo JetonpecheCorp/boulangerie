@@ -23,11 +23,14 @@ public static class ExportRoute
             .ProducesNoContent();
 
         builder.MapGet("client", ExportClientAsync)
-            .WithDescription("Produit un 'no content' si pas d'utilisateur")
+            .WithDescription("Produit un 'no content' si pas de client")
             .Produces(StatusCodes.Status200OK, contentType: ContentType.Excel)
             .ProducesNoContent();
 
-        builder.MapGet("commande", ExportCommandeAsync);
+        builder.MapGet("commande", ExportCommandeAsync)
+            .WithDescription("Produit un 'no content' si pas de commande")
+            .Produces(StatusCodes.Status200OK, contentType: ContentType.Pdf)
+            .ProducesNoContent();
 
         return builder;
     }
@@ -49,6 +52,9 @@ public static class ExportRoute
             DateFin = _dateInterval.DateFin,
             Status = _dateInterval.Status
         }, idGroupe);
+
+        if(listeCommande.Length is 0)
+            return Results.NoContent();
 
         var listeCommandeGroupeBy = listeCommande.GroupBy(x => x.Date).ToArray();
 
@@ -75,13 +81,6 @@ public static class ExportRoute
                     });
 
                     var liste = listeCommandeGroupeBy.SelectMany(x => x).ToArray();
-
-                    /**
-                     * 6/12/2024 0
-                     * cmd 1 row j = 1 colonne  i = 1
-                     * cmd 2 row j = 2 colonne i = 1
-                     * 
-                     */
 
                     for (uint i = 0; i < listeCommandeGroupeBy.Length; i++)
                     {

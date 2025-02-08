@@ -16,7 +16,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommandeFiltreExport } from '@model/exports/CommandeExport';
 import { EStatusCommande, ConvertionEnum } from '@enum/EStatusCommande';
 import {MatSelectModule} from '@angular/material/select';
-import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/modal-ajouter-commmande.component';
+import { ModalExportCommandeComponent } from '@modal/modal-export-commande/modal-export-commande.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 enum EModeCalendrier 
 {
@@ -28,7 +29,7 @@ enum EModeCalendrier
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [MatSelectModule, MatSidenavModule, MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
+  imports: [MatSelectModule, MatTooltipModule, MatSidenavModule, MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
@@ -63,6 +64,27 @@ export class TestComponent implements OnInit
   protected ConvertionEnumCommande(_status: EStatusCommande): string
   {
     return ConvertionEnum.StatusCommande(_status);
+  }
+
+  protected OuvrirModalExportCommande(): void
+  {
+    const INFO = { 
+      dateDebut: this.dateJour(),
+      dateFin: this.dateJour()
+    };
+
+    if(this.mode() == EModeCalendrier.Semaine)
+    {
+      INFO.dateDebut = this.dateJour().datePremierJourSemaine();
+      INFO.dateFin = this.dateJour().dateDernierJourSemaine();
+    }
+    else if(this.mode() == EModeCalendrier.Mois)
+    {
+      INFO.dateDebut = this.dateJour().debutMois();
+      INFO.dateFin = this.dateJour().finMois();
+    }
+
+    this.matDialog.open(ModalExportCommandeComponent, { data: INFO });
   }
 
   protected OuvrirModalCalendrierJour(_info: RetourCalendrierMois)
@@ -124,8 +146,7 @@ export class TestComponent implements OnInit
     if(this.mode() == EModeCalendrier.Semaine)
     {
       dateJour = this.dateJour().datePremierJourSemaine();
-      dateFin = new Date(dateJour.getTime());
-      dateFin.ajouterJour(6);
+      dateFin = this.dateJour().dateDernierJourSemaine();
     }
     else if(this.mode() == EModeCalendrier.Mois)
     {

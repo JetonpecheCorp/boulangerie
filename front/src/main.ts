@@ -7,6 +7,7 @@ declare global {
   interface Date {
     nbJourDiff(_date: Date): number;
     datePremierJourSemaine(): Date;
+    dateDernierJourSemaine(): Date;
     nomJour(): string;
     ajouterJour(_nbJour: number): Date;
     ajouterMois(_nbMois: number): Date;
@@ -138,6 +139,11 @@ Date.prototype.datePremierJourSemaine = function(): Date
   date.setDate(diff)
 
   return date;
+};
+
+Date.prototype.dateDernierJourSemaine = function(): Date
+{
+  return this.datePremierJourSemaine().ajouterJour(6);
 };
 
 bootstrapApplication(AppComponent, appConfig)

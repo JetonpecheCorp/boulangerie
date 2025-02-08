@@ -46,6 +46,7 @@ export class CommandeService
     this.http.get(`${this.BASE_API}/facture/${_numero}`,
       {observe: "response", responseType: "blob"}
     )
+    .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe(reponse => 
     {
       const NOM_FICHIER = reponse.headers.get("content-disposition")!

@@ -1,23 +1,30 @@
 <div style="text-align: center; margin-bottom: 10px;">
-    <button mat-mini-fab (click)="Precedent()">
+    <button mat-mini-fab matTooltip="Précédent" (click)="Precedent()">
         <mat-icon>keyboard_arrow_left</mat-icon>
     </button>
 
     &nbsp;{{ dateJour().toLocaleDateString() }}&nbsp;
 
-    <button mat-mini-fab (click)="Suivant()">
+    <button mat-mini-fab matTooltip="Suivant" (click)="Suivant()">
         <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
     <br><br>
 
-    <mat-button-toggle-group (change)="ChangerAffichage($event)" 
-                             name="fontStyle"
-                             [value]="mode()" 
-                             aria-label="Affichage calendrier">
-        <mat-button-toggle [value]="eModeCalendrier.Jour">Jour</mat-button-toggle>
-        <mat-button-toggle [value]="eModeCalendrier.Semaine">Semaine</mat-button-toggle>
-        <mat-button-toggle [value]="eModeCalendrier.Mois">Mois</mat-button-toggle>
-    </mat-button-toggle-group>
+    <div style="display: flex; justify-content: center;">
+        <mat-button-toggle-group (change)="ChangerAffichage($event)" 
+            name="fontStyle"
+            [value]="mode()" 
+            aria-label="Affichage calendrier">
+
+            <mat-button-toggle [value]="eModeCalendrier.Jour">Jour</mat-button-toggle>
+            <mat-button-toggle [value]="eModeCalendrier.Semaine">Semaine</mat-button-toggle>
+            <mat-button-toggle [value]="eModeCalendrier.Mois">Mois</mat-button-toggle>
+        </mat-button-toggle-group>&nbsp;
+
+        <button mat-icon-button matTooltip="Exporter commandes" (click)="OuvrirModalExportCommande()">
+            <mat-icon>download</mat-icon>
+        </button>
+    </div>
 </div>
 
 <div>
