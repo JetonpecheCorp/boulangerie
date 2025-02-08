@@ -17,6 +17,7 @@ import { Utilisateur } from '@model/Utilisateur';
 import { UtilisateurService } from '@service/Utilisateur.service';
 import { ExportService } from '@service/Export.service';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { AjouterModifierUtilisateurComponent } from '@modal/ajouter-modifier-utilisateur/ajouter-modifier-utilisateur.component';
 
 @Component({
   selector: 'app-utilisateur',
@@ -70,7 +71,27 @@ export class UtilisateurComponent implements AfterViewInit
 
   protected OuvrirModal(_utilisateur?: Utilisateur): void
   {
+    const DIALOG_REF = this.matDialog.open(AjouterModifierUtilisateurComponent, { data: _utilisateur });
 
+    DIALOG_REF.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (retour?: Utilisateur) =>
+        {
+          // modification
+          if(retour && _utilisateur)
+          {
+            _utilisateur.estAdmin = retour.estAdmin;
+            _utilisateur.mail = retour.mail;
+            _utilisateur.nom = retour.nom;
+            _utilisateur.prenom;
+            _utilisateur.telephone = retour.telephone;
+          }
+          // ajout
+          else if(!_utilisateur && retour)
+            this.Lister();
+        }
+      });
   }
 
   protected Exporter(): void

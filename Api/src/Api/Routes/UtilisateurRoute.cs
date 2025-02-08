@@ -30,7 +30,7 @@ public static class UtilisateurRoute
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter un nouvelle utilisateur")
             .ProducesBadRequestErreurValidation()
-            .ProducesCreated();
+            .ProducesCreated<string>();
 
         return builder;
     }
@@ -74,6 +74,7 @@ public static class UtilisateurRoute
     }
 
     async static Task<IResult> AjouterAsync(
+        HttpContext _httpContext,
         [FromServices] IValidator<UtilisateurImport> validator,
         [FromServices] IMdpService _mdpServ,
         [FromServices] IUtilisateurService _utilisateurServ,
@@ -91,7 +92,7 @@ public static class UtilisateurRoute
 
             Utilisateur utilisateur = new()
             {
-                IdGroupe = _utilisateurImport.IdGroupe,
+                IdGroupe = _httpContext.RecupererIdGroupe(),
                 Nom = _utilisateurImport.Nom.XSS(),
                 Prenom = _utilisateurImport.Prenom.XSS(),
                 Telephone = _utilisateurImport.Telephone?.XSS(),
@@ -102,7 +103,7 @@ public static class UtilisateurRoute
 
             await _utilisateurServ.AjouterAsync(utilisateur);
 
-            return Results.Created("", utilisateur.Id);
+            return Results.Created("", utilisateur.IdPublic);
         }
         catch
         {
