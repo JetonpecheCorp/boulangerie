@@ -22,6 +22,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProgrammerLivraisonComponent } from '@modal/programmer-livraison/programmer-livraison.component';
 import { ButtonComponent } from "../../components/button/button.component";
 import { ThemeService } from '@service/ThemeService.Service';
+import { UtilisateurService } from '@service/Utilisateur.service';
+import { UtilisateurLeger } from '@model/Utilisateur';
 
 @Component({
   selector: 'app-livraison',
@@ -33,12 +35,14 @@ import { ThemeService } from '@service/ThemeService.Service';
 export class LivraisonComponent implements OnInit, AfterContentInit
 {
   autoCompleteClientFormCtrl = new FormControl<string | null>(null);
+  autoCompleteUtilisateurFormCtrl = new FormControl<string | null>(null);
 
   displayedColumns: string[] = ["numero", "date", "fraisHT", "action"];
   dataSource = signal<MatTableDataSource<Livraison>>(new MatTableDataSource());
   estEnChargement = signal(false);
 
   listeClientFiltrer = signal<ClientLeger[]>([]);
+  listeUtilisateurFiltrer = signal<UtilisateurLeger[]>([]);
   dateJour = new Date();
 
   nbParPage = signal(0);
@@ -51,9 +55,11 @@ export class LivraisonComponent implements OnInit, AfterContentInit
   sort = viewChild.required(MatSort);
 
   private listeClient = signal<ClientLeger[]>([]);
+  private listeUtilisateur = signal<UtilisateurLeger[]>([]);
 
   private livraisonServ = inject(LivraisonService);
   private clientServ = inject(ClientService);
+  private utilisateurServ = inject(UtilisateurService);
   private ToastrServ = inject(ToastrService);
   private themeServ = inject(ThemeService);
   private destroyRef = inject(DestroyRef);
@@ -69,6 +75,7 @@ export class LivraisonComponent implements OnInit, AfterContentInit
     });
 
     this.ListerClient();
+    this.ListerUtilisateur();
     this.ListerLivraison();
 
     this.autoCompleteClientFormCtrl.valueChanges
@@ -80,6 +87,18 @@ export class LivraisonComponent implements OnInit, AfterContentInit
             .filter(x => x.nom.toLowerCase().includes(valeur?.toLowerCase() || ""));
 
           this.listeClientFiltrer.set(liste);
+        }
+      });
+
+    this.autoCompleteUtilisateurFormCtrl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (valeur: string | null) =>
+        {
+          let liste = this.listeUtilisateur()
+            .filter(x => x.nomComplet.toLowerCase().includes(valeur?.toLowerCase() || ""));
+
+          this.listeUtilisateurFiltrer.set(liste);
         }
       });
 
@@ -171,6 +190,9 @@ export class LivraisonComponent implements OnInit, AfterContentInit
     const ID_PUBLIC_CLIENT = this.listeClient()
       .find(x => x.nom == this.autoCompleteClientFormCtrl.value)?.idPublic;
 
+    const ID_PUBLIC_CONDUCTEUR = this.listeUtilisateur()
+      .find(x => x.nomComplet == this.autoCompleteUtilisateurFormCtrl.value)?.idPublic;
+
     const INFOS: PaginationFiltreLivraisonExport =
     {
       numPage: _eventPage ? this.paginator().pageIndex + 1 : 1,
@@ -180,7 +202,8 @@ export class LivraisonComponent implements OnInit, AfterContentInit
       dateFin: this.form.value.dateFin,
 
       thermeRecherche: this.inputFormCtrl.value,
-      idPublicClient: ID_PUBLIC_CLIENT
+      idPublicClient: ID_PUBLIC_CLIENT,
+      idPublicConducteur: ID_PUBLIC_CONDUCTEUR
     };
 
     this.livraisonServ.Lister(INFOS).subscribe({
@@ -242,6 +265,22 @@ export class LivraisonComponent implements OnInit, AfterContentInit
       {
         this.listeClient.set(retour.liste);
         this.listeClientFiltrer.set(retour.liste);
+      }
+    });
+  }
+
+  private ListerUtilisateur(): void
+  {
+    const INFOS: PaginationExport = {
+      numPage: 1,
+      nbParPage: 1_000_000
+    };
+
+    this.utilisateurServ.ListerLeger(INFOS).subscribe({
+      next: (retour) =>
+      {
+        this.listeUtilisateur.set(retour.liste);
+        this.listeUtilisateurFiltrer.set(retour.liste);
       }
     });
   }

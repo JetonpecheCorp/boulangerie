@@ -11,4 +11,5 @@ export type PaginationFiltreLivraisonExport = PaginationExport &
     dateFin?: Date | null,
 
     idPublicClient?: string | null
+    idPublicConducteur?: string | null
 }

@@ -25,6 +25,9 @@ export class LivraisonService
     if(_paginationFiltre.idPublicClient)
       INFOS.idPublicClient = _paginationFiltre.idPublicClient;
 
+    if(_paginationFiltre.idPublicConducteur)
+      INFOS.idPublicConducteur = _paginationFiltre.idPublicConducteur;
+
     if(_paginationFiltre.thermeRecherche)
       INFOS.thermeRecherche = _paginationFiltre.thermeRecherche;
 

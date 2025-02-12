@@ -33,6 +33,9 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
             requete = requete.Where(x => x.Commandes.Any(y => y.IdClientNavigation.IdPublic == _filtre.IdPublicClient));
 #pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null.
 
+        if (_filtre.IdPublicConducteur is not null)
+            requete = requete.Where(x => x.IdUtilisateurNavigation.IdPublic == _filtre.IdPublicConducteur);
+
         int total = await requete.CountAsync();
 
         var liste = await requete
