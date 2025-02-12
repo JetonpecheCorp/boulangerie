@@ -61,8 +61,9 @@
             <th mat-header-cell *matHeaderCellDef> Action </th>
             <td mat-cell *matCellDef="let row">
                 <button mat-mini-fab 
-                        stop-propagation>
-                    <mat-icon>list</mat-icon>
+                        stop-propagation
+                        (click)="OuvrirModalLivraison(row)">
+                    <mat-icon>local_shipping</mat-icon>
                 </button>&nbsp;
 
                 <button mat-mini-fab 

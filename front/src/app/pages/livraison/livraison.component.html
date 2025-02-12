@@ -1,11 +1,14 @@
-<h1>Gestion des livraisons</h1>
+@if(!this.idPublicConducteur())
+{
+    <h1>Gestion des livraisons</h1>
 
-<div style="text-align: center; margin-bottom: 10px;">
-    <button mat-flat-button (click)="OuvrirModalProgammerLivraison()">
-        <mat-icon>add</mat-icon>
-        Nouvelle livraison
-    </button>
-</div>
+    <div style="text-align: center; margin-bottom: 10px;">
+        <button mat-flat-button (click)="OuvrirModalProgammerLivraison()">
+            <mat-icon>add</mat-icon>
+            Nouvelle livraison
+        </button>
+    </div>
+}
 
 <div class="container-table">
     @if (estEnChargement()) 
@@ -49,11 +52,11 @@
             <mat-form-field style="margin-bottom: 10px;">
                 <mat-label>Client</mat-label>
                 <input type="text"
-                       placeholder="Client"
-                       aria-label="Client"
-                       matInput
-                       [formControl]="autoCompleteClientFormCtrl"
-                       [matAutocomplete]="auto">
+                        placeholder="Client"
+                        aria-label="Client"
+                        matInput
+                        [formControl]="autoCompleteClientFormCtrl"
+                        [matAutocomplete]="auto">
         
                 <mat-autocomplete (optionSelected)="ListerLivraison()" autoActiveFirstOption #auto="matAutocomplete">
                     @for (element of listeClientFiltrer(); track element.idPublic) 

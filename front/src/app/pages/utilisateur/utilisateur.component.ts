@@ -18,6 +18,8 @@ import { UtilisateurService } from '@service/Utilisateur.service';
 import { ExportService } from '@service/Export.service';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { AjouterModifierUtilisateurComponent } from '@modal/ajouter-modifier-utilisateur/ajouter-modifier-utilisateur.component';
+import { LivraisonComponent } from '../livraison/livraison.component';
+import { ModalLivraisonComponent } from '@modal/modal-livraison/modal-livraison.component';
 
 @Component({
   selector: 'app-utilisateur',
@@ -92,6 +94,15 @@ export class UtilisateurComponent implements AfterViewInit
             this.Lister();
         }
       });
+  }
+
+  protected OuvrirModalLivraison(_utilisateur: Utilisateur): void
+  {
+    this.matDialog.open(ModalLivraisonComponent, { data: {
+        idPublicConducteur: _utilisateur.idPublic
+      },
+      maxWidth: 2000
+    });
   }
 
   protected Exporter(): void

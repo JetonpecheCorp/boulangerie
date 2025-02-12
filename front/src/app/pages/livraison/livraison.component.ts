@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { AfterContentInit, Component, DestroyRef, inject, input, OnInit, signal, viewChild } from '@angular/core';
 import { PaginationExport, PaginationFiltreLivraisonExport } from '@model/exports/PaginationExport';
 import { LivraisonService } from '@service/Livraison.service';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -34,6 +34,8 @@ import { UtilisateurLeger } from '@model/Utilisateur';
 })
 export class LivraisonComponent implements OnInit, AfterContentInit
 {
+  idPublicConducteur = input<string | undefined>();
+
   autoCompleteClientFormCtrl = new FormControl<string | null>(null);
   autoCompleteUtilisateurFormCtrl = new FormControl<string | null>(null);
 
@@ -74,9 +76,9 @@ export class LivraisonComponent implements OnInit, AfterContentInit
       dateFin: new FormControl<Date | null>(new Date().setFinMois())
     });
 
+    this.ListerLivraison();
     this.ListerClient();
     this.ListerUtilisateur();
-    this.ListerLivraison();
 
     this.autoCompleteClientFormCtrl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -190,7 +192,7 @@ export class LivraisonComponent implements OnInit, AfterContentInit
     const ID_PUBLIC_CLIENT = this.listeClient()
       .find(x => x.nom == this.autoCompleteClientFormCtrl.value)?.idPublic;
 
-    const ID_PUBLIC_CONDUCTEUR = this.listeUtilisateur()
+    const ID_PUBLIC_CONDUCTEUR = this.idPublicConducteur() ?? this.listeUtilisateur()
       .find(x => x.nomComplet == this.autoCompleteUtilisateurFormCtrl.value)?.idPublic;
 
     const INFOS: PaginationFiltreLivraisonExport =
@@ -281,6 +283,12 @@ export class LivraisonComponent implements OnInit, AfterContentInit
       {
         this.listeUtilisateur.set(retour.liste);
         this.listeUtilisateurFiltrer.set(retour.liste);
+
+        if(this.idPublicConducteur())
+        {
+          let nom = retour.liste.find(x => x.idPublic == this.idPublicConducteur())!.nomComplet;
+          this.autoCompleteUtilisateurFormCtrl.setValue(nom);
+        }
       }
     });
   }
