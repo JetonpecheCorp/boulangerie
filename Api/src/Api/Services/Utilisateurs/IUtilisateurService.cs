@@ -47,6 +47,13 @@ public interface IUtilisateurService
     Task AjouterAsync(Utilisateur _utilisateur);
 
     /// <summary>
+    /// Ajouter des nouveaux utilisateurs
+    /// </summary>
+    /// <param name="_listeUtilisateur"></param>
+    /// <returns></returns>
+    Task AjouterAsync(IReadOnlyList<Utilisateur> _listeUtilisateur);
+
+    /// <summary>
     /// Modifier un utilisateur
     /// </summary>
     /// <param name="_builder">info a modifier</param>

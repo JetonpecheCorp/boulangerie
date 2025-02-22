@@ -89,6 +89,12 @@ public class UtilisateurService(BoulangerieContext _context) : IUtilisateurServi
         await _context.SaveChangesAsync();
     }
 
+    public async Task AjouterAsync(IReadOnlyList<Utilisateur> _listeUtilisateur)
+    {
+        _context.AddRange(_listeUtilisateur);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<bool> ModifierAsync(SetPropertyBuilder<Utilisateur> _builder, int _idGroupe, Guid _idPublicUtilisateur)
     {
         if (_idPublicUtilisateur == Guid.Empty)

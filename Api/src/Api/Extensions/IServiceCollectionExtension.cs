@@ -3,6 +3,7 @@ using Api.Services.Clients;
 using Api.Services.Commandes;
 using Api.Services.Fournisseurs;
 using Api.Services.Groupes;
+using Api.Services.Imports;
 using Api.Services.Ingredients;
 using Api.Services.Livraisons;
 using Api.Services.Produits;
@@ -39,7 +40,8 @@ public static class IServiceCollectionExtension
             .AddScoped<IFournisseurService, FournisseurService>()
             .AddScoped<ICommandeService, CommandeService>()
             .AddScoped<IClientService, ClientService>()
-            .AddScoped<ILivraisonService, LivraisonService>();
+            .AddScoped<ILivraisonService, LivraisonService>()
+            .AddScoped<IImportService, ImportService>();
 
         _service.AddSingleton<IJwtService>(new JwtService(_rsa, ""))
             .AddSingleton<IMdpService, MdpService>();
