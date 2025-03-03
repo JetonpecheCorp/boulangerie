@@ -20,6 +20,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { AjouterModifierUtilisateurComponent } from '@modal/ajouter-modifier-utilisateur/ajouter-modifier-utilisateur.component';
 import { LivraisonComponent } from '../livraison/livraison.component';
 import { ModalLivraisonComponent } from '@modal/modal-livraison/modal-livraison.component';
+import { ImporterDonneeComponent } from '@modal/importer-donnee/importer-donnee.component';
+import { ETypeRessourceImport } from '@enum/ETypeRessourceImport';
 
 @Component({
   selector: 'app-utilisateur',
@@ -102,6 +104,13 @@ export class UtilisateurComponent implements AfterViewInit
         idPublicConducteur: _utilisateur.idPublic
       },
       maxWidth: 2000
+    });
+  }
+
+  protected OuvrirModalImporter(): void
+  {
+    this.matDialog.open(ImporterDonneeComponent, { 
+      data: ETypeRessourceImport.Utilisateur
     });
   }
 

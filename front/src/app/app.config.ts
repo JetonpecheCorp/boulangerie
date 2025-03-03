@@ -23,6 +23,7 @@ import { ClientService } from '@service/Client.service';
 import { UtilisateurService } from '@service/Utilisateur.service';
 import { LivraisonService } from '@service/Livraison.service';
 import { ExportService } from '@service/Export.service';
+import { ImportService } from '@service/Import.service';
 
 const matInput: MatFormFieldDefaultOptions = {
   appearance: 'outline',
@@ -53,6 +54,7 @@ export const appConfig: ApplicationConfig = {
     { provide: UtilisateurService, useClass: UtilisateurService },
     { provide: LivraisonService, useClass: LivraisonService },
     { provide: ExportService, useClass: ExportService },
+    { provide: ImportService, useClass: ImportService },
 
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matInput },
     { provide: MAT_DATE_LOCALE, useValue: navigator.language }

@@ -20,7 +20,7 @@ public static class ImportRoute
     async static Task<IResult> UtilisateurAsync(
         HttpContext _httpContext,
         [FromServices] IImportService _importServ,
-        IFormFile _fichierCSV
+        [FromForm(Name = "fichier")] IFormFile _fichierCSV
     )
     {
         int idGroupe = _httpContext.RecupererIdGroupe();
