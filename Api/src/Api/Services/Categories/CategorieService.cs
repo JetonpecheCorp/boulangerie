@@ -45,8 +45,7 @@ public class CategorieService(BoulangerieContext _context): ICategorieService
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new CategorieExport
             {
                 IdPublic = x.IdPublic.ToString("D"),

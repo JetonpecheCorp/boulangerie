@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using Api.Extensions;
+using Api.Models;
 using Api.ModelsExports;
 using Api.ModelsExports.Vehicules;
 using Api.ModelsImports;
@@ -26,8 +27,7 @@ public class VehiculeService(BoulangerieContext _context) : IVehiculeService
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new VehiculeExport
             {
                 IdPublic = x.IdPublic,

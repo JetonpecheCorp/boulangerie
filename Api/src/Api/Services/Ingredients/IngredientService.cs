@@ -29,8 +29,7 @@ public class IngredientService(BoulangerieContext _context): IIngredientService
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new IngredientExport
             {
                IdPublic = x.IdPublic.ToString("D"),

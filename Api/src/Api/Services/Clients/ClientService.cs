@@ -3,6 +3,7 @@ using Api.ModelsExports.Clients;
 using Api.ModelsExports;
 using Api.ModelsImports;
 using Microsoft.EntityFrameworkCore;
+using Api.Extensions;
 
 namespace Api.Services.Clients;
 
@@ -24,8 +25,7 @@ public sealed class ClientService(BoulangerieContext _context): IClientService
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new ClientExport
             {
                 IdPublic = x.IdPublic,
@@ -64,8 +64,7 @@ public sealed class ClientService(BoulangerieContext _context): IClientService
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new ClientLegerExport
             {
                 IdPublic = x.IdPublic,

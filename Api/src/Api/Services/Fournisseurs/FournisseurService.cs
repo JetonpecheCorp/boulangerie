@@ -31,8 +31,7 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new FournisseurExport
             {
                 IdPublic = x.IdPublic.ToString("D"),

@@ -27,8 +27,7 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new ProduitExport
             {
                 IdPublic = x.IdPublic,
@@ -91,8 +90,7 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new ProduitLegerExport
             {
                 IdPublic = x.IdPublic,
