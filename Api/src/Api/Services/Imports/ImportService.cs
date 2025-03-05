@@ -4,6 +4,7 @@ using Api.ModelsExports;
 using Api.ModelsImports.CSVs;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Services.Mdp;
 using System.Globalization;
 using System.Text;
@@ -30,6 +31,52 @@ public class ImportService(BoulangerieContext _context, IMdpService _mdpServ) : 
             return false;
         }
     };
+
+    public async Task<List<ErreurValidationCSV>> ClientAsync(int _idGroupe, IFormFile _fichierCSV)
+    {
+        using StreamReader lecteur = new(_fichierCSV.OpenReadStream());
+
+        using (var csv = new CsvReader(lecteur, Config))
+        {
+            csv.Context.RegisterClassMap<ClientCsvMap>();
+            var record = csv.GetRecords<ClientCSV>().ToArray();
+
+            List<Client> liste = [];
+
+            for(int i = 0; i < record.Length; i++)
+            {
+                var element = record[i];
+
+                if(element.Mail is not null && await _context.Clients.AnyAsync(x => x.Mail == element.Mail))
+                {
+                    ListeErreur.Add(new()
+                    {
+                        Message = "Le mail existe déjà",
+                        NomHeader = "mail",
+                        NumeroLigne = i + 2
+                    });
+
+                    continue;
+                }
+
+                liste.Add(new()
+                {
+                    Nom = element.Nom.XSS(),
+                    IdGroupe = _idGroupe,
+                    IdPublic = Guid.NewGuid(),
+                    Adresse = element.Adresse.XSS(),
+                    AdresseFacturation = element.AdresseFacturation.XSS(),
+                    Mail = element.Mail?.XSS(),
+                    Telephone = element.Telephone?.XSS()
+                });
+            }
+
+            _context.Clients.AddRange(liste);
+            await _context.SaveChangesAsync();
+        }
+
+        return ListeErreur;
+    }
 
     public async Task<List<ErreurValidationCSV>> IngredientAsync(int _idGroupe, IFormFile _fichierCSV)
     {

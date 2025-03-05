@@ -17,6 +17,9 @@ public static class ImportRoute
         builder.MapPost("ingredient", IngredientAsync)
             .DisableAntiforgery();
 
+        builder.MapPost("client", ClientAsync)
+            .DisableAntiforgery();
+
         return builder;
     }
 
@@ -42,6 +45,20 @@ public static class ImportRoute
         int idGroupe = _httpContext.RecupererIdGroupe();
 
         var retour = await _importServ.IngredientAsync(idGroupe, _fichierCSV);
+
+        return Results.Extensions.OK(retour, ErreurValidationCSVContext.Default);
+    }
+
+
+    async static Task<IResult> ClientAsync(
+        HttpContext _httpContext,
+        [FromServices] IImportService _importServ,
+        [FromForm(Name = "fichier")] IFormFile _fichierCSV
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        var retour = await _importServ.ClientAsync(idGroupe, _fichierCSV);
 
         return Results.Extensions.OK(retour, ErreurValidationCSVContext.Default);
     }
