@@ -1,4 +1,5 @@
-﻿using Api.Extensions;
+﻿using Api.Enums;
+using Api.Extensions;
 using Api.ModelsExports;
 using Api.Services.Imports;
 using Microsoft.AspNetCore.Mvc;
@@ -11,55 +12,40 @@ public static class ImportRoute
     {
         builder.WithOpenApi().ProducesServiceUnavailable();
 
-        builder.MapPost("utilisateur", UtilisateurAsync)
-            .DisableAntiforgery();
-
-        builder.MapPost("ingredient", IngredientAsync)
-            .DisableAntiforgery();
-
-        builder.MapPost("client", ClientAsync)
+        builder.MapPost("{ressource}", ImportAsync)
+            .WithDescription("""
+                Importer des infos avec un CSV 
+                Valeurs possible de ressource => utilisateur, client, ingredient (non sensible à la case). 
+                Si aucune erreur => import OK, sinon l'import est fait sauf sur les lignes où il y a des erreurs.
+            """)
+            
             .DisableAntiforgery();
 
         return builder;
     }
 
-    async static Task<IResult> UtilisateurAsync(
+    async static Task<IResult> ImportAsync(
         HttpContext _httpContext,
         [FromServices] IImportService _importServ,
+        [FromRoute(Name = "ressource")] string _ressource,
         [FromForm(Name = "fichier")] IFormFile _fichierCSV
     )
     {
-        int idGroupe = _httpContext.RecupererIdGroupe();
+        if(Enum.TryParse<ERessourceImport>(_ressource, true, out var ressource))
+        {
+            int idGroupe = _httpContext.RecupererIdGroupe();
 
-        var retour = await _importServ.UtilisateurAsync(idGroupe, _fichierCSV);
+            var retour = ressource switch
+            {
+                ERessourceImport.Utilisateur => await _importServ.UtilisateurAsync(idGroupe, _fichierCSV),
+                ERessourceImport.Client => await _importServ.ClientAsync(idGroupe, _fichierCSV),
+                ERessourceImport.Ingredient => await _importServ.IngredientAsync(idGroupe, _fichierCSV),
+                _ => []
+            };
 
-        return Results.Extensions.OK(retour, ErreurValidationCSVContext.Default);
-    }
+            return Results.Extensions.OK(retour, ErreurValidationCSVContext.Default);
+        }
 
-    async static Task<IResult> IngredientAsync(
-        HttpContext _httpContext,
-        [FromServices] IImportService _importServ,
-        [FromForm(Name = "fichier")] IFormFile _fichierCSV
-    )
-    {
-        int idGroupe = _httpContext.RecupererIdGroupe();
-
-        var retour = await _importServ.IngredientAsync(idGroupe, _fichierCSV);
-
-        return Results.Extensions.OK(retour, ErreurValidationCSVContext.Default);
-    }
-
-
-    async static Task<IResult> ClientAsync(
-        HttpContext _httpContext,
-        [FromServices] IImportService _importServ,
-        [FromForm(Name = "fichier")] IFormFile _fichierCSV
-    )
-    {
-        int idGroupe = _httpContext.RecupererIdGroupe();
-
-        var retour = await _importServ.ClientAsync(idGroupe, _fichierCSV);
-
-        return Results.Extensions.OK(retour, ErreurValidationCSVContext.Default);
+        return Results.BadRequest("La ressource n'existe pas");
     }
 }
