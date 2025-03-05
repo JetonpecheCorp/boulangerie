@@ -2,40 +2,71 @@
 using Api.Models;
 using Api.ModelsExports;
 using Api.ModelsImports.CSVs;
-using Api.Services.Utilisateurs;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Services.Mdp;
 using System.Globalization;
+using System.Text;
 
 namespace Api.Services.Imports;
 
-public class ImportService(IUtilisateurService _utilisateurServ, IMdpService _mdpServ) : IImportService
+public class ImportService(BoulangerieContext _context, IMdpService _mdpServ) : IImportService
 {
     public List<ErreurValidationCSV> ListeErreur { get; private set; } = [];
+
+    private CsvConfiguration Config => new(CultureInfo.InvariantCulture)
+    {
+        Encoding = Encoding.UTF8,
+        Delimiter = ";",
+        ReadingExceptionOccurred = x =>
+        {
+            ListeErreur.Add(new()
+            {
+                NumeroLigne = x.Exception.Context!.Parser!.Row,
+                NomHeader = x.Exception.Context.Reader!.HeaderRecord![x.Exception.Context.Reader.CurrentIndex],
+                Message = x.Exception.Message.Split(Environment.NewLine)[0],
+            });
+
+            return false;
+        }
+    };
+
+    public async Task<List<ErreurValidationCSV>> IngredientAsync(int _idGroupe, IFormFile _fichierCSV)
+    {
+        using StreamReader lecteur = new(_fichierCSV.OpenReadStream());
+
+        using (var csv = new CsvReader(lecteur, Config))
+        {
+            csv.Context.RegisterClassMap<IngredientCsvMap>();
+            var record = csv.GetRecordsAsync<IngredientCSV>();
+
+            List<Ingredient> liste = [];
+
+            await foreach (var element in record)
+            {
+                liste.Add(new()
+                {
+                    Nom = element.Nom.XSS(),
+                    IdGroupe = _idGroupe,
+                    IdPublic = Guid.NewGuid(),
+                    CodeInterne = element.CodeInterne?.XSS(),
+                    Stock = element.Stock,
+                    StockAlert = element.StockAlert
+                });
+            }
+
+            _context.Ingredients.AddRange(liste);
+            await _context.SaveChangesAsync();
+        }
+
+        return ListeErreur;
+    }
 
     public async Task<List<ErreurValidationCSV>> UtilisateurAsync(int _idGroupe, IFormFile _fichierCSV)
     {
         using StreamReader lecteur = new(_fichierCSV.OpenReadStream());
 
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            Encoding = System.Text.Encoding.UTF8,
-            Delimiter = ";",
-            ReadingExceptionOccurred = x =>
-            {
-                ListeErreur.Add(new()
-                {
-                    NumeroLigne = x.Exception.Context!.Parser!.Row,
-                    NomHeader = x.Exception.Context.Reader!.HeaderRecord![x.Exception.Context.Reader.CurrentIndex],
-                    Message = x.Exception.Message.Split(Environment.NewLine)[0],
-                });
-
-                return false;
-            }
-        };
-
-        using (var csv = new CsvReader(lecteur, config))
+        using (var csv = new CsvReader(lecteur, Config))
         {
             csv.Context.RegisterClassMap<UtilisateurCsvMap>();
             var record = csv.GetRecordsAsync<UtilisateurCSV>();
@@ -57,7 +88,8 @@ public class ImportService(IUtilisateurService _utilisateurServ, IMdpService _md
                 });
             }
 
-            await _utilisateurServ.AjouterAsync(liste);
+            _context.Utilisateurs.AddRange(liste);
+            await _context.SaveChangesAsync();
         }
 
         return ListeErreur;

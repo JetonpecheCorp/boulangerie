@@ -1,6 +1,5 @@
 ﻿using Api.Extensions;
 using CsvHelper.Configuration;
-using System.Net.Mail;
 
 namespace Api.ModelsImports.CSVs;
 
