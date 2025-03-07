@@ -1,4 +1,6 @@
 export enum ETypeRessourceImport
 {
-    Utilisateur = "utilisateur"
+    Utilisateur = "utilisateur",
+    Client = "client",
+    Ingredient = "ingredient"
 }

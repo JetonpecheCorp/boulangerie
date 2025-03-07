@@ -16,7 +16,7 @@ public static class ImportRoute
             .WithDescription("""
                 Importer des infos avec un CSV 
                 Valeurs possible de ressource => utilisateur, client, ingredient (non sensible à la case). 
-                Si aucune erreur => import OK, sinon l'import est fait sauf sur les lignes où il y a des erreurs.
+                Si aucune erreur => import OK, sinon l'import est fait SAUF sur les lignes où il y a des erreurs.
             """)
             
             .DisableAntiforgery();
