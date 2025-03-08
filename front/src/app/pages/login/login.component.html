@@ -11,18 +11,10 @@
                        type="password"
                        label="Mot de passe" />
         </form>
+        <a href="#" routerLink="/reset-mdp">Mot de passe oublié</a>
     </mat-card-content>
     <mat-card-footer class="cardFooter">
-        <button mat-flat-button (click)="OnConnexion()">
-            @if(!btnClicker())
-            {
-                Connexion
-            }
-            @else 
-            {
-                <mat-spinner class="spinnerBtn" diameter="30"></mat-spinner>
-            }
-        </button>
+        <app-button label="Connexion" (onClick)="OnConnexion()" [btnClicker]="btnClicker()" />
     </mat-card-footer>
 </mat-card>
 

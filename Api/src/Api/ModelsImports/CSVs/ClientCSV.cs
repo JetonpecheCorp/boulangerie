@@ -21,7 +21,7 @@ public class ClientCsvMap : ClassMap<ClientCSV>
         Map(x => x.AdresseFacturation).Validate(x => !string.IsNullOrWhiteSpace(x.Field), x => "Le nom est obligatoire").Name("adresse de facturation *");
         Map(x => x.Mail)
             .Optional()
-            .Validate(x => string.IsNullOrWhiteSpace(x.Field) || !x.Field.MailValide(), x => "Se n'est pas une adresse mail")
+            .Validate(x => string.IsNullOrWhiteSpace(x.Field) || !x.Field.MailInvalide(), x => "Se n'est pas une adresse mail")
             .Name("mail")
             .Default(null);
 

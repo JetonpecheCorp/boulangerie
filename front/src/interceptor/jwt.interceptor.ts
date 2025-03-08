@@ -9,7 +9,9 @@ export const JwtInterceptor: HttpInterceptorFn = (req, next) =>
 {
   let toastrServ = inject(ToastrService);
 
-  if(environment.utilisateur)
+  console.log(req);
+
+  if(environment.utilisateur && !req.url.includes("reset-mdp"))
   {
     req = req.clone({
       headers: req.headers.set("Authorization", `Bearer ${environment.utilisateur.Jwt}`)

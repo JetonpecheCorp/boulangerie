@@ -7,6 +7,12 @@ export const routes: Routes = [
         title: "Connexion" 
     },
     {
+        path: "reset-mdp", 
+        data: { p: null },
+        loadComponent: () => import('./pages/reset-mdp/reset-mdp.component').then(x => x.ResetMdpComponent), 
+        title: "Connexion" 
+    },
+    {
         path: "ingredient",
         loadComponent: () => import('./pages/ingredient/ingredient.component').then(x => x.IngredientComponent),
         title: "Ingredient"

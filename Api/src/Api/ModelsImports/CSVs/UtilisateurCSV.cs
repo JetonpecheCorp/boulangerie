@@ -22,7 +22,7 @@ public class UtilisateurCsvMap: ClassMap<UtilisateurCSV>
 
         Map(x => x.Mail)
             .Validate(x => !string.IsNullOrWhiteSpace(x.Field), x => "Le mail est obligatoire")
-            .Validate(x => !x.Field.MailValide(), x => "Se n'est pas une adresse mail")
+            .Validate(x => !x.Field.MailInvalide(), x => "Se n'est pas une adresse mail")
             .Name("mail *");
 
         Map(x => x.Mdp).Validate(x => !string.IsNullOrWhiteSpace(x.Field), x => "Le mot de passe est obligatoire").Name("mot de passe *");

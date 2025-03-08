@@ -3,6 +3,7 @@ using Api.Extensions;
 using Api.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Services.Mail;
 using System.Security.Cryptography;
 
 QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
@@ -26,7 +27,8 @@ rsa.ImportRSAPrivateKey(File.ReadAllBytes(cheminCleRsa), out _);
 
 builder.Services.AddAuthorizationBuilder()
     .AddDefaultPolicy(NomPolicyJwt.DefautClient, x => x.RequireRole("client").RequireClaim("idUtilisateur").RequireClaim("idGroupe"))
-    .AddPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur"));
+    .AddPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur"))
+    .AddPolicy(NomPolicyJwt.ResetMdp, x => x.RequireClaim("mdp-oublie").RequireClaim("idUtilisateur").RequireClaim("idGroupe"));
 
 builder.Services.AjouterSecuriteJwt(rsa);
 builder.Services.AddDbContext<BoulangerieContext>(x =>
@@ -50,14 +52,13 @@ builder.Services.AddCors(x => x.AddDefaultPolicy(y => y.AllowAnyOrigin().AllowAn
 builder.Services.AjouterService(rsa);
 builder.Services.AjouterOutputCache();
 
-//builder.Services.AddSingleton<IMailService>(new MailService(new MailOptions
-//{
-//    Expediteur = "",
-//    Mdp = "",
-//    NomSmtp = "smtp.gmail.com",
-//    NumeroPortSmtp = 587
-//}));
-
+builder.Services.AddSingleton<IMailService>(new MailService(new MailOptions
+{
+    Expediteur = "nicolas.np63@gmail.com",
+    Mdp = "cewy qbhb crqd mvsi",
+    NomSmtp = "smtp.gmail.com",
+    NumeroPortSmtp = 587
+}));
 
 var app = builder.Build();
 

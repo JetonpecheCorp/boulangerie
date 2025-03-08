@@ -6,7 +6,7 @@ public static class StringExtension
 {
     public static string XSS(this string _valeur) => Regex.Replace(_valeur, "<[^>]*>", "", RegexOptions.Compiled);
 
-    public static bool MailValide(this string _mail)
+    public static bool MailInvalide(this string _mail)
     {
         return !Regex.IsMatch(
             _mail, 
