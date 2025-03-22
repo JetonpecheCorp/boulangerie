@@ -30,6 +30,7 @@ public static class ClientRoute
             .ProducesCreated<string>();
 
         builder.MapPut("modifier/{idPublicClient:guid}", ModifierAsync)
+            .WithDescription("Modifier un client")
             .ProducesBadRequestErreurValidation()
             .ProducesNotFound()
             .ProducesNoContent();
