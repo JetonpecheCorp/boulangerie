@@ -6,6 +6,7 @@ import { Pagination } from '@model/Pagination';
 import { PaginationExport } from '@model/exports/PaginationExport';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Client, ClientLeger } from '@model/Client';
+import { ClientExport } from '@model/exports/ClientExport';
 
 export class ClientService 
 {
@@ -22,5 +23,15 @@ export class ClientService
   ListerLeger(_pagination: PaginationExport): Observable<Pagination<ClientLeger>>
   {
     return this.http.get<Pagination<ClientLeger>>(`${this.BASE_API}/listerLeger`, { params: _pagination }).pipe(takeUntilDestroyed(this.destroyRef));
+  }
+
+  Ajouter(_client: ClientExport): Observable<string>
+  {
+    return this.http.post<string>(`${this.BASE_API}/ajouter`, _client).pipe(takeUntilDestroyed(this.destroyRef));
+  }
+
+  Modifier(_idPublic: string, _client: ClientExport): Observable<void>
+  {
+    return this.http.put<void>(`${this.BASE_API}/modifier/${_idPublic}`, _client).pipe(takeUntilDestroyed(this.destroyRef));
   }
 }

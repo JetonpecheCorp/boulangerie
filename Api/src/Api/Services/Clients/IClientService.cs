@@ -1,4 +1,6 @@
-﻿using Api.ModelsExports;
+﻿using Api.Extensions;
+using Api.Models;
+using Api.ModelsExports;
 using Api.ModelsExports.Clients;
 using Api.ModelsImports;
 
@@ -29,6 +31,21 @@ namespace Api.Services.Clients
         /// <param name="_idGroupe">id groupe conserné</param>
         /// <returns><see langword="int"/>id, sinon 0</returns>
         Task<int> RecupererIdAsync(Guid _idPublicClient, int _idGroupe);
+
+        /// <summary>
+        /// Ajouter un nouveau client
+        /// </summary>
+        /// <param name="_client">infos nouveau client</param>
+        Task AjouterAsync(Client _client);
+
+        /// <summary>
+        /// Modifier un client
+        /// </summary>
+        /// <param name="_builder">info a modifier</param>
+        /// <param name="_idGroupe">id groupe de l'utilisateur conserné</param>
+        /// <param name="_idPublicClient">id public utilisateur conserné</param>
+        /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
+        Task<bool> ModifierAsync(SetPropertyBuilder<Client> _builder, int _idGroupe, Guid _idPublicClient);
 
         /// <summary>
         /// Vérifier que la catégorie exite

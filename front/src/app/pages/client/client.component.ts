@@ -13,26 +13,26 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { StopPropagationDirective } from '@directive/stop-propagation.directive';
-import { Utilisateur } from '@model/Utilisateur';
-import { UtilisateurService } from '@service/Utilisateur.service';
 import { ExportService } from '@service/Export.service';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { AjouterModifierUtilisateurComponent } from '@modal/ajouter-modifier-utilisateur/ajouter-modifier-utilisateur.component';
-import { ModalLivraisonComponent } from '@modal/modal-livraison/modal-livraison.component';
 import { ImporterDonneeComponent } from '@modal/importer-donnee/importer-donnee.component';
 import { ETypeRessourceImport } from '@enum/ETypeRessourceImport';
+import { ClientService } from '@service/Client.service';
+import { Client } from '@model/Client';
+import { ModalInfoComponent } from './modal-info/modal-info.component';
+import { AjouterModifierClientComponent } from '@modal/ajouter-modifier-client/ajouter-modifier-client.component';
 
 @Component({
-  selector: 'app-utilisateur',
+  selector: 'app-client',
   standalone: true,
   imports: [StopPropagationDirective, MatTooltipModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './utilisateur.component.html',
-  styleUrl: './utilisateur.component.scss'
+  templateUrl: './client.component.html',
+  styleUrl: './client.component.scss'
 })
-export class UtilisateurComponent implements AfterViewInit
+export class ClientComponent 
 {
-  displayedColumns: string[] = ["nom", "prenom", "mail", "telephone", "estAdmin", "action"];
-  dataSource = signal<MatTableDataSource<Utilisateur>>(new MatTableDataSource());
+  displayedColumns: string[] = ["nom", "mail", "telephone", "adresse", "adresseFacturation", "infoComplementaire", "action"];
+  dataSource = signal<MatTableDataSource<Client>>(new MatTableDataSource());
   estEnChargement = signal(false);
 
   nbParPage = signal(0);
@@ -43,7 +43,7 @@ export class UtilisateurComponent implements AfterViewInit
   paginator = viewChild.required(MatPaginator);
   sort = viewChild.required(MatSort);
 
-  private utilisateurServ = inject(UtilisateurService);
+  private clientServ = inject(ClientService);
   private exportServ = inject(ExportService);
   private destroyRef = inject(DestroyRef);
   private matDialog = inject(MatDialog);
@@ -72,50 +72,26 @@ export class UtilisateurComponent implements AfterViewInit
     .subscribe(() =>this.Lister());
   }
 
-  protected OuvrirModal(_utilisateur?: Utilisateur): void
-  {
-    const DIALOG_REF = this.matDialog.open(AjouterModifierUtilisateurComponent, { data: _utilisateur });
-
-    DIALOG_REF.afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (retour?: Utilisateur) =>
-        {
-          // modification
-          if(retour && _utilisateur)
-          {
-            _utilisateur.estAdmin = retour.estAdmin;
-            _utilisateur.mail = retour.mail;
-            _utilisateur.nom = retour.nom;
-            _utilisateur.prenom;
-            _utilisateur.telephone = retour.telephone;
-          }
-          // ajout
-          else if(!_utilisateur && retour)
-            this.Lister();
-        }
-      });
-  }
-
-  protected OuvrirModalLivraison(_utilisateur: Utilisateur): void
-  {
-    this.matDialog.open(ModalLivraisonComponent, { data: {
-        idPublicConducteur: _utilisateur.idPublic
-      },
-      maxWidth: 2000
-    });
-  }
-
   protected OuvrirModalImporter(): void
   {
     this.matDialog.open(ImporterDonneeComponent, { 
-      data: ETypeRessourceImport.Utilisateur
+      data: ETypeRessourceImport.Client
     });
+  }
+
+  protected OuvrirModal(_client?: Client): void
+  {
+    const DIALOG_REF = this.matDialog.open(AjouterModifierClientComponent, { data: _client });
+  }
+
+  protected OuvrirModalInfo(_info?: string): void
+  {
+    this.matDialog.open(ModalInfoComponent, { data: { info: _info }});
   }
 
   protected Exporter(): void
   {
-    this.exportServ.Utilisateur();
+    this.exportServ.Client();
   }
 
   private Lister(): void
@@ -130,7 +106,7 @@ export class UtilisateurComponent implements AfterViewInit
     if(this.inputFormCtrl.value)
       INFOS.thermeRecherche = this.inputFormCtrl.value
 
-    this.utilisateurServ.Lister(INFOS).subscribe({
+    this.clientServ.Lister(INFOS).subscribe({
       next: (retour) =>
       {
         this.dataSource.update(x =>

@@ -19,11 +19,11 @@ public static class AuthentificationRoute
         builder.WithOpenApi().ProducesServiceUnavailable();
 
         builder.MapPost("connexion", ConnexionAsync);
-        builder.MapGet("reset-mdp/{mail}", ResetMdpAsync)
+        builder.MapGet("demande-reset-mdp/{mail}", DemandeResetMdpAsync)
             .ProducesBadRequest()
             .ProducesNoContent();
 
-        builder.MapPost("reset-mdp", ResetMdp2Async)
+        builder.MapPost("reset-mdp", ResetMdpAsync)
             .ProducesNotFound()
             .ProducesBadRequestErreurValidation()
             .ProducesNoContent();
@@ -67,7 +67,7 @@ public static class AuthentificationRoute
         return Results.Extensions.OK(export, ConnexionExportContext.Default);
     }
 
-    async static Task<IResult> ResetMdpAsync(
+    async static Task<IResult> DemandeResetMdpAsync(
         [FromRoute(Name = "mail")] string _mail,
         [FromServices] IUtilisateurService _utilisateurServ,
         [FromServices] IJwtService _jwtServ,
@@ -105,7 +105,7 @@ public static class AuthentificationRoute
         return Results.NoContent();
     }
 
-    async static Task<IResult> ResetMdp2Async(
+    async static Task<IResult> ResetMdpAsync(
         HttpContext _httpContext,
         [FromServices] IValidator<ResetMdpImport> _validator,
         [FromServices] IUtilisateurService _utilisateurServ,
