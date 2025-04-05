@@ -35,6 +35,7 @@ import { UtilisateurLeger } from '@model/Utilisateur';
 export class LivraisonComponent implements OnInit, AfterContentInit
 {
   idPublicConducteur = input<string | undefined>();
+  idPublicClient = input<string | undefined>();
 
   autoCompleteClientFormCtrl = new FormControl<string | null>(null);
   autoCompleteUtilisateurFormCtrl = new FormControl<string | null>(null);
@@ -189,7 +190,7 @@ export class LivraisonComponent implements OnInit, AfterContentInit
       }
     }
 
-    const ID_PUBLIC_CLIENT = this.listeClient()
+    const ID_PUBLIC_CLIENT = this.idPublicClient() ?? this.listeClient()
       .find(x => x.nom == this.autoCompleteClientFormCtrl.value)?.idPublic;
 
     const ID_PUBLIC_CONDUCTEUR = this.idPublicConducteur() ?? this.listeUtilisateur()
@@ -267,6 +268,12 @@ export class LivraisonComponent implements OnInit, AfterContentInit
       {
         this.listeClient.set(retour.liste);
         this.listeClientFiltrer.set(retour.liste);
+
+        if(this.idPublicClient())
+        {
+          let nom = retour.liste.find(x => x.idPublic == this.idPublicClient())!.nom;
+          this.autoCompleteClientFormCtrl.setValue(nom);
+        }
       }
     });
   }

@@ -79,6 +79,13 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> Action </th>
             <td mat-cell *matCellDef="let row">
+
+                <button mat-mini-fab 
+                        stop-propagation 
+                        (click)="OuvrirModalLivraison(row)">
+                    <mat-icon>local_shipping</mat-icon>
+                </button>&nbsp;
+
                 <button mat-mini-fab 
                         stop-propagation 
                         (click)="OuvrirModal(row)">

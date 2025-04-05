@@ -21,6 +21,7 @@ import { ClientService } from '@service/Client.service';
 import { Client } from '@model/Client';
 import { ModalInfoComponent } from './modal-info/modal-info.component';
 import { AjouterModifierClientComponent } from '@modal/ajouter-modifier-client/ajouter-modifier-client.component';
+import { ModalLivraisonComponent } from '@modal/modal-livraison/modal-livraison.component';
 
 @Component({
   selector: 'app-client',
@@ -81,7 +82,16 @@ export class ClientComponent
 
   protected OuvrirModal(_client?: Client): void
   {
-    const DIALOG_REF = this.matDialog.open(AjouterModifierClientComponent, { data: _client });
+    this.matDialog.open(AjouterModifierClientComponent, { data: _client });
+  }
+
+  protected OuvrirModalLivraison(_client: Client): void
+  {
+    this.matDialog.open(ModalLivraisonComponent, { data: {
+        idPublicClient: _client.idPublic
+      },
+      maxWidth: 2000
+    });
   }
 
   protected OuvrirModalInfo(_info?: string): void
