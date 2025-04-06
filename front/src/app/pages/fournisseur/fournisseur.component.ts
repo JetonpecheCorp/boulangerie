@@ -65,6 +65,13 @@ export class FournisseurComponent implements AfterViewInit
     .subscribe(() =>this.Lister());
   }
 
+  protected EnvoyerMail(_fournisseur: Fournisseur): void
+  {
+    const A = document.createElement("a");
+    A.href = `mailto:${_fournisseur.mail}`
+    A.click();
+  }
+
   protected OuvrirModal(_fournisseur?: Fournisseur): void
   {
     const DIALOG_REF = this.matDialog.open(AjouterModifierFournisseurComponent, {
