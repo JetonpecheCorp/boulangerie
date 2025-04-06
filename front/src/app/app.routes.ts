@@ -56,5 +56,10 @@ export const routes: Routes = [
         path: "client",
         loadComponent: () => import('./pages/client/client.component').then(x => x.ClientComponent),
         title: "Client"
+    },
+    {
+        path: "groupe",
+        loadComponent: () => import('./pages/groupe/groupe.component').then(x => x.GroupeComponent),
+        title: "Groupe"
     }
 ];

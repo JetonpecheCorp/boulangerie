@@ -1,6 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { InputComponent } from "../../components/input/input.component";
-import { ButtonComponent } from "../../components/button/button.component";
+import { Component, inject, signal } from '@angular/core';
+import { InputComponent } from "@component/input/input.component";
+import { ButtonComponent } from "@component/button/button.component";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';

@@ -5,6 +5,7 @@ using Api.ModelsImports.Groupes;
 using Api.Services.Groupes;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Services.Mdp;
 
 namespace Api.Routes;
 
@@ -36,6 +37,7 @@ public static class GroupeRoute
     async static Task<IResult> AjouterAsync(
         [FromServices] IValidator<GroupeImport> _validator,
         [FromServices] IGroupeService _groupeServ,
+        [FromServices] IMdpService _mdpServ,
         [FromBody] GroupeImport _groupeImport
     )
     {
@@ -47,7 +49,8 @@ public static class GroupeRoute
         Groupe groupe = new()
         {
             Adresse = _groupeImport.Adresse,
-            Nom = _groupeImport.Nom
+            Nom = _groupeImport.Nom,
+            Prefix = _groupeImport.Nom.Substring(0, 3)
         };
 
         await _groupeServ.AjouterAsync(groupe);
