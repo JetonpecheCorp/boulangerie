@@ -14,11 +14,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { GroupeService } from '@service/Groupe.service';
 import { Groupe } from '@model/Groupe';
 import { AjouterModifierGroupeComponent } from '@modal/ajouter-modifier-groupe/ajouter-modifier-groupe.component';
+import { ButtonComponent } from "@component/button/button.component";
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-groupe',
   standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+  imports: [MatTooltipModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule, ButtonComponent],
   templateUrl: './groupe.component.html',
   styleUrl: './groupe.component.scss'
 })
@@ -27,6 +29,7 @@ export class GroupeComponent implements AfterViewInit
   displayedColumns: string[] = ["nom", "adresse", "bloquer", "action"];
   dataSource = signal<MatTableDataSource<Groupe>>(new MatTableDataSource());
   estEnChargement = signal(false);
+  btnClicker = signal(false);
 
   groupeServ = inject(GroupeService);
   destroyRef = inject(DestroyRef);
@@ -66,7 +69,9 @@ export class GroupeComponent implements AfterViewInit
 
   protected OuvrirModal(_groupe?: Groupe): void
   {
-    const DIALOG_REF = this.matDialog.open(AjouterModifierGroupeComponent);
+    const DIALOG_REF = this.matDialog.open(AjouterModifierGroupeComponent, {
+      data: _groupe
+    });
 
      DIALOG_REF.afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -84,9 +89,14 @@ export class GroupeComponent implements AfterViewInit
       });
   }
 
-  protected BloquerDebloquerConnexion(_groupe: any): void
+  protected BloquerDebloquerConnexion(_groupe: Groupe): void
   {
-    _groupe.connexionBloquer = !_groupe.connexionBloquer;
+    this.groupeServ.BloquerDebloquer(_groupe.id).subscribe({
+      next: () =>
+      {
+        _groupe.connexionBloquer = !_groupe.connexionBloquer;
+      }
+    });
   }
 
   private Lister(): void

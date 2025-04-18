@@ -19,7 +19,7 @@ export class AjouterModifierGroupeComponent implements OnInit
 {
   protected form: FormGroup;
   protected labelBtn = signal<string>("Ajouter");
-  protected btnClick = signal(false);
+  protected btnClicker = signal(false);
 
   private matDialogData?: Groupe = inject(MAT_DIALOG_DATA);
   private groupeServ = inject(GroupeService);
@@ -28,8 +28,8 @@ export class AjouterModifierGroupeComponent implements OnInit
   ngOnInit(): void 
   {
     this.form = new FormGroup({
-      nom: new FormControl("", [Validators.required, Validators.maxLength(300)]),
-      adresse: new FormControl("", [Validators.required, Validators.maxLength(800)])
+      nom: new FormControl(this.matDialogData?.nom, [Validators.required, Validators.maxLength(300)]),
+      adresse: new FormControl(this.matDialogData?.adresse, [Validators.required, Validators.maxLength(800)])
     });
 
     this.labelBtn.set(this.matDialogData ? "Modifier" : "Ajouter");
@@ -37,22 +37,36 @@ export class AjouterModifierGroupeComponent implements OnInit
 
   protected Valider(): void
   {    
-    if(this.form.invalid ||this.btnClick())
+    if(this.form.invalid ||this.btnClicker())
       return;
 
-    this.groupeServ.Ajouter(this.form.value).subscribe({
-      next: (retour) =>
-      {
-        let groupe: Groupe = 
+    if(this.matDialogData)
+    {
+      this.groupeServ.Modifier(this.matDialogData.id, this.form.value).subscribe({
+        next: () =>
+          {
+            this.btnClicker.set(false);
+            this.dialogRef.close(this.form.value);
+          },
+          error: () => this.btnClicker.set(false)
+      });
+    }
+    else
+    {
+      this.groupeServ.Ajouter(this.form.value).subscribe({
+        next: (retour) =>
         {
-          adresse: this.form.value.adresse,
-          nom: this.form.value.nom,
-          connexionBloquer: false,
-          id: retour
-        };
-
-        this.dialogRef.close(groupe);
-      }
-    });
+          let groupe: Groupe = 
+          {
+            adresse: this.form.value.adresse,
+            nom: this.form.value.nom,
+            connexionBloquer: false,
+            id: retour
+          };
+  
+          this.dialogRef.close(groupe);
+        }
+      });
+    }
   }
 }

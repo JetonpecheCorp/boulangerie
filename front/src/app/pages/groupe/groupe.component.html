@@ -38,9 +38,10 @@
         <ng-container matColumnDef="bloquer">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Bloquer </th>
             <td mat-cell *matCellDef="let row"> 
-                <button mat-mini-fab (click)="BloquerDebloquerConnexion(row)">
-                    <mat-icon>{{row.connexionBloquer ? "lock" : "lock_open" }}</mat-icon>
-                </button>
+                <app-button [style]="'miniFab'" 
+                            [icon]="row.connexionBloquer ? 'lock' : 'lock_open'" 
+                            [btnClicker]="btnClicker()"
+                            (click)="BloquerDebloquerConnexion(row)" />
             </td>
         </ng-container>
 
@@ -48,7 +49,11 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> Action </th>
             <td mat-cell *matCellDef="let row">
-                <button mat-mini-fab>
+                <button mat-mini-fab (click)="OuvrirModal(row)">
+                    <mat-icon>edit</mat-icon>
+                </button>&nbsp;
+
+                <button mat-mini-fab matTooltip="Se connecter au groupe">
                     <mat-icon>power_settings_new</mat-icon>
                 </button>
             </td>

@@ -24,6 +24,17 @@ public static class GroupeRoute
             .ProducesBadRequestErreurValidation()
             .ProducesCreated<int>();
 
+        builder.MapPut("bloquer-debloquer/{idGroupe:int}", BloquerDebloquerAsync)
+            .WithDescription("Bloquer ou debloquer la connexion à un groupe")
+            .ProducesNotFound()
+            .ProducesNoContent();
+
+        builder.MapPut("modifier/{idGroupe:int}", ModifierAsync)
+            .WithDescription("Modifier un groupe")
+            .ProducesBadRequestErreurValidation()
+            .ProducesNotFound()
+            .ProducesNoContent();
+
         return builder;
     }
 
@@ -56,5 +67,45 @@ public static class GroupeRoute
         await _groupeServ.AjouterAsync(groupe);
 
         return Results.Created("", groupe.Id);
+    }
+
+    async static Task<IResult> BloquerDebloquerAsync(
+        [FromRoute(Name = "idGroupe")] int _idGroupe,
+        [FromServices] IGroupeService _groupeServ
+    )
+    {
+        if (_idGroupe <= 0)
+            return Results.NotFound();
+
+        SetPropertyBuilder<Groupe> builder = new();
+        builder.SetProperty(x => x.ConnexionBloquer, y => !y.ConnexionBloquer);
+
+        bool ok = await _groupeServ.ModifierAsync(_idGroupe, builder);
+
+        return ok ? Results.NoContent() : Results.NotFound();
+    }
+
+    async static Task<IResult> ModifierAsync(
+        [FromServices] IValidator<GroupeImport> _validator,
+        [FromServices] IGroupeService _groupeServ,
+        [FromRoute(Name = "idGroupe")] int _idGroupe,
+        [FromBody] GroupeImport _groupeImport
+    )
+    {
+        if (_idGroupe <= 0)
+            return Results.NotFound();
+
+        var validate = _validator.Validate(_groupeImport);
+
+        if (!validate.IsValid)
+            return Results.Extensions.ErreurValidator(validate.Errors);
+
+        SetPropertyBuilder<Groupe> builder = new();
+        builder.SetProperty(x => x.Nom, _groupeImport.Nom.XSS())
+            .SetProperty(x => x.Adresse, _groupeImport.Adresse.XSS());
+
+        bool ok = await _groupeServ.ModifierAsync(_idGroupe, builder);
+
+        return ok ? Results.NoContent() : Results.NotFound();
     }
 }

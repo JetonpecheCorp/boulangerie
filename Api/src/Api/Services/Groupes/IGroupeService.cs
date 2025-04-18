@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using Api.Extensions;
+using Api.Models;
 using Api.ModelsExports.Groupes;
 
 namespace Api.Services.Groupes;
@@ -28,6 +29,14 @@ public interface IGroupeService
     /// <see langword="true"/> si ajouté, sinon <see langword="false"/>
     /// </returns>
     Task<bool> AjouterAsync(Groupe _groupe);
+
+    /// <summary>
+    /// Modifier un groupe
+    /// </summary>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <param name="_builder">info a modifier</param>
+    /// <returns><see langword="true"/> si modifié, sinon <see langword="false"/></returns>
+    Task<bool> ModifierAsync(int _idGroupe, SetPropertyBuilder<Groupe> _builder);
 
     /// <summary>
     /// Recuperer le préfix d'un groupe

@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using Api.Extensions;
+using Api.Models;
 using Api.ModelsExports.Groupes;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,17 @@ public sealed class GroupeService(BoulangerieContext _context) : IGroupeService
     {
         _context.Add(_groupe);
         var nb = await _context.SaveChangesAsync();
+
+        return nb > 0;
+    }
+
+    public async Task<bool> ModifierAsync(int _idGroupe, SetPropertyBuilder<Groupe> _builder)
+    {
+        if (_idGroupe <= 0)
+            return false;
+
+        int nb = await _context.Groupes.Where(x => x.Id == _idGroupe)
+            .ExecuteUpdateAsync(_builder.SetPropertyCalls);
 
         return nb > 0;
     }
