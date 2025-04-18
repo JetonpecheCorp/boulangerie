@@ -12,6 +12,7 @@ using QuestPDF.Helpers;
 using System.Text;
 using Api.Services.Produits;
 using Api.Services.Fournisseurs;
+using Api.ModelsExports.Fournisseurs;
 
 namespace Api.Routes;
 
@@ -333,6 +334,8 @@ public static class ExportRoute
         worksheet.Cell(1, 2).Value = "Adresse";
         worksheet.Cell(1, 3).Value = "Mail";
         worksheet.Cell(1, 4).Value = "Téléphone";
+        worksheet.Cell(1, 5).Value = "Ingredient(s)";
+        worksheet.Cell(1, 6).Value = "Produit(s)";
 
         int ligneIndex = 2;
         for (int i = 0; i < info.Liste.Length; i++)
@@ -343,9 +346,11 @@ public static class ExportRoute
             worksheet.Cell(ligneIndex, 2).Value = element.Adresse;
             worksheet.Cell(ligneIndex, 3).Value = element.Mail;
             worksheet.Cell(ligneIndex, 4).Value = element.Telephone;
+            worksheet.Cell(ligneIndex, 5).Value = string.Join(',', element.ListeIngredient.Select(x => x.Nom));
+            worksheet.Cell(ligneIndex, 6).Value = string.Join(',', element.ListeProduit.Select(x => x.Nom));
         }
 
-        worksheet.Columns("A:D").AdjustToContents();
+        worksheet.Columns("A:F").AdjustToContents();
 
         using MemoryStream stream = new();
 

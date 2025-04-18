@@ -34,11 +34,22 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
             .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new FournisseurExport
             {
-                IdPublic = x.IdPublic.ToString("D"),
+                IdPublic = x.IdPublic,
                 Nom = x.Nom,
                 Adresse = x.Adresse,
                 Mail = x.Mail,
-                Telephone = x.Telephone
+                Telephone = x.Telephone,
+                ListeIngredient = x.IdIngredients.Select(y => new IngredientFournisseur 
+                { 
+                    IdPublic = y.IdPublic,
+                    Nom = y.Nom
+                }).ToArray(),
+
+                ListeProduit = x.IdProduits.Select(y => new IngredientFournisseur
+                {
+                    IdPublic = y.IdPublic,
+                    Nom = y.Nom
+                }).ToArray()
             }).ToArrayAsync();
 
         PaginationExport<FournisseurExport> pagination = new()
