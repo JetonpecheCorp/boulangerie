@@ -1,4 +1,5 @@
-﻿using Api.Extensions;
+﻿using Api.Constantes;
+using Api.Extensions;
 using Api.Extensions.PdfStyle;
 using Api.Models;
 using Api.ModelsExports.Commandes;
@@ -30,7 +31,7 @@ public static class CommandeRoute
 
         builder.MapGet("facture/{numero}", GenererFactureAsync)
             .WithDescription("Ajouter une nouvelle commande")
-            .Produces(StatusCodes.Status200OK, contentType: "application/pdf");
+            .Produces(StatusCodes.Status200OK, contentType: ContentType.Pdf);
 
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter une nouvelle commande")
