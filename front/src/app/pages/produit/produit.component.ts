@@ -17,6 +17,7 @@ import { Produit } from '@model/Produit';
 import { AjouterModifierProduitComponent } from '@modal/ajouter-modifier-produit/ajouter-modifier-produit.component';
 import { RecetteProduitComponent } from '@modal/recette-produit/recette-produit.component';
 import { StopPropagationDirective } from '@directive/stop-propagation.directive';
+import { ExportService } from '@service/Export.service';
 
 @Component({
   selector: 'app-produit',
@@ -32,6 +33,7 @@ export class ProduitComponent implements AfterViewInit
   estEnChargement = signal(false);
 
   produitServ = inject(ProduitService);
+  exportServ = inject(ExportService);
   destroyRef = inject(DestroyRef);
   matDialog = inject(MatDialog);
 
@@ -74,6 +76,11 @@ export class ProduitComponent implements AfterViewInit
         nomProduit: _produit.nom
       }
     });
+  }
+
+  protected Exporter(): void
+  {
+    this.exportServ.Produit();
   }
 
   protected OuvrirModal(_produit?: Produit): void

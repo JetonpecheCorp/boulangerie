@@ -30,6 +30,15 @@ export class ExportService
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(reponse => this.Telecharger(reponse));
   }
+  
+  Produit(): void
+  {
+    this.http.get(`${this.BASE_API}/produit`,
+        {observe: "response", responseType: "blob" }
+      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(reponse => this.Telecharger(reponse));
+  }
 
   Commande(_dateDebut: Date, _dateFin: Date, _status: EStatusCommande): void
   {    
