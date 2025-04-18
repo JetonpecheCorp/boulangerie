@@ -16,6 +16,8 @@ import { Fournisseur } from '@model/Fournisseur';
 import { FournissseurService } from '@service/Fournisseur.service';
 import { AjouterModifierFournisseurComponent } from '@modal/ajouter-modifier-fournisseur/ajouter-modifier-fournisseur.component';
 import { ExportService } from '@service/Export.service';
+import { ImporterDonneeComponent } from '@modal/importer-donnee/importer-donnee.component';
+import { ETypeRessourceImport } from '@enum/ETypeRessourceImport';
 
 @Component({
   selector: 'app-fournisseur',
@@ -72,6 +74,13 @@ export class FournisseurComponent implements AfterViewInit
     const A = document.createElement("a");
     A.href = `mailto:${_fournisseur.mail}`
     A.click();
+  }
+
+  protected OuvrirModalImporter(): void
+  {
+    this.matDialog.open(ImporterDonneeComponent, { 
+      data: ETypeRessourceImport.Fournisseur
+    });
   }
 
   protected Exporter(): void

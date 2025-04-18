@@ -27,4 +27,12 @@ public interface IImportService
     /// <param name="_fichierCSV">fichier CSV</param>
     /// <returns></returns>
     Task<List<ErreurValidationCSV>> ClientAsync(int _idGroupe, IFormFile _fichierCSV);
+
+    /// <summary>
+    /// Importer des fournisseurs pour un groupe
+    /// </summary>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <param name="_fichierCSV">fichier CSV</param>
+    /// <returns></returns>
+    Task<List<ErreurValidationCSV>> FournisseurAsync(int _idGroupe, IFormFile _fichierCSV);
 }

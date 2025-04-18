@@ -15,7 +15,7 @@ public static class ImportRoute
         builder.MapPost("{ressource}", ImportAsync)
             .WithDescription("""
                 Importer des infos avec un CSV 
-                Valeurs possible de ressource => utilisateur, client, ingredient (non sensible à la case). 
+                Valeurs possible de ressource => utilisateur, client, ingredient, fournisseur (non sensible à la case). 
                 Si aucune erreur => import OK, sinon l'import est fait SAUF sur les lignes où il y a des erreurs.
             """)
             
@@ -40,6 +40,7 @@ public static class ImportRoute
                 ERessourceImport.Utilisateur => await _importServ.UtilisateurAsync(idGroupe, _fichierCSV),
                 ERessourceImport.Client => await _importServ.ClientAsync(idGroupe, _fichierCSV),
                 ERessourceImport.Ingredient => await _importServ.IngredientAsync(idGroupe, _fichierCSV),
+                ERessourceImport.Fournisseur => await _importServ.FournisseurAsync(idGroupe, _fichierCSV),
                 _ => []
             };
 

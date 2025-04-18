@@ -4,5 +4,6 @@ public enum ERessourceImport
 {
     Utilisateur,
     Client,
-    Ingredient
+    Ingredient,
+    Fournisseur
 }

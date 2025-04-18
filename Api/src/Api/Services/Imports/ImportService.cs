@@ -141,4 +141,37 @@ public class ImportService(BoulangerieContext _context, IMdpService _mdpServ) : 
 
         return ListeErreur;
     }
+
+    public async Task<List<ErreurValidationCSV>> FournisseurAsync(int _idGroupe, IFormFile _fichierCSV)
+    {
+        using StreamReader lecteur = new(_fichierCSV.OpenReadStream());
+
+        using (var csv = new CsvReader(lecteur, Config))
+        {
+            csv.Context.RegisterClassMap<FournisseurCsvMap>();
+            var record = csv.GetRecords<FournisseurCSV>().ToArray();
+
+            List<Fournisseur> liste = [];
+
+            for (int i = 0; i < record.Length; i++)
+            {
+                var element = record[i];
+
+                liste.Add(new()
+                {
+                    Nom = element.Nom.XSS(),
+                    IdGroupe = _idGroupe,
+                    IdPublic = Guid.NewGuid(),
+                    Adresse = element.Adresse?.XSS(),
+                    Mail = element.Mail?.XSS(),
+                    Telephone = element.Telephone?.XSS()
+                });
+            }
+
+            _context.Fournisseurs.AddRange(liste);
+            await _context.SaveChangesAsync();
+        }
+
+        return ListeErreur;
+    }
 }
