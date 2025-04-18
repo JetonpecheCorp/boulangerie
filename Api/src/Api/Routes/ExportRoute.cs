@@ -12,7 +12,6 @@ using QuestPDF.Helpers;
 using System.Text;
 using Api.Services.Produits;
 using Api.Services.Fournisseurs;
-using Api.ModelsExports.Fournisseurs;
 
 namespace Api.Routes;
 
