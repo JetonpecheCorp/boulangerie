@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using System.Text;
+using Api.Services.Produits;
 
 namespace Api.Routes;
 
@@ -30,6 +31,11 @@ public static class ExportRoute
         builder.MapGet("commande", ExportCommandeAsync)
             .WithDescription("Produit un 'no content' si pas de commande")
             .Produces(StatusCodes.Status200OK, contentType: ContentType.Pdf)
+            .ProducesNoContent();
+
+        builder.MapGet("produit", ExportProduitAsync)
+            .WithDescription("Produit un 'no content' si pas de produit")
+            .Produces(StatusCodes.Status200OK, contentType: ContentType.Excel)
             .ProducesNoContent();
 
         return builder;
@@ -238,6 +244,63 @@ public static class ExportRoute
             stream.ToArray(),
             ContentType.Excel,
             "export_client.xlsx"
+        );
+    }
+
+    async static Task<IResult> ExportProduitAsync(
+        HttpContext _httpContext,
+        [FromServices] IProduitService _produitServ
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        var info = await _produitServ.ListerAsync(new() 
+        { 
+            NumPage = 1, 
+            NbParPage = 10_000_000 
+        }, idGroupe);
+
+        if (info.Liste.Length is 0)
+            return Results.NoContent();
+
+        using XLWorkbook workbook = new();
+        var worksheet = workbook.AddWorksheet();
+
+        worksheet.Cell(1, 1).Value = "Nom";
+        worksheet.Cell(1, 2).Value = "Code interne";
+        worksheet.Cell(1, 3).Value = "Catégorie";
+        worksheet.Cell(1, 4).Value = "Prix HT (€)";
+        worksheet.Cell(1, 5).Value = "Poids";
+        worksheet.Cell(1, 6).Value = "TVA (%)";
+        worksheet.Cell(1, 7).Value = "Allergene(s)";
+
+        int ligneIndex = 2;
+        for (int i = 0; i < info.Liste.Length; i++)
+        {
+            var element = info.Liste[i];
+
+            worksheet.Cell(ligneIndex, 1).Value = element.Nom;
+            worksheet.Cell(ligneIndex, 2).Value = element.CodeInterne;
+            worksheet.Cell(ligneIndex, 3).Value = element.Categorie.Nom;
+            worksheet.Cell(ligneIndex, 4).Value = element.PrixHt;
+            worksheet.Cell(ligneIndex, 5).Value = element.Poids;
+            worksheet.Cell(ligneIndex, 6).Value = element.Tva.Valeur;
+            worksheet.Cell(ligneIndex, 7).Value = element.Allergene;
+
+            ligneIndex++;
+        }
+
+        worksheet.Columns("A:G").AdjustToContents();
+
+        using MemoryStream stream = new();
+
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+
+        return Results.File(
+            stream.ToArray(),
+            ContentType.Excel,
+            "export_produit.xlsx"
         );
     }
 }
