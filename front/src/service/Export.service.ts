@@ -15,29 +15,22 @@ export class ExportService
 
   Client(): void
   {
-    this.http.get(`${this.BASE_API}/client`,
-        {observe: "response", responseType: "blob" }
-      )
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(reponse => this.Telecharger(reponse));
+    this.EnvoyerRequete("client");
   }
 
   Utilisateur(): void
   {
-    this.http.get(`${this.BASE_API}/utilisateur`,
-        {observe: "response", responseType: "blob" }
-      )
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(reponse => this.Telecharger(reponse));
+    this.EnvoyerRequete("utilisateur");
   }
   
   Produit(): void
   {
-    this.http.get(`${this.BASE_API}/produit`,
-        {observe: "response", responseType: "blob" }
-      )
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(reponse => this.Telecharger(reponse));
+    this.EnvoyerRequete("produit");
+  }
+
+  Fournisseur(): void
+  {
+    this.EnvoyerRequete("fournisseur");
   }
 
   Commande(_dateDebut: Date, _dateFin: Date, _status: EStatusCommande): void
@@ -48,8 +41,13 @@ export class ExportService
         status: _status 
     };
 
-    this.http.get(`${this.BASE_API}/commande`,
-      {observe: "response", responseType: "blob", params: INFO }
+    this.EnvoyerRequete("commande", INFO);
+  }
+
+  private EnvoyerRequete(_route: string, _params?: any): void
+  {
+    this.http.get(`${this.BASE_API}/${_route}`,
+      {observe: "response", responseType: "blob", params: _params }
     )
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe(reponse => this.Telecharger(reponse));

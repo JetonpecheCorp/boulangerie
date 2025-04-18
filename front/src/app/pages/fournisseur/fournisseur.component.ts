@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Fournisseur } from '@model/Fournisseur';
 import { FournissseurService } from '@service/Fournisseur.service';
 import { AjouterModifierFournisseurComponent } from '@modal/ajouter-modifier-fournisseur/ajouter-modifier-fournisseur.component';
+import { ExportService } from '@service/Export.service';
 
 @Component({
   selector: 'app-fournisseur',
@@ -30,6 +31,7 @@ export class FournisseurComponent implements AfterViewInit
   estEnChargement = signal(false);
 
   fournisseurServ = inject(FournissseurService);
+  exportServ = inject(ExportService);
   destroyRef = inject(DestroyRef);
   matDialog = inject(MatDialog);
 
@@ -70,6 +72,11 @@ export class FournisseurComponent implements AfterViewInit
     const A = document.createElement("a");
     A.href = `mailto:${_fournisseur.mail}`
     A.click();
+  }
+
+  protected Exporter(): void
+  {
+    this.exportServ.Fournisseur();
   }
 
   protected OuvrirModal(_fournisseur?: Fournisseur): void
