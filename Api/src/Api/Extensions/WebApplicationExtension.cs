@@ -6,21 +6,23 @@ public static class WebApplicationExtension
 {
     public static WebApplication AjouterRouteAPI(this WebApplication _app)
     {
-        _app.MapGroup("utilisateur").AjouterRouteUtilisateur();
-        _app.MapGroup("groupe").AjouterRouteGroupe();
-        _app.MapGroup("authentification").AjouterRouteAuthentification();
-        _app.MapGroup("ingredient").AjouterRouteIngredient();
-        _app.MapGroup("recette").AjouterRouteRecette();
-        _app.MapGroup("produit").AjouterRouteProduit();
-        _app.MapGroup("tva").AjouterRouteTva();
-        _app.MapGroup("categorie").AjouterRouteCategorie();
-        _app.MapGroup("vehicule").AjouterRouteVehicule();
-        _app.MapGroup("fournisseur").AjouterRouteFournisseur();
-        _app.MapGroup("commande").AjouterRouteCommande();
-        _app.MapGroup("client").AjouterRouteClient();
-        _app.MapGroup("livraison").AjouterRouteLivraison();
-        _app.MapGroup("export").AjouterRouteExport();
-        _app.MapGroup("import").AjouterRouteImport();
+        var apiGroupe = _app.MapGroup("api");
+
+        apiGroupe.MapGroup("utilisateur").AjouterRouteUtilisateur();
+        apiGroupe.MapGroup("groupe").AjouterRouteGroupe();
+        apiGroupe.MapGroup("authentification").AjouterRouteAuthentification();
+        apiGroupe.MapGroup("ingredient").AjouterRouteIngredient();
+        apiGroupe.MapGroup("recette").AjouterRouteRecette();
+        apiGroupe.MapGroup("produit").AjouterRouteProduit();
+        apiGroupe.MapGroup("tva").AjouterRouteTva();
+        apiGroupe.MapGroup("categorie").AjouterRouteCategorie();
+        apiGroupe.MapGroup("vehicule").AjouterRouteVehicule();
+        apiGroupe.MapGroup("fournisseur").AjouterRouteFournisseur();
+        apiGroupe.MapGroup("commande").AjouterRouteCommande();
+        apiGroupe.MapGroup("client").AjouterRouteClient();
+        apiGroupe.MapGroup("livraison").AjouterRouteLivraison();
+        apiGroupe.MapGroup("export").AjouterRouteExport();
+        apiGroupe.MapGroup("import").AjouterRouteImport();
 
         return _app;
     }
