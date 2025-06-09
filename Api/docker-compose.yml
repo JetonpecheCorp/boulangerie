@@ -2,13 +2,16 @@ services:
   api:
     image: ${DOCKER_REGISTRY-}api
     build:
-      context: .
-      dockerfile: src/Api/Dockerfile
+      context: ./src/Api
+      dockerfile: Dockerfile
     depends_on:
       - mysql
     ports:
       - "5000:8080"
-
+    environment:
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_URLS=http://+:8080
+    restart: on-failure
   mysql:
     image: mysql:latest
     restart: always
