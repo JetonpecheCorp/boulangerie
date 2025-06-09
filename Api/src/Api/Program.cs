@@ -3,6 +3,7 @@ using Api.Extensions;
 using Api.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto;
 using Services.Mail;
 using System.Security.Cryptography;
 
@@ -13,6 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 string cheminCleRsa = builder.Configuration.GetValue<string>("cheminCleRsa")!;
 
 RSA rsa = RSA.Create();
+
+if(!Directory.Exists("Rsa"))
+    Directory.CreateDirectory("Rsa");
 
 // creer la clé une seule fois
 if (!File.Exists(cheminCleRsa))
@@ -67,18 +71,16 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
 
     // cacher la liste des models import / export dans swagger
     app.UseSwaggerUI(x => x.DefaultModelsExpandDepth(-1));
-}
+
 
 app.UseOutputCache();
 app.AjouterRouteAPI();
 
 app.Run();
 
-// Scaffold-DbContext "server=localhost;database=Boulangerie;User=root;Pwd=root;GuidFormat=Char36" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
+// Scaffold-DbContext "server=mysql;database=Boulangerie;User=root;Pwd=root;GuidFormat=Char36" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
