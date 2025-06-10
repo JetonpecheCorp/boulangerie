@@ -6,7 +6,7 @@ public static class Connexion
 {
     public static HttpClient HttpClient = new()
     {
-        BaseAddress = new Uri("http://localhost:5000/api")
+        BaseAddress = new Uri("http://localhost:5000")
     };
 
     static bool estConnecter = false;
@@ -16,7 +16,7 @@ public static class Connexion
         if (estConnecter)
             return true;
 
-        var reponse = await HttpClient.PostAsJsonAsync("authentification", new ConnexionLog(
+        var reponse = await HttpClient.PostAsJsonAsync("api/authentification/connexion", new ConnexionLog(
             "nicolas.np63@gmail.com",
             "Azertyuiop1&"
         ));
