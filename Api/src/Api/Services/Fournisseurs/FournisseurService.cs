@@ -104,13 +104,13 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
         int nb = 0;
 
         if(_idPublicFournisseur == Guid.Empty)
-        {
-            nb = await _context.Fournisseurs.Where(x => x.IdGroupe == _idGroupe && x.IdPublic == _idPublicFournisseur)
-                .ExecuteUpdateAsync(_builder.SetPropertyCalls);
+            return false;
 
-            if (nb == 0)
-                return false;
-        }
+        nb = await _context.Fournisseurs.Where(x => x.IdGroupe == _idGroupe && x.IdPublic == _idPublicFournisseur)
+            .ExecuteUpdateAsync(_builder.SetPropertyCalls);
+
+        if (nb == 0)
+            return false;
 
         _context.Database.ExecuteSqlRaw("DELETE fi.* FROM FournisseurIngredient fi JOIN Fournisseur f ON f.Id = fi.IdFournisseur WHERE IdPublic = ?", _idPublicFournisseur);
 
