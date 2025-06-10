@@ -1,8 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using System.Security.Cryptography.X509Certificates;
-
-namespace Api.test;
+﻿namespace Api.test;
 
 public class FournisseurTest
 {

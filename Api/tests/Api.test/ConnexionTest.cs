@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Api.test;
 
 public class ConnexionTest
