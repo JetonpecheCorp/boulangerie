@@ -3,7 +3,6 @@ using Api.Extensions;
 using Api.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Crypto;
 using Services.Mail;
 using System.Security.Cryptography;
 

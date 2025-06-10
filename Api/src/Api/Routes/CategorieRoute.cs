@@ -30,7 +30,7 @@ public static class CategorieRoute
             .ProducesBadRequestErreurValidation()
             .ProducesCreated<string>();
 
-        builder.MapPut("modifier", ModifierAsync)
+        builder.MapPut("modifier/{idPublicCategorie:guid}", ModifierAsync)
             .WithDescription("Modifier une categorie au groupe")
             .ProducesNotFound()
             .ProducesNoContent();
@@ -57,6 +57,12 @@ public static class CategorieRoute
     )
     {
         int idGroupe = _httpContext.RecupererIdGroupe();
+
+        if (_pagination.NumPage <= 0)
+            _pagination.NumPage = 1;
+
+        if (_pagination.NbParPage <= 0)
+            _pagination.NbParPage = 20;
 
         var liste = await _categorieServ.ListerAsync(_pagination, idGroupe);
 
@@ -97,11 +103,10 @@ public static class CategorieRoute
         [FromServices] IValidator<CategorieImport> _validator,
         [FromServices] IOutputCacheStore _cache,
         [FromServices] ICategorieService _categorieServ,
+        [FromRoute(Name = "idPublicCategorie")] Guid _idPublicCategorie,
         [FromBody] CategorieImport _categorieImport
     )
     {
-        _categorieImport.Mode = Enums.EModeImport.Modifier;
-
         var validate = _validator.Validate(_categorieImport);
 
         if(!validate.IsValid)
@@ -111,7 +116,7 @@ public static class CategorieRoute
 
         bool estModifier = await _categorieServ.ModifierAsync(
             _categorieImport.Nom,
-            _categorieImport.IdPublic!.Value,
+            _idPublicCategorie,
             idGroupe
         );
 
