@@ -83,7 +83,7 @@ public static class ClientRoute
         [FromBody] ClientImport _clientImport
     )
     {
-        var validate = _validator.Validate(_clientImport);
+        var validate = await _validator.ValidateAsync(_clientImport);
 
         if (!validate.IsValid)
             return Results.Extensions.ErreurValidator(validate.Errors);
