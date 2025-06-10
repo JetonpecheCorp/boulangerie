@@ -58,10 +58,7 @@ public class FournisseurTest
             $"{baseUrl}/ajouter", new FounisseurRequete(
                 "nom test",
                 [],
-                [],
-                null,
-                null,
-                null
+                []
             )
         );
 

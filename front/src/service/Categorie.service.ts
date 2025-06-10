@@ -32,7 +32,7 @@ export class CategorieService
 
   Modifier(_idPublic: string, _nom: string): Observable<void>
   {
-    const INFOS = { nom: _nom, idPublic: _idPublic };
-    return this.http.put<void>(`${this.BASE_API}/modifier`, INFOS).pipe(takeUntilDestroyed(this.destroyRef));
+    const INFOS = { nom: _nom };
+    return this.http.put<void>(`${this.BASE_API}/modifier/${_idPublic}`, INFOS).pipe(takeUntilDestroyed(this.destroyRef));
   }
 }
