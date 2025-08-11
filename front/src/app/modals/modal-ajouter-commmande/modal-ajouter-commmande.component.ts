@@ -197,6 +197,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
         next: () =>
         {
           this.btnClicker.set(false);
+          this.dialogRef.close();
         },
         error: () => this.btnClicker.set(false)
       });
