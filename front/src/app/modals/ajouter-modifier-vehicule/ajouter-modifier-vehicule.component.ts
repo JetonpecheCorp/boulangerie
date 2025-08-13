@@ -33,7 +33,7 @@ export class AjouterModifierVehiculeComponent implements OnInit
 
     this.form = new FormGroup({
       immatriculation: new FormControl(this.vehicule?.immatriculation ?? "", [Validators.max(15)]),
-      nom: new FormControl(this.vehicule?.nom ?? "", [Validators.max(100)]),
+      nom: new FormControl(this.vehicule?.nom ?? "", [Validators.max(100), Validators.required]),
       infoComplementaire: new FormControl<string | null>(this.vehicule?.infoComplementaire ?? null, [Validators.max(1_000)])
     });
   }

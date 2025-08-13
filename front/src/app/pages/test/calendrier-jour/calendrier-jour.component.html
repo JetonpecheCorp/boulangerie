@@ -54,7 +54,9 @@
                 <div class="btnsAction">
                     @if(element.status != eStatusCommande.Valider)
                     {
-                        <button mat-icon-button stop-propagation (click)="ValiderCommande(element.numero)">
+                        <button mat-icon-button stop-propagation 
+                                matTooltip="Valider la commande"
+                                (click)="ValiderCommande(element.numero)">
                             <mat-icon>check_circle</mat-icon>
                         </button> 
                         <br>
@@ -62,13 +64,17 @@
 
                     @if(element.status != eStatusCommande.Annuler && element.status != eStatusCommande.Livrer)
                     {
-                        <button mat-icon-button stop-propagation (click)="AnnulerCommande(element.numero)">
+                        <button mat-icon-button stop-propagation
+                                matTooltip="Invalider la commande" 
+                                (click)="AnnulerCommande(element.numero)">
                             <mat-icon>clear</mat-icon>
                         </button>
                         <br>
                     }
 
-                    <button mat-icon-button stop-propagation (click)="TelechargerFacture(element.numero)">
+                    <button mat-icon-button stop-propagation 
+                            matTooltip="Télécharger la facture de la commande"
+                            (click)="TelechargerFacture(element.numero)">
                         <mat-icon>download</mat-icon>
                     </button>
                 </div>
