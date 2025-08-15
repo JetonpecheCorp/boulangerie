@@ -266,13 +266,3 @@ VALUES
 (1, 1, 10, 1.20), (2, 1, 2, 3),
 (1, 2, 10, 1.20), (2, 2, 2, 3),
 (1, 3, 10, 1.20), (2, 3, 2, 3);
-
--- cretion utilisateur
-DROP USER 'utilisateur'@'%';
-CREATE USER IF NOT EXISTS 'utilisateur'@'%' IDENTIFIED BY '4)P9Apnr(aHY76Q[^hp,25X2b9$L/s';
-
--- donne les privileges CRUD sur la bdd
-GRANT SELECT, INSERT, UPDATE, DELETE ON Boulangerie.* TO 'utilisateur'@'%';
-
--- applique les privileges
-FLUSH PRIVILEGES;
