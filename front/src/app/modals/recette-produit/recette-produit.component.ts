@@ -14,7 +14,7 @@ import { AjouterModifierRecetteComponent } from "../ajouter-modifier-recette/ajo
 @Component({
   selector: 'app-recette-produit',
   standalone: true,
-  imports: [MatDialogModule, MatIconModule, MatCheckboxModule, MatTableModule, MatTabsModule, MatButton, ButtonComponent, AjouterModifierRecetteComponent],
+  imports: [MatDialogModule, MatIconModule, MatCheckboxModule, MatTableModule, MatTabsModule, MatButton, ButtonComponent],
   templateUrl: './recette-produit.component.html',
   styleUrl: './recette-produit.component.scss'
 })
