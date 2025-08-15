@@ -3,6 +3,9 @@ using Api.Extensions;
 using Api.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Services.Mail;
 using System.Security.Cryptography;
 
@@ -32,6 +35,24 @@ builder.Services.AddAuthorizationBuilder()
     .AddDefaultPolicy(NomPolicyJwt.DefautClient, x => x.RequireRole("client").RequireClaim("idUtilisateur").RequireClaim("idGroupe"))
     .AddPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur"))
     .AddPolicy(NomPolicyJwt.ResetMdp, x => x.RequireClaim("mdp-oublie").RequireClaim("idUtilisateur").RequireClaim("idGroupe"));
+
+builder.Services.AddHealthChecks();
+
+// add prometheus exporter
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(opt =>
+
+        opt
+            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(builder.Environment.ApplicationName))
+            .AddMeter("boulangerie")
+            .AddAspNetCoreInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddProcessInstrumentation()
+            .AddOtlpExporter(opts =>
+            {
+                opts.Endpoint = new Uri("http://otel-collector:4317");
+            })
+    );
 
 builder.Services.AjouterSecuriteJwt(rsa);
 builder.Services.AddDbContext<BoulangerieContext>(x =>
@@ -66,6 +87,9 @@ builder.Services.AddSingleton<IMailService>(new MailService(new MailOptions
 var app = builder.Build();
 
 app.UseCors();
+app.UseHttpsRedirection();
+app.MapHealthChecks("api/sante");
+
 // l'ordre est important
 app.UseAuthentication();
 app.UseAuthorization();
