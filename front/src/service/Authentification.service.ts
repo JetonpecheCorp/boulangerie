@@ -20,7 +20,7 @@ export class AuthentificationService
 
   DemandeResetMdp(_mail: string): Observable<void>
   {
-    return this.http.get<void>(`${this.BASE_API}/demande-reset-mdp/${_mail}`);
+    return this.http.get<void>(`${this.BASE_API}/demande-reset-mdp/${_mail}`).pipe(takeUntilDestroyed(this.destroyRef));
   }
 
   ResetMdp(_mdp: string, _jwtMdpOublier: string): Observable<void>

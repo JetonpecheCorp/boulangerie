@@ -33,7 +33,7 @@ export class AppComponent
 
   protected EstConnecter(): boolean
   {
-    return true//environment.utilisateur != undefined && environment.utilisateur != null;
+    return environment.utilisateur != undefined && environment.utilisateur != null;
   }
 
   private BreakpointChanges(): void 
