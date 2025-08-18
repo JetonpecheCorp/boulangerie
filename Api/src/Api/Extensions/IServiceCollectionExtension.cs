@@ -22,6 +22,7 @@ using Services.Mdp;
 using Services.QrCodes;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Threading.RateLimiting;
 
 namespace Api.Extensions;
 
@@ -133,6 +134,28 @@ public static class IServiceCollectionExtension
                     },
                     new string[]{}
                 }
+            });
+        });
+
+        return _service;
+    }
+
+    public static IServiceCollection AjouterRateLimiter(this IServiceCollection _service)
+    {
+        _service.AddRateLimiter(opt =>
+        {
+            opt.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            opt.AddPolicy("connexion-limiteur", httpContext =>
+            {
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    httpContext.Connection.RemoteIpAddress?.ToString(),
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 3,
+                        Window = TimeSpan.FromSeconds(10)
+                    }
+                );
             });
         });
 

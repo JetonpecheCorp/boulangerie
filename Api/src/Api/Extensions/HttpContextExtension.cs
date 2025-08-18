@@ -18,7 +18,7 @@ public static class HttpContextExtension
     /// <returns>Id groupe de l'utilisateur</returns>
     public static int RecupererIdGroupe(this HttpContext _httpContext)
     {
-        return 1;
+        //return 1;
         string idGroupeString = _httpContext.User.FindFirstValue("idGroupe")!;
 
         return int.Parse(idGroupeString);

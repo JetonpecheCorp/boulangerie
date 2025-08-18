@@ -32,8 +32,8 @@ if (!File.Exists(cheminCleRsa))
 rsa.ImportRSAPrivateKey(File.ReadAllBytes(cheminCleRsa), out _);
 
 builder.Services.AddAuthorizationBuilder()
-    .AddDefaultPolicy(NomPolicyJwt.DefautClient, x => x.RequireRole("client").RequireClaim("idUtilisateur").RequireClaim("idGroupe"))
-    .AddPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur"))
+    .AddDefaultPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur"))
+    .AddPolicy(NomPolicyJwt.DefautClient, x => x.RequireRole("client").RequireClaim("idUtilisateur").RequireClaim("idGroupe"))
     .AddPolicy(NomPolicyJwt.ResetMdp, x => x.RequireClaim("mdp-oublie").RequireClaim("idUtilisateur").RequireClaim("idGroupe"));
 
 builder.Services.AddHealthChecks();
@@ -75,6 +75,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddCors(x => x.AddDefaultPolicy(y => y.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("Content-Disposition")));
 builder.Services.AjouterService(rsa);
 builder.Services.AjouterOutputCache();
+builder.Services.AjouterRateLimiter();
 
 builder.Services.AddSingleton<IMailService>(new MailService(new MailOptions
 {
@@ -103,6 +104,7 @@ app.UseAuthorization();
 
 app.UseOutputCache();
 app.AjouterRouteAPI();
+app.UseRateLimiter();
 
 app.Run();
 

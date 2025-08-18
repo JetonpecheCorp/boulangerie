@@ -16,14 +16,19 @@ public static class AuthentificationRoute
 {
     public static RouteGroupBuilder AjouterRouteAuthentification(this RouteGroupBuilder builder)
     {
-        builder.WithOpenApi().ProducesServiceUnavailable();
+        builder.WithOpenApi().ProducesServiceUnavailable().RequireRateLimiting("connexion-limiteur");
 
-        builder.MapPost("connexion", ConnexionAsync);
+        builder.MapPost("connexion", ConnexionAsync)
+            .ProducesBadRequest()
+            .ProducesToManyRequests()
+            .Produces<ConnexionExport>();
+
         builder.MapGet("demande-reset-mdp/{mail}", DemandeResetMdpAsync)
             .ProducesBadRequest()
             .ProducesNoContent();
 
         builder.MapPost("reset-mdp", ResetMdpAsync)
+            .RequireAuthorization(NomPolicyJwt.ResetMdp)
             .ProducesNotFound()
             .ProducesBadRequestErreurValidation()
             .ProducesNoContent();
@@ -53,6 +58,7 @@ public static class AuthentificationRoute
             return Results.BadRequest("Login ou mot de passe incorrect");
 
         string jwt = _jwtServ.Generer([
+            new Claim(ClaimTypes.Role, utilisateur.EstAdmin ? "admin" : "client"),
             new Claim("idUtilisateur", utilisateur.IdPublic.ToString()),
             new Claim("idGroupe", utilisateur.IdGroupe.ToString())
         ]);
