@@ -24,12 +24,14 @@ public static class AuthentificationRoute
             .Produces<ConnexionExport>();
 
         builder.MapGet("demande-reset-mdp/{mail}", DemandeResetMdpAsync)
+            .ProducesToManyRequests()
             .ProducesBadRequest()
             .ProducesNoContent();
 
         builder.MapPost("reset-mdp", ResetMdpAsync)
             .RequireAuthorization(NomPolicyJwt.ResetMdp)
             .ProducesNotFound()
+            .ProducesToManyRequests()
             .ProducesBadRequestErreurValidation()
             .ProducesNoContent();
 
