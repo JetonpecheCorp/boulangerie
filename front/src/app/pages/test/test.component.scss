@@ -14,8 +14,8 @@ mat-card-header
 {
     background-color: black;
     color: white;
-    border-top-left-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
-    border-top-right-radius: var(--mdc-outlined-card-container-shape, var(--mat-app-corner-medium));
+    border-top-left-radius: var(--mat-card-outlined-container-shape, var(--mat-app-corner-medium));
+    border-top-right-radius: var(--mat-card-outlined-container-shape, var(--mat-app-corner-medium));
     padding: 0;
 }
 
