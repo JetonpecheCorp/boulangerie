@@ -29,11 +29,10 @@ type Info =
 }
 
 @Component({
-  selector: 'app-modal-ajouter-commmande',
-  standalone: true,
-  imports: [FormsModule, MatIconModule, MatButtonModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, ButtonComponent, ReactiveFormsModule],
-  templateUrl: './modal-ajouter-commmande.component.html',
-  styleUrl: './modal-ajouter-commmande.component.scss'
+    selector: 'app-modal-ajouter-commmande',
+    imports: [FormsModule, MatIconModule, MatButtonModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, ButtonComponent, ReactiveFormsModule],
+    templateUrl: './modal-ajouter-commmande.component.html',
+    styleUrl: './modal-ajouter-commmande.component.scss'
 })
 export class ModalAjouterCommmandeComponent implements OnInit
 {

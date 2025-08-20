@@ -17,11 +17,10 @@ import { Categorie } from '@model/Categorie';
 import { AjouterModifierCategorieComponent } from '@modal/ajouter-modifier-categorie/ajouter-modifier-categorie.component';
 
 @Component({
-  selector: 'app-categorie',
-  standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './categorie.component.html',
-  styleUrl: './categorie.component.scss'
+    selector: 'app-categorie',
+    imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './categorie.component.html',
+    styleUrl: './categorie.component.scss'
 })
 export class CategorieComponent implements AfterViewInit
 {

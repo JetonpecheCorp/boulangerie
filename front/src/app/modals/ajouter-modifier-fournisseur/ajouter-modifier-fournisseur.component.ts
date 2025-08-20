@@ -19,11 +19,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
-  selector: 'app-ajouter-modifier-fournisseur',
-  standalone: true,
-  imports: [MatIconModule, MatChipsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, InputComponent, ButtonComponent],
-  templateUrl: './ajouter-modifier-fournisseur.component.html',
-  styleUrl: './ajouter-modifier-fournisseur.component.scss'
+    selector: 'app-ajouter-modifier-fournisseur',
+    imports: [MatIconModule, MatChipsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, InputComponent, ButtonComponent],
+    templateUrl: './ajouter-modifier-fournisseur.component.html',
+    styleUrl: './ajouter-modifier-fournisseur.component.scss'
 })
 export class AjouterModifierFournisseurComponent 
 {

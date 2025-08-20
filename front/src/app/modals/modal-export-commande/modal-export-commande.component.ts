@@ -17,11 +17,10 @@ type DateInterval = {
 }
 
 @Component({
-  selector: 'app-modal-export-commande',
-  standalone: true,
-  imports: [MatSelectModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatButtonModule, ButtonComponent, MatNativeDateModule, MatDatepickerModule, ReactiveFormsModule],
-  templateUrl: './modal-export-commande.component.html',
-  styleUrl: './modal-export-commande.component.scss'
+    selector: 'app-modal-export-commande',
+    imports: [MatSelectModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatButtonModule, ButtonComponent, MatNativeDateModule, MatDatepickerModule, ReactiveFormsModule],
+    templateUrl: './modal-export-commande.component.html',
+    styleUrl: './modal-export-commande.component.scss'
 })
 export class ModalExportCommandeComponent implements OnInit
 {

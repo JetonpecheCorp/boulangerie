@@ -12,11 +12,10 @@ type JourMois = {
 };
 
 @Component({
-  selector: 'app-calendrier-mois',
-  standalone: true,
-  imports: [],
-  templateUrl: './calendrier-mois.component.html',
-  styleUrl: './calendrier-mois.component.scss'
+    selector: 'app-calendrier-mois',
+    imports: [],
+    templateUrl: './calendrier-mois.component.html',
+    styleUrl: './calendrier-mois.component.scss'
 })
 export class CalendrierMoisComponent implements OnInit, OnChanges
 {

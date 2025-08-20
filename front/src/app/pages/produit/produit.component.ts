@@ -20,11 +20,10 @@ import { StopPropagationDirective } from '@directive/stop-propagation.directive'
 import { ExportService } from '@service/Export.service';
 
 @Component({
-  selector: 'app-produit',
-  standalone: true,
-  imports: [StopPropagationDirective, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './produit.component.html',
-  styleUrl: './produit.component.scss'
+    selector: 'app-produit',
+    imports: [StopPropagationDirective, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './produit.component.html',
+    styleUrl: './produit.component.scss'
 })
 export class ProduitComponent implements AfterViewInit
 {

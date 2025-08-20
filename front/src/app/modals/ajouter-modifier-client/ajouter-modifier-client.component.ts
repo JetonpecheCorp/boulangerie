@@ -9,11 +9,10 @@ import { TextareaComponent } from "@component/textarea/textarea.component";
 import { ClientService } from '@service/Client.service';
 
 @Component({
-  selector: 'app-ajouter-modifier-client',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule, InputComponent, ButtonComponent, TextareaComponent],
-  templateUrl: './ajouter-modifier-client.component.html',
-  styleUrl: './ajouter-modifier-client.component.scss'
+    selector: 'app-ajouter-modifier-client',
+    imports: [MatDialogModule, MatButtonModule, InputComponent, ButtonComponent, TextareaComponent],
+    templateUrl: './ajouter-modifier-client.component.html',
+    styleUrl: './ajouter-modifier-client.component.scss'
 })
 export class AjouterModifierClientComponent implements OnInit
 {

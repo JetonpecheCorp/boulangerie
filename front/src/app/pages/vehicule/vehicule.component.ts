@@ -18,11 +18,10 @@ import { VehiculeService } from '@service/Vehicule.service';
 import { AjouterModifierVehiculeComponent } from '@modal/ajouter-modifier-vehicule/ajouter-modifier-vehicule.component';
 
 @Component({
-  selector: 'app-vehicule',
-  standalone: true,
-  imports: [StopPropagationDirective, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './vehicule.component.html',
-  styleUrl: './vehicule.component.scss'
+    selector: 'app-vehicule',
+    imports: [StopPropagationDirective, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './vehicule.component.html',
+    styleUrl: './vehicule.component.scss'
 })
 export class VehiculeComponent 
 {

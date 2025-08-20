@@ -4,11 +4,10 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { LivraisonComponent } from "../../pages/livraison/livraison.component";
 
 @Component({
-  selector: 'app-modal-livraison',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule, LivraisonComponent],
-  templateUrl: './modal-livraison.component.html',
-  styleUrl: './modal-livraison.component.scss'
+    selector: 'app-modal-livraison',
+    imports: [MatDialogModule, MatButtonModule, LivraisonComponent],
+    templateUrl: './modal-livraison.component.html',
+    styleUrl: './modal-livraison.component.scss'
 })
 export class ModalLivraisonComponent 
 {

@@ -16,11 +16,10 @@ type Info =
 }
 
 @Component({
-  selector: 'app-modal-calendrier-jour',
-  standalone: true,
-  imports: [MatSelectModule, MatDialogModule, MatButtonModule, CalendrierJourComponent, ButtonComponent],
-  templateUrl: './modal-calendrier-jour.component.html',
-  styleUrl: './modal-calendrier-jour.component.scss',
+    selector: 'app-modal-calendrier-jour',
+    imports: [MatSelectModule, MatDialogModule, MatButtonModule, CalendrierJourComponent, ButtonComponent],
+    templateUrl: './modal-calendrier-jour.component.html',
+    styleUrl: './modal-calendrier-jour.component.scss'
 })
 export class ModalCalendrierJourComponent implements OnInit
 {

@@ -20,11 +20,10 @@ import { ImporterDonneeComponent } from '@modal/importer-donnee/importer-donnee.
 import { ETypeRessourceImport } from '@enum/ETypeRessourceImport';
 
 @Component({
-  selector: 'app-fournisseur',
-  standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './fournisseur.component.html',
-  styleUrl: './fournisseur.component.scss'
+    selector: 'app-fournisseur',
+    imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './fournisseur.component.html',
+    styleUrl: './fournisseur.component.scss'
 })
 export class FournisseurComponent implements AfterViewInit
 {

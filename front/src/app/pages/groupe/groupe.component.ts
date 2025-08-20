@@ -18,11 +18,10 @@ import { ButtonComponent } from "@component/button/button.component";
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-groupe',
-  standalone: true,
-  imports: [MatTooltipModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule, ButtonComponent],
-  templateUrl: './groupe.component.html',
-  styleUrl: './groupe.component.scss'
+    selector: 'app-groupe',
+    imports: [MatTooltipModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule, ButtonComponent],
+    templateUrl: './groupe.component.html',
+    styleUrl: './groupe.component.scss'
 })
 export class GroupeComponent implements AfterViewInit
 {

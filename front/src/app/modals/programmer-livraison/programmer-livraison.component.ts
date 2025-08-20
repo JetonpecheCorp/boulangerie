@@ -34,11 +34,10 @@ type Info =
 }
 
 @Component({
-  selector: 'app-programmer-livraison',
-  standalone: true,
-  imports: [StopPropagationDirective, MatSelectModule, DragDropModule, MatIconModule, MatCardModule, MatDatepickerModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatInputModule, MatAutocompleteModule, MatFormFieldModule, ButtonComponent],
-  templateUrl: './programmer-livraison.component.html',
-  styleUrl: './programmer-livraison.component.scss'
+    selector: 'app-programmer-livraison',
+    imports: [StopPropagationDirective, MatSelectModule, DragDropModule, MatIconModule, MatCardModule, MatDatepickerModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatInputModule, MatAutocompleteModule, MatFormFieldModule, ButtonComponent],
+    templateUrl: './programmer-livraison.component.html',
+    styleUrl: './programmer-livraison.component.scss'
 })
 export class ProgrammerLivraisonComponent implements OnInit
 {

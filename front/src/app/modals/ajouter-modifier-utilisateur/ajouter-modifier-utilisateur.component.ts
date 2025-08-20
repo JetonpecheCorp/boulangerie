@@ -10,11 +10,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-ajouter-modifier-utilisateur',
-  standalone: true,
-  imports: [MatDialogModule, MatCheckboxModule, MatButtonModule, ReactiveFormsModule, ButtonComponent, InputComponent],
-  templateUrl: './ajouter-modifier-utilisateur.component.html',
-  styleUrl: './ajouter-modifier-utilisateur.component.scss'
+    selector: 'app-ajouter-modifier-utilisateur',
+    imports: [MatDialogModule, MatCheckboxModule, MatButtonModule, ReactiveFormsModule, ButtonComponent, InputComponent],
+    templateUrl: './ajouter-modifier-utilisateur.component.html',
+    styleUrl: './ajouter-modifier-utilisateur.component.scss'
 })
 export class AjouterModifierUtilisateurComponent implements OnInit
 {

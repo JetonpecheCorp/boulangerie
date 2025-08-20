@@ -23,11 +23,10 @@ import { ImporterDonneeComponent } from '@modal/importer-donnee/importer-donnee.
 import { ETypeRessourceImport } from '@enum/ETypeRessourceImport';
 
 @Component({
-  selector: 'app-utilisateur',
-  standalone: true,
-  imports: [StopPropagationDirective, MatTooltipModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './utilisateur.component.html',
-  styleUrl: './utilisateur.component.scss'
+    selector: 'app-utilisateur',
+    imports: [StopPropagationDirective, MatTooltipModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './utilisateur.component.html',
+    styleUrl: './utilisateur.component.scss'
 })
 export class UtilisateurComponent implements AfterViewInit
 {

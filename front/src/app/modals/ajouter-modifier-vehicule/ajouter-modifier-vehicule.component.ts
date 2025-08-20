@@ -10,11 +10,10 @@ import { Vehicule } from '@model/Vehicule';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-ajouter-modifier-vehicule',
-  standalone: true,
-  imports: [MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule, InputComponent, ButtonComponent],
-  templateUrl: './ajouter-modifier-vehicule.component.html',
-  styleUrl: './ajouter-modifier-vehicule.component.scss'
+    selector: 'app-ajouter-modifier-vehicule',
+    imports: [MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule, InputComponent, ButtonComponent],
+    templateUrl: './ajouter-modifier-vehicule.component.html',
+    styleUrl: './ajouter-modifier-vehicule.component.scss'
 })
 export class AjouterModifierVehiculeComponent implements OnInit
 {

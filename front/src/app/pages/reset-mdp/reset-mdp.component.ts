@@ -8,11 +8,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-reset-mdp',
-  standalone: true,
-  imports: [InputComponent, ReactiveFormsModule, ButtonComponent, MatCardModule],
-  templateUrl: './reset-mdp.component.html',
-  styleUrl: './reset-mdp.component.scss'
+    selector: 'app-reset-mdp',
+    imports: [InputComponent, ReactiveFormsModule, ButtonComponent, MatCardModule],
+    templateUrl: './reset-mdp.component.html',
+    styleUrl: './reset-mdp.component.scss'
 })
 export class ResetMdpComponent implements OnInit
 {

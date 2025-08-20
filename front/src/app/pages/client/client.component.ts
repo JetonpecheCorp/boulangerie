@@ -24,11 +24,10 @@ import { AjouterModifierClientComponent } from '@modal/ajouter-modifier-client/a
 import { ModalLivraisonComponent } from '@modal/modal-livraison/modal-livraison.component';
 
 @Component({
-  selector: 'app-client',
-  standalone: true,
-  imports: [StopPropagationDirective, MatTooltipModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './client.component.html',
-  styleUrl: './client.component.scss'
+    selector: 'app-client',
+    imports: [StopPropagationDirective, MatTooltipModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './client.component.html',
+    styleUrl: './client.component.scss'
 })
 export class ClientComponent 
 {

@@ -27,11 +27,10 @@ enum EModeCalendrier
 }
 
 @Component({
-  selector: 'app-test',
-  standalone: true,
-  imports: [MatSelectModule, MatTooltipModule, MatSidenavModule, MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
-  templateUrl: './test.component.html',
-  styleUrl: './test.component.scss'
+    selector: 'app-test',
+    imports: [MatSelectModule, MatTooltipModule, MatSidenavModule, MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
+    templateUrl: './test.component.html',
+    styleUrl: './test.component.scss'
 })
 export class TestComponent implements OnInit
 {

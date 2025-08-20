@@ -9,11 +9,10 @@ import { Groupe } from '@model/Groupe';
 import { GroupeService } from '@service/Groupe.service';
 
 @Component({
-  selector: 'app-ajouter-modifier-groupe',
-  standalone: true,
-  imports: [MatIconModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, ReactiveFormsModule, InputComponent, ButtonComponent],
-  templateUrl: './ajouter-modifier-groupe.component.html',
-  styleUrl: './ajouter-modifier-groupe.component.scss'
+    selector: 'app-ajouter-modifier-groupe',
+    imports: [MatIconModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, ReactiveFormsModule, InputComponent, ButtonComponent],
+    templateUrl: './ajouter-modifier-groupe.component.html',
+    styleUrl: './ajouter-modifier-groupe.component.scss'
 })
 export class AjouterModifierGroupeComponent implements OnInit
 {

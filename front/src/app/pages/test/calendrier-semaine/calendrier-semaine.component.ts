@@ -14,11 +14,10 @@ type CommandeAlternatif =
 }
 
 @Component({
-  selector: 'app-calendrier-semaine',
-  standalone: true,
-  imports: [MatTooltipModule, MatCardModule, MatButtonModule, MatIconModule, CalendrierJourComponent],
-  templateUrl: './calendrier-semaine.component.html',
-  styleUrl: './calendrier-semaine.component.scss'
+    selector: 'app-calendrier-semaine',
+    imports: [MatTooltipModule, MatCardModule, MatButtonModule, MatIconModule, CalendrierJourComponent],
+    templateUrl: './calendrier-semaine.component.html',
+    styleUrl: './calendrier-semaine.component.scss'
 })
 export class CalendrierSemaineComponent implements OnInit, OnChanges
 {

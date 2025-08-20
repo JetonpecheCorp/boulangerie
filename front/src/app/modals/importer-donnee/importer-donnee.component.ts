@@ -12,11 +12,10 @@ import { ToastrService } from 'ngx-toastr';
 import { ButtonComponent } from "@component/button/button.component";
 
 @Component({
-  selector: 'app-importer-donnee',
-  standalone: true,
-  imports: [ReactiveFormsModule, MatDialogModule, MatButtonModule, MatSelectModule, MatFormFieldModule, ButtonComponent],
-  templateUrl: './importer-donnee.component.html',
-  styleUrl: './importer-donnee.component.scss'
+    selector: 'app-importer-donnee',
+    imports: [ReactiveFormsModule, MatDialogModule, MatButtonModule, MatSelectModule, MatFormFieldModule, ButtonComponent],
+    templateUrl: './importer-donnee.component.html',
+    styleUrl: './importer-donnee.component.scss'
 })
 export class ImporterDonneeComponent implements OnInit
 {

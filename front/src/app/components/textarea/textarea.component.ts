@@ -4,11 +4,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-textarea',
-  standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule],
-  templateUrl: './textarea.component.html',
-  styleUrl: './textarea.component.scss'
+    selector: 'app-textarea',
+    imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+    templateUrl: './textarea.component.html',
+    styleUrl: './textarea.component.scss'
 })
 export class TextareaComponent 
 {

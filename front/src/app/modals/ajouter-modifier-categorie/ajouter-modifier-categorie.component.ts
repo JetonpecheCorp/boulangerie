@@ -9,11 +9,10 @@ import { CategorieService } from '@service/Categorie.service';
 import { ButtonComponent } from '@component/button/button.component';
 
 @Component({
-  selector: 'app-ajouter-modifier-categorie',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
-  templateUrl: './ajouter-modifier-categorie.component.html',
-  styleUrl: './ajouter-modifier-categorie.component.scss'
+    selector: 'app-ajouter-modifier-categorie',
+    imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
+    templateUrl: './ajouter-modifier-categorie.component.html',
+    styleUrl: './ajouter-modifier-categorie.component.scss'
 })
 export class AjouterModifierCategorieComponent implements OnInit
 {

@@ -17,11 +17,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-ingredient',
-  standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './ingredient.component.html',
-  styleUrl: './ingredient.component.scss'
+    selector: 'app-ingredient',
+    imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './ingredient.component.html',
+    styleUrl: './ingredient.component.scss'
 })
 export class IngredientComponent implements AfterViewInit
 {

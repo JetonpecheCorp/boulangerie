@@ -26,11 +26,10 @@ import { UtilisateurService } from '@service/Utilisateur.service';
 import { UtilisateurLeger } from '@model/Utilisateur';
 
 @Component({
-  selector: 'app-livraison',
-  standalone: true,
-  imports: [MatSortModule, MatButtonModule, MatPaginatorModule, MatTableModule, MatProgressSpinnerModule, ReactiveFormsModule, MatIconModule, MatDatepickerModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, ButtonComponent],
-  templateUrl: './livraison.component.html',
-  styleUrl: './livraison.component.scss'
+    selector: 'app-livraison',
+    imports: [MatSortModule, MatButtonModule, MatPaginatorModule, MatTableModule, MatProgressSpinnerModule, ReactiveFormsModule, MatIconModule, MatDatepickerModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, ButtonComponent],
+    templateUrl: './livraison.component.html',
+    styleUrl: './livraison.component.scss'
 })
 export class LivraisonComponent implements OnInit, AfterContentInit
 {

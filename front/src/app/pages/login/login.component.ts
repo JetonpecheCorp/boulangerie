@@ -13,11 +13,10 @@ import { ButtonComponent } from "@component/button/button.component";
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [RouterLink, MatProgressSpinnerModule, MatCardModule, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, InputComponent, ButtonComponent],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+    selector: 'app-login',
+    imports: [RouterLink, MatProgressSpinnerModule, MatCardModule, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, InputComponent, ButtonComponent],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit
 {

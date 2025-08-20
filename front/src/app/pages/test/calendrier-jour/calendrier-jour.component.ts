@@ -16,11 +16,10 @@ import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/m
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-calendrier-jour',
-  standalone: true,
-  imports: [MatTooltipModule, StopPropagationDirective, MatIconModule, MatCardModule, MatSlideToggleModule, MatButtonModule],
-  templateUrl: './calendrier-jour.component.html',
-  styleUrl: './calendrier-jour.component.scss'
+    selector: 'app-calendrier-jour',
+    imports: [MatTooltipModule, StopPropagationDirective, MatIconModule, MatCardModule, MatSlideToggleModule, MatButtonModule],
+    templateUrl: './calendrier-jour.component.html',
+    styleUrl: './calendrier-jour.component.scss'
 })
 export class CalendrierJourComponent implements OnInit, OnChanges
 {
