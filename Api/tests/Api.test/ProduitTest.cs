@@ -5,6 +5,18 @@ public class ProduitTest
     string baseUrl = "api/client";
 
     [Theory]
+    [InlineData("/lister")]
+    [InlineData("/listerLeger")]
+    public async Task Pas_acces_produit(string _url)
+    {
+        Connexion.HttpClient.DefaultRequestHeaders.Authorization = null;
+
+        var reponse = await Connexion.HttpClient.GetAsync($"{baseUrl}{_url}");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, reponse.StatusCode);
+    }
+
+    [Theory]
     [InlineData(1, 10, null)]
     [InlineData(-1, 10, "")]
     [InlineData(1, -10, "salut")]

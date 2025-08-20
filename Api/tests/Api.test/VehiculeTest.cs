@@ -5,6 +5,23 @@ public class VehiculeTest
     string baseUrl = "api/vehicule";
 
     [Theory]
+    [InlineData("/lister", "GET")]
+    [InlineData("/ajouter", "POST")]
+    [InlineData("/modifier/00000000-0000-0000-0000-000000000000", "PUT")]
+    public async Task Pas_acces_vehicule(string _url, string _httpMethod)
+    {
+        Connexion.HttpClient.DefaultRequestHeaders.Authorization = null;
+
+        var reponse = await Connexion.HttpClient.SendAsync(new HttpRequestMessage()
+        {
+            Method = Connexion.VerbeHttp(_httpMethod),
+            RequestUri = new Uri($"{baseUrl}{_url}", UriKind.RelativeOrAbsolute),
+        });
+
+        Assert.Equal(HttpStatusCode.Unauthorized, reponse.StatusCode);
+    }
+
+    [Theory]
     [InlineData(1, 10, null)]
     [InlineData(-1, 10, "")]
     [InlineData(1, -10, "salut")]

@@ -1,8 +1,29 @@
-﻿namespace Api.test;
+﻿using System.Text;
+using System.Text.Json;
+
+namespace Api.test;
 
 public class CategorieTest
 {
     string baseUrl = "api/categorie";
+
+    [Theory]
+    [InlineData("/listerPaginer?NumPage=1&NbParPage=10", "GET")]
+    [InlineData("/lister", "GET")]
+    [InlineData("/ajouter", "POST")]
+    [InlineData("/modifier/00000000-0000-0000-0000-000000000000", "PUT")]
+    public async Task Pas_acces_categorie(string _url, string _httpMethod)
+    {
+        Connexion.HttpClient.DefaultRequestHeaders.Authorization = null;
+
+        var reponse = await Connexion.HttpClient.SendAsync(new HttpRequestMessage()
+        {
+            Method = Connexion.VerbeHttp(_httpMethod),
+            RequestUri = new Uri($"{baseUrl}{_url}", UriKind.RelativeOrAbsolute),
+        });
+
+        Assert.Equal(HttpStatusCode.Unauthorized, reponse.StatusCode);
+    }
 
     [Theory]
     [InlineData(1, 10, null)]

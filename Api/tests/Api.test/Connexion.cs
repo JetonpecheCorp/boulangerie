@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace Api.test;
 
@@ -32,6 +33,18 @@ public static class Connexion
         }
 
         return false;
+    }
+
+    public static HttpMethod VerbeHttp(string _httpMethode)
+    {
+        return _httpMethode switch
+        {
+            "GET" => HttpMethod.Get,
+            "POST" => HttpMethod.Post,
+            "PUT" => HttpMethod.Put,
+            "DELETE" => HttpMethod.Delete,
+            _ => HttpMethod.Get
+        };
     }
 }
 

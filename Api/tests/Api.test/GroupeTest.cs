@@ -4,6 +4,24 @@ public class GroupeTest
 {
     string baseUrl = "api/groupe";
 
+    [Theory]
+    [InlineData("/lister", "GET")]
+    [InlineData("/ajouter", "POST")]
+    [InlineData("/bloquer-debloquer/1", "PUT")]
+    [InlineData("/modifier/1", "PUT")]
+    public async Task Pas_acces_groupe(string _url, string _httpMethod)
+    {
+        Connexion.HttpClient.DefaultRequestHeaders.Authorization = null;
+
+        var reponse = await Connexion.HttpClient.SendAsync(new HttpRequestMessage()
+        {
+            Method = Connexion.VerbeHttp(_httpMethod),
+            RequestUri = new Uri($"{baseUrl}{_url}", UriKind.RelativeOrAbsolute),
+        });
+
+        Assert.Equal(HttpStatusCode.Unauthorized, reponse.StatusCode);
+    }
+
     [Fact]
     public async Task Lister_groupe()
     {

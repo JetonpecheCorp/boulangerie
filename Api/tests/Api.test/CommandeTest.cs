@@ -1,10 +1,27 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Api.test;
+﻿namespace Api.test;
 
 public class CommandeTest
 {
     string baseUrl = "api/commande";
+
+    [Theory]
+    [InlineData("/lister", "GET")]
+    [InlineData("/facture/Aazerty", "GET")]
+    [InlineData("/ajouter", "POST")]
+    [InlineData("/modifierStatus", "PUT")]
+    [InlineData("/modifierAdmin/azerty", "PUT")]
+    public async Task Pas_acces_commande(string _url, string _httpMethod)
+    {
+        Connexion.HttpClient.DefaultRequestHeaders.Authorization = null;
+
+        var reponse = await Connexion.HttpClient.SendAsync(new HttpRequestMessage()
+        {
+            Method = Connexion.VerbeHttp(_httpMethod),
+            RequestUri = new Uri($"{baseUrl}{_url}", UriKind.RelativeOrAbsolute),
+        });
+
+        Assert.Equal(HttpStatusCode.Unauthorized, reponse.StatusCode);
+    }
 
     [Theory]
     [InlineData("2020-01-01", "2020-12-31", 0, HttpStatusCode.OK)]

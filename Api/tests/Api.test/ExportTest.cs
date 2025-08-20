@@ -4,6 +4,21 @@ public class ExportTest
 {
     string baseUrl = "api/export";
 
+    [Theory]
+    [InlineData("/utilisateur")]
+    [InlineData("/client")]
+    [InlineData("/commande")]
+    [InlineData("/produit")]
+    [InlineData("/fournisseur")]
+    public async Task Pas_acces_export(string _url)
+    {
+        Connexion.HttpClient.DefaultRequestHeaders.Authorization = null;
+
+        var reponse = await Connexion.HttpClient.GetAsync($"{baseUrl}{_url}");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, reponse.StatusCode);
+    }
+
     [Fact]
     public async Task Exporter_utilisateur()
     {
