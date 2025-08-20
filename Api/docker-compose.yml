@@ -80,13 +80,13 @@ services:
     depends_on:
       - mysql
 
-  # front:
-  #   image: front
-  #   build: 
-  #     context: ../front
-  #     dockerfile: ./Dockerfile
-  #   ports:
-  #     - "9000:80"
+  front:
+    image: front
+    build: 
+      context: ../front
+      dockerfile: ../front/Dockerfile
+    ports:
+      - "9000:80"
 
 volumes:
   dbdata:
