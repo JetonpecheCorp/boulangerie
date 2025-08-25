@@ -20,7 +20,7 @@ public class ProduitImportValidator: AbstractValidator<ProduitImport>
         {
             if (x.Mode == Enums.EModeImport.Modifier)
             {
-                if (string.IsNullOrEmpty(x.IdPublic))
+                if (!x.IdPublic.HasValue || x.IdPublic.Value == Guid.Empty)
                     context.AddFailure("IdPublic", "IdPublic ne peux pas être null ou vide");
             }
         });

@@ -1,6 +1,4 @@
-import { Utilisateur } from "../models/Utilisateur";
-
 export var environment = {
-    urlApi: "http://localhost:5256",
+    urlApi: "http://localhost:5000/api",
     utilisateur: null as any
 };

@@ -12,21 +12,20 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { StopPropagationDirective } from '../../directive/stop-propagation.directive';
+import { StopPropagationDirective } from '@directive/stop-propagation.directive';
 import { Vehicule } from '@model/Vehicule';
 import { VehiculeService } from '@service/Vehicule.service';
 import { AjouterModifierVehiculeComponent } from '@modal/ajouter-modifier-vehicule/ajouter-modifier-vehicule.component';
 
 @Component({
-  selector: 'app-vehicule',
-  standalone: true,
-  imports: [StopPropagationDirective, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './vehicule.component.html',
-  styleUrl: './vehicule.component.scss'
+    selector: 'app-vehicule',
+    imports: [StopPropagationDirective, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './vehicule.component.html',
+    styleUrl: './vehicule.component.scss'
 })
 export class VehiculeComponent 
 {
-  displayedColumns: string[] = ["immatriculation", "info", "action"];
+  displayedColumns: string[] = ["nom", "immatriculation", "info", "action"];
   dataSource = signal<MatTableDataSource<Vehicule>>(new MatTableDataSource());
   estEnChargement = signal(false);
 

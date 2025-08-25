@@ -5,8 +5,8 @@ namespace Api.ModelsImports.Produits;
 
 public sealed record ProduitImport
 {
-    public string? IdPublic { get; init; }
-    public required string IdPublicCategorie { get; init; }
+    public Guid? IdPublic { get; init; }
+    public required Guid IdPublicCategorie { get; init; }
     public required int IdTva { get; init; }
     public required string Nom { get; init; }
     public required decimal PrixHt { get; init; }

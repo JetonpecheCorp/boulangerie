@@ -22,6 +22,12 @@
 
     <table mat-table [dataSource]="dataSource()" matSort>
 
+        <!-- nom Column -->
+        <ng-container matColumnDef="nom">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> nom </th>
+            <td mat-cell *matCellDef="let row"> {{row.nom}} </td>
+        </ng-container>
+
         <!-- immatriculation Column -->
         <ng-container matColumnDef="immatriculation">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> immatriculation </th>

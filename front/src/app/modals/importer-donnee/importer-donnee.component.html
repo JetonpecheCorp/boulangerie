@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Importer des données</h2>
+<mat-dialog-content style="padding-top: 10px;">
+
+    <!-- select ineformation import -->
+    <mat-form-field style="margin-bottom: 15px;">
+        <mat-label>Choisissez quelle information importer</mat-label>
+        <mat-select #selectRessource>
+        <mat-option [value]="eTypeRessourceImport.Utilisateur">Utilisateur</mat-option>
+        <mat-option [value]="eTypeRessourceImport.Client">Client</mat-option>
+        <mat-option [value]="eTypeRessourceImport.Ingredient">Ingrédient</mat-option>
+        <mat-option [value]="eTypeRessourceImport.Fournisseur">Fournisseur</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!-- btn choisir fichier -->
+    <button mat-flat-button (click)="inputFile.click()">
+        Choisissez votre fichier (CSV)
+    </button>
+    <br>
+    <p style="margin-top: 10px;">Fichier: {{ nomFichier() }}</p>
+  
+    <!-- liste error import -->
+    <ul>
+        @for (element of listeErreur(); track $index) 
+        {
+            <li>
+                {{ element.nomHeader }} ligne: {{ element.NumeroLigne }} <br>
+                {{ element.message }}
+            </li>
+        }
+    </ul>
+
+    <!-- input file -->
+    <input #inputFile 
+            type="file" 
+            accept=".csv" 
+            style="display: none;"
+            (change)="Fichier()">
+
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Fermer</button>&nbsp;
+    <app-button [btnClicker]="btnClicker()" 
+                (onClick)="Importer()" 
+                label="Importer" />
+</mat-dialog-actions>

@@ -28,7 +28,9 @@
       "@service/*": ["./src/service/*"],
       "@modal/*": ["./src/app/modals/*"],
       "@model/*": ["./src/models/*"],
-      "@component/*": ["./src/app/components/*"]
+      "@enum/*": ["./src/enums/*"],
+      "@component/*": ["./src/app/components/*"],
+      "@directive/*": ["./src/app/directive/*"]
     }
   },
   "angularCompilerOptions": {

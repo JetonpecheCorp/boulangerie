@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{ labelBtn() }} un groupe</h2>
+<mat-dialog-content style="padding-top: 10px;">
+    <form class="row">
+        <div class="col-12">
+            <app-input label="Nom" [controle]="form.controls['nom']" />
+        </div>
+
+        <div class="col-12">
+            <app-input label="Adresse" [controle]="form.controls['adresse']" />
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="null">Fermer</button>
+    <app-button [label]="labelBtn()" (onClick)="Valider()" [btnClicker]="btnClicker()" />
+</mat-dialog-actions>

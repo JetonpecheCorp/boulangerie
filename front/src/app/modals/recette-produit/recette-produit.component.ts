@@ -12,11 +12,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { AjouterModifierRecetteComponent } from "../ajouter-modifier-recette/ajouter-modifier-recette.component";
 
 @Component({
-  selector: 'app-recette-produit',
-  standalone: true,
-  imports: [MatDialogModule, MatIconModule, MatCheckboxModule, MatTableModule, MatTabsModule, MatButton, ButtonComponent, AjouterModifierRecetteComponent],
-  templateUrl: './recette-produit.component.html',
-  styleUrl: './recette-produit.component.scss'
+    selector: 'app-recette-produit',
+    imports: [MatDialogModule, MatIconModule, MatCheckboxModule, MatTableModule, MatTabsModule, MatButton, ButtonComponent],
+    templateUrl: './recette-produit.component.html',
+    styleUrl: './recette-produit.component.scss'
 })
 export class RecetteProduitComponent implements OnInit
 {

@@ -4,7 +4,6 @@ using Api.ModelsExports;
 using Api.ModelsExports.Fournisseurs;
 using Api.ModelsImports;
 using Microsoft.EntityFrameworkCore;
-using MySqlConnector;
 
 namespace Api.Services.Fournisseurs;
 
@@ -32,15 +31,25 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new FournisseurExport
             {
-                IdPublic = x.IdPublic.ToString("D"),
+                IdPublic = x.IdPublic,
                 Nom = x.Nom,
                 Adresse = x.Adresse,
                 Mail = x.Mail,
-                Telephone = x.Telephone
+                Telephone = x.Telephone,
+                ListeIngredient = x.IdIngredients.Select(y => new IngredientFournisseur 
+                { 
+                    IdPublic = y.IdPublic,
+                    Nom = y.Nom
+                }).ToArray(),
+
+                ListeProduit = x.IdProduits.Select(y => new IngredientFournisseur
+                {
+                    IdPublic = y.IdPublic,
+                    Nom = y.Nom
+                }).ToArray()
             }).ToArrayAsync();
 
         PaginationExport<FournisseurExport> pagination = new()
@@ -54,18 +63,14 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
         return pagination;
     }
 
-    public async Task<bool> AjouterAsync(Fournisseur _fournisseur, string[] _listeIdPublicIngredient, string[] _listeIdPublicProduit)
+    public async Task<bool> AjouterAsync(Fournisseur _fournisseur, Guid[] _listeIdPublicIngredient, Guid[] _listeIdPublicProduit)
     {
         if (_listeIdPublicIngredient.Length > 0)
         {
             var predicat = PredicateBuilder.False<Ingredient>();
 
             foreach (var element in _listeIdPublicIngredient)
-            {
-                var idPublic = Guid.Parse(element);
-
-                predicat = predicat.Or(x => x.IdPublic == idPublic);
-            }
+                predicat = predicat.Or(x => x.IdPublic == element);
 
             var listeIngredient = await _context.Ingredients.Where(predicat).ToArrayAsync();
             _fournisseur.IdIngredients = listeIngredient;
@@ -76,11 +81,7 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
             var predicat = PredicateBuilder.False<Produit>();
 
             foreach (var element in _listeIdPublicProduit)
-            {
-                var idPublic = Guid.Parse(element);
-
-                predicat = predicat.Or(x => x.IdPublic == idPublic);
-            }
+                predicat = predicat.Or(x => x.IdPublic == element);
 
             var listeProduit = await _context.Produits.Where(predicat).ToArrayAsync();
             _fournisseur.IdProduits = listeProduit;
@@ -94,22 +95,22 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
 
     public async Task<bool> ModifierAsync(
         int _idGroupe, 
-        string _idPublicFournisseur, 
+        Guid _idPublicFournisseur, 
         SetPropertyBuilder<Fournisseur> _builder,
-        string[] _listeIdPublicProduit,
-        string[] _listeIdPublicIngredient
+        Guid[] _listeIdPublicProduit,
+        Guid[] _listeIdPublicIngredient
     )
     {
         int nb = 0;
 
-        if(Guid.TryParse(_idPublicFournisseur, out Guid idPublicFournisseur))
-        {
-            nb = await _context.Fournisseurs.Where(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublicFournisseur)
-                .ExecuteUpdateAsync(_builder.SetPropertyCalls);
+        if(_idPublicFournisseur == Guid.Empty)
+            return false;
 
-            if (nb == 0)
-                return false;
-        }
+        nb = await _context.Fournisseurs.Where(x => x.IdGroupe == _idGroupe && x.IdPublic == _idPublicFournisseur)
+            .ExecuteUpdateAsync(_builder.SetPropertyCalls);
+
+        if (nb == 0)
+            return false;
 
         _context.Database.ExecuteSqlRaw("DELETE fi.* FROM FournisseurIngredient fi JOIN Fournisseur f ON f.Id = fi.IdFournisseur WHERE IdPublic = ?", _idPublicFournisseur);
 
@@ -118,16 +119,12 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
             var predicat = PredicateBuilder.False<Ingredient>();
 
             foreach (var element in _listeIdPublicIngredient)
-            {
-                var idPublic = Guid.Parse(element);
-
-                predicat = predicat.Or(x => x.IdPublic == idPublic);
-            }
+                predicat = predicat.Or(x => x.IdPublic == element);
 
             var listeIngredient = await _context.Ingredients.Where(predicat).ToArrayAsync();
 
             var listeFournisseurIngredient = _context.Fournisseurs
-                .Where(x => x.IdPublic == idPublicFournisseur)
+                .Where(x => x.IdPublic == _idPublicFournisseur)
                 .First()
                 .IdIngredients;
 
@@ -144,16 +141,12 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
             var predicat = PredicateBuilder.False<Produit>();
 
             foreach (var element in _listeIdPublicProduit)
-            {
-                var idPublic = Guid.Parse(element);
-
-                predicat = predicat.Or(x => x.IdPublic == idPublic);
-            }
+                predicat = predicat.Or(x => x.IdPublic == element);
 
             var listeProduit = await _context.Produits.Where(predicat).ToArrayAsync();
 
             var listeFournisseurProduit = _context.Fournisseurs
-                .Where(x => x.IdPublic == idPublicFournisseur)
+                .Where(x => x.IdPublic == _idPublicFournisseur)
                 .First()
                 .IdProduits;
 
@@ -166,13 +159,13 @@ public class FournisseurService(BoulangerieContext _context): IFournisseurServic
         return nb > 0;
     }
 
-    public async Task<bool> ArchiverAsync(int _idGroupe, string _idPublicFournisseur)
+    public async Task<bool> ArchiverAsync(int _idGroupe, Guid _idPublicFournisseur)
     {
         int nb = 0;
 
-        if (Guid.TryParse(_idPublicFournisseur, out Guid idPublicFournisseur))
+        if (_idPublicFournisseur != Guid.Empty)
         {
-            nb = await _context.Fournisseurs.Where(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublicFournisseur)
+            nb = await _context.Fournisseurs.Where(x => x.IdGroupe == _idGroupe && x.IdPublic == _idPublicFournisseur)
                 .ExecuteUpdateAsync(x => x.SetProperty(y => y.EstSupprimer, true));
         }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Api.Models;
 
@@ -20,6 +17,8 @@ public partial class BoulangerieContext : DbContext
 
     public virtual DbSet<Client> Clients { get; set; }
 
+    public virtual DbSet<Commande> Commandes { get; set; }
+
     public virtual DbSet<Fournisseur> Fournisseurs { get; set; }
 
     public virtual DbSet<Groupe> Groupes { get; set; }
@@ -28,13 +27,9 @@ public partial class BoulangerieContext : DbContext
 
     public virtual DbSet<Livraison> Livraisons { get; set; }
 
-    public virtual DbSet<Planning> Plannings { get; set; }
-
-    public virtual DbSet<PlanningProduitUtilisateur> PlanningProduitUtilisateurs { get; set; }
-
     public virtual DbSet<Produit> Produits { get; set; }
 
-    public virtual DbSet<ProduitLivraison> ProduitLivraisons { get; set; }
+    public virtual DbSet<ProduitCommande> ProduitCommandes { get; set; }
 
     public virtual DbSet<Recette> Recettes { get; set; }
 
@@ -42,14 +37,9 @@ public partial class BoulangerieContext : DbContext
 
     public virtual DbSet<Utilisateur> Utilisateurs { get; set; }
 
-    public virtual DbSet<UtilisateurAdmin> UtilisateurAdmins { get; set; }
-
     public virtual DbSet<Vehicule> Vehicules { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
-    {
-        
-    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -91,6 +81,45 @@ public partial class BoulangerieContext : DbContext
                 .HasForeignKey(d => d.IdGroupe)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Client_ibfk_1");
+        });
+
+        modelBuilder.Entity<Commande>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("Commande");
+
+            entity.HasIndex(e => e.IdClient, "IdClient");
+
+            entity.HasIndex(e => e.IdGroupe, "IdGroupe");
+
+            entity.HasIndex(e => e.IdLivraison, "IdLivraison");
+
+            entity.Property(e => e.DatLivraison).HasColumnType("datetime");
+            entity.Property(e => e.DateAnnulation).HasColumnType("datetime");
+            entity.Property(e => e.DateCreation)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("datetime");
+            entity.Property(e => e.DatePourLe).HasColumnType("datetime");
+            entity.Property(e => e.DateValidation).HasColumnType("datetime");
+            entity.Property(e => e.Numero).HasMaxLength(15);
+            entity.Property(e => e.OrdreLivraison).HasColumnName("ordreLivraison");
+            entity.Property(e => e.PrixTotalHt)
+                .HasPrecision(10, 2)
+                .HasColumnName("PrixTotalHT");
+
+            entity.HasOne(d => d.IdClientNavigation).WithMany(p => p.Commandes)
+                .HasForeignKey(d => d.IdClient)
+                .HasConstraintName("Commande_ibfk_1");
+
+            entity.HasOne(d => d.IdGroupeNavigation).WithMany(p => p.Commandes)
+                .HasForeignKey(d => d.IdGroupe)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Commande_ibfk_2");
+
+            entity.HasOne(d => d.IdLivraisonNavigation).WithMany(p => p.Commandes)
+                .HasForeignKey(d => d.IdLivraison)
+                .HasConstraintName("Commande_ibfk_3");
         });
 
         modelBuilder.Entity<Fournisseur>(entity =>
@@ -160,8 +189,10 @@ public partial class BoulangerieContext : DbContext
             entity.ToTable("Groupe");
 
             entity.Property(e => e.Adresse).HasMaxLength(800);
-            entity.Property(e => e.ConnexionBloquer).HasDefaultValueSql("'0'");
             entity.Property(e => e.Nom).HasMaxLength(300);
+            entity.Property(e => e.Prefix)
+                .HasMaxLength(3)
+                .IsFixedLength();
         });
 
         modelBuilder.Entity<Ingredient>(entity =>
@@ -189,7 +220,7 @@ public partial class BoulangerieContext : DbContext
 
             entity.ToTable("Livraison");
 
-            entity.HasIndex(e => e.IdClient, "IdClient");
+            entity.HasIndex(e => e.IdUtilisateur, "IdUtilisateur");
 
             entity.HasIndex(e => e.IdVehicule, "IdVehicule");
 
@@ -198,8 +229,8 @@ public partial class BoulangerieContext : DbContext
                 .HasMaxLength(20)
                 .IsFixedLength();
 
-            entity.HasOne(d => d.IdClientNavigation).WithMany(p => p.Livraisons)
-                .HasForeignKey(d => d.IdClient)
+            entity.HasOne(d => d.IdUtilisateurNavigation).WithMany(p => p.Livraisons)
+                .HasForeignKey(d => d.IdUtilisateur)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Livraison_ibfk_2");
 
@@ -207,42 +238,6 @@ public partial class BoulangerieContext : DbContext
                 .HasForeignKey(d => d.IdVehicule)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Livraison_ibfk_1");
-        });
-
-        modelBuilder.Entity<Planning>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("Planning");
-        });
-
-        modelBuilder.Entity<PlanningProduitUtilisateur>(entity =>
-        {
-            entity.HasKey(e => new { e.IdPlanning, e.IdProduit })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-            entity.ToTable("PlanningProduitUtilisateur");
-
-            entity.HasIndex(e => e.IdProduit, "IdProduit");
-
-            entity.HasIndex(e => e.IdUtilisateur, "IdUtilisateur");
-
-            entity.Property(e => e.Quantite).HasPrecision(20, 3);
-
-            entity.HasOne(d => d.IdPlanningNavigation).WithMany(p => p.PlanningProduitUtilisateurs)
-                .HasForeignKey(d => d.IdPlanning)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("PlanningProduitUtilisateur_ibfk_2");
-
-            entity.HasOne(d => d.IdProduitNavigation).WithMany(p => p.PlanningProduitUtilisateurs)
-                .HasForeignKey(d => d.IdProduit)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("PlanningProduitUtilisateur_ibfk_1");
-
-            entity.HasOne(d => d.IdUtilisateurNavigation).WithMany(p => p.PlanningProduitUtilisateurs)
-                .HasForeignKey(d => d.IdUtilisateur)
-                .HasConstraintName("PlanningProduitUtilisateur_ibfk_3");
         });
 
         modelBuilder.Entity<Produit>(entity =>
@@ -284,32 +279,28 @@ public partial class BoulangerieContext : DbContext
                 .HasConstraintName("Produit_ibfk_3");
         });
 
-        modelBuilder.Entity<ProduitLivraison>(entity =>
+        modelBuilder.Entity<ProduitCommande>(entity =>
         {
-            entity.HasKey(e => new { e.IdProduit, e.IdLivraison })
+            entity.HasKey(e => new { e.IdProduit, e.IdCommande })
                 .HasName("PRIMARY")
                 .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-            entity.ToTable("ProduitLivraison");
+            entity.ToTable("ProduitCommande");
 
-            entity.HasIndex(e => e.IdLivraison, "IdLivraison");
+            entity.HasIndex(e => e.IdCommande, "IdCommande");
 
-            entity.Property(e => e.Poids).HasPrecision(5, 2);
             entity.Property(e => e.PrixHt)
                 .HasPrecision(8, 2)
                 .HasColumnName("PrixHT");
-            entity.Property(e => e.Quantite).HasPrecision(20, 3);
-            entity.Property(e => e.Tva).HasPrecision(5, 2);
 
-            entity.HasOne(d => d.IdLivraisonNavigation).WithMany(p => p.ProduitLivraisons)
-                .HasForeignKey(d => d.IdLivraison)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("ProduitLivraison_ibfk_2");
+            entity.HasOne(d => d.IdCommandeNavigation).WithMany(p => p.ProduitCommandes)
+                .HasForeignKey(d => d.IdCommande)
+                .HasConstraintName("ProduitCommande_ibfk_2");
 
-            entity.HasOne(d => d.IdProduitNavigation).WithMany(p => p.ProduitLivraisons)
+            entity.HasOne(d => d.IdProduitNavigation).WithMany(p => p.ProduitCommandes)
                 .HasForeignKey(d => d.IdProduit)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("ProduitLivraison_ibfk_1");
+                .HasConstraintName("ProduitCommande_ibfk_1");
         });
 
         modelBuilder.Entity<Recette>(entity =>
@@ -364,19 +355,6 @@ public partial class BoulangerieContext : DbContext
                 .HasConstraintName("Utilisateur_ibfk_1");
         });
 
-        modelBuilder.Entity<UtilisateurAdmin>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("UtilisateurAdmin");
-
-            entity.Property(e => e.Mail).HasMaxLength(250);
-            entity.Property(e => e.Mdp).HasMaxLength(300);
-            entity.Property(e => e.Nom).HasMaxLength(200);
-            entity.Property(e => e.Prenom).HasMaxLength(200);
-            entity.Property(e => e.Telephone).HasMaxLength(20);
-        });
-
         modelBuilder.Entity<Vehicule>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -387,6 +365,7 @@ public partial class BoulangerieContext : DbContext
 
             entity.Property(e => e.Immatriculation).HasMaxLength(15);
             entity.Property(e => e.InfoComplementaire).HasMaxLength(1000);
+            entity.Property(e => e.Nom).HasMaxLength(100);
 
             entity.HasOne(d => d.IdGroupeNavigation).WithMany(p => p.Vehicules)
                 .HasForeignKey(d => d.IdGroupe)

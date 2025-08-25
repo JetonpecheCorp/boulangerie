@@ -36,6 +36,15 @@ public static class ProducesExtension
     /// </summary>
     public static RouteHandlerBuilder ProducesBadRequestErreurValidation(this RouteHandlerBuilder builder)
         => builder.Produces<ErreurValidation>(StatusCodes.Status400BadRequest);
+
+    /// <summary>
+    /// Renvoie un code erreur 429 trop de requete
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static RouteHandlerBuilder ProducesToManyRequests(this RouteHandlerBuilder builder)
+        => builder.Produces<ErreurValidation>(StatusCodes.Status429TooManyRequests);
+
     /// <summary>
     /// Renvoie un code erreur 503. Peut être mis sur tout les endpoints d'une route
     /// </summary>

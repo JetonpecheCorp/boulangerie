@@ -9,11 +9,10 @@ type Message =
 }
 
 @Component({
-  selector: 'app-modal-confirmation',
-  standalone: true,
-  imports: [MatButtonModule, MatDialogModule],
-  templateUrl: './modal-confirmation.component.html',
-  styleUrl: './modal-confirmation.component.scss'
+    selector: 'app-modal-confirmation',
+    imports: [MatButtonModule, MatDialogModule],
+    templateUrl: './modal-confirmation.component.html',
+    styleUrl: './modal-confirmation.component.scss'
 })
 export class ModalConfirmationComponent 
 {

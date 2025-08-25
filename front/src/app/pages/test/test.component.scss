@@ -1,0 +1,43 @@
+mat-card
+{
+    width: calc(100% / 7);
+}
+
+.container-flex
+{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+mat-card-header
+{
+    background-color: black;
+    color: white;
+    border-top-left-radius: var(--mat-card-outlined-container-shape, var(--mat-app-corner-medium));
+    border-top-right-radius: var(--mat-card-outlined-container-shape, var(--mat-app-corner-medium));
+    padding: 0;
+}
+
+mat-card-content, mat-card-header
+{
+    padding: 5px;
+}
+
+.element:not(:last-child)
+{
+    border-bottom: 1px solid black;
+}
+
+@media screen and (max-width: 800px) 
+{
+    .card
+    {
+        width: 100%;
+    }
+
+    .container-flex
+    {
+        flex-direction: column;
+    }
+}

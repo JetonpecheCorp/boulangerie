@@ -4,15 +4,15 @@ namespace Api.ModelsExports.Vehicules;
 
 public sealed record VehiculeExport
 {
-    [JsonPropertyName("idPublic")]
-    public required string IdPublic { get; init; }
+    public required Guid IdPublic { get; init; }
 
-    [JsonPropertyName("immatriculation")]
+    public required string Nom { get; init; }
+
     public required string Immatriculation { get; init; }
 
-    [JsonPropertyName("infoComplementaire")]
     public required string? InfoComplementaire { get; init; }
 }
 
 [JsonSerializable(typeof(VehiculeExport))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class VehiculeExportContext: JsonSerializerContext { }

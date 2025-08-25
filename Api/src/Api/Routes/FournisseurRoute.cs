@@ -27,13 +27,13 @@ public static class FournisseurRoute
             .ProducesBadRequestErreurValidation()
             .ProducesCreated<string>();
 
-        builder.MapPut("modifier/{idPublicFournisseur}", ModifierAsync)
+        builder.MapPut("modifier/{idPublicFournisseur:guid}", ModifierAsync)
             .WithDescription("Modifier un fournisseur")
             .ProducesBadRequestErreurValidation()
             .ProducesNotFound()
             .ProducesNoContent();
 
-        builder.MapDelete("archiver/{idPublicFournisseur}", ArchiverAsync)
+        builder.MapDelete("archiver/{idPublicFournisseur:guid}", ArchiverAsync)
             .WithDescription("Archiver un fournisseur")
             .ProducesNotFound()
             .ProducesNoContent();
@@ -99,7 +99,7 @@ public static class FournisseurRoute
         [FromServices] IFournisseurService _fournisseurServ,
         [FromServices] IProduitService _produitServ,
         [FromServices] IIngredientService _ingredientServ,
-        [FromRoute(Name = "idPublicFournisseur")] string _idPublicFournisseur,
+        [FromRoute(Name = "idPublicFournisseur")] Guid _idPublicFournisseur,
         [FromBody] FournisseurImport _fournisseurImport
     )
     {
@@ -118,7 +118,13 @@ public static class FournisseurRoute
             .SetProperty(x => x.Mail, _fournisseurImport.Mail)
             .SetProperty(x => x.DateModification, DateOnly.FromDateTime(DateTime.UtcNow));
 
-        bool ok = await _fournisseurServ.ModifierAsync(idGroupe, _idPublicFournisseur, builder, _fournisseurImport.ListeIdPublicProduit, _fournisseurImport.ListeIdPublicIngredient);
+        bool ok = await _fournisseurServ.ModifierAsync(
+            idGroupe, 
+            _idPublicFournisseur, 
+            builder, 
+            _fournisseurImport.ListeIdPublicProduit,
+            _fournisseurImport.ListeIdPublicIngredient
+        );
 
         return ok ? Results.NoContent() : Results.NotFound();
     }
@@ -126,7 +132,7 @@ public static class FournisseurRoute
     async static Task<IResult> ArchiverAsync(
         HttpContext _httpContext,
         [FromServices] IFournisseurService _fournisseurServ,
-        [FromRoute(Name = "idPublicFournisseur")] string _idPublicFournisseur
+        [FromRoute(Name = "idPublicFournisseur")] Guid _idPublicFournisseur
     )
     {
         int idGroupe = _httpContext.RecupererIdGroupe();

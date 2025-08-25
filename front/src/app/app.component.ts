@@ -10,11 +10,10 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { environment } from '../environments/environment';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [MatListModule, RouterLink, RouterLinkActive, RouterOutlet, MatSidenavModule, MatToolbarModule, MatButtonModule, MatIconModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [MatListModule, RouterLink, RouterLinkActive, RouterOutlet, MatSidenavModule, MatToolbarModule, MatButtonModule, MatIconModule],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent 
 {
@@ -33,7 +32,7 @@ export class AppComponent
 
   protected EstConnecter(): boolean
   {
-    return true//environment.utilisateur != undefined && environment.utilisateur != null;
+    return environment.utilisateur != undefined && environment.utilisateur != null;
   }
 
   private BreakpointChanges(): void 

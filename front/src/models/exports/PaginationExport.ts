@@ -4,3 +4,12 @@ export type PaginationExport =
     nbParPage: number,
     thermeRecherche?: string
 }
+
+export type PaginationFiltreLivraisonExport = PaginationExport & 
+{
+    dateDebut?: Date | null,
+    dateFin?: Date | null,
+
+    idPublicClient?: string | null
+    idPublicConducteur?: string | null
+}

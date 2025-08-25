@@ -7,8 +7,9 @@ public interface IJwtService
     /// Generer un JWT
     /// </summary>
     /// <param name="_tabClaim">Infos contenu dans le JWT</param>
+    /// <param name="_tempsValide">Temps de validité du JWT (Defaut 1 heure)</param>
     /// <returns>Renvoie le JWT</returns>
-    string Generer(Claim[] _tabClaim);
+    string Generer(Claim[] _tabClaim, TimeSpan? _tempsValide = null);
 
     /// <summary>
     /// Generer un JWT pour 2fa

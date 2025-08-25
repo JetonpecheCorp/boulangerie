@@ -1,0 +1,34 @@
+<div class="calendrier-body">
+    @for (element of LISTE_JOUR_SEMAINE; track $index) 
+    {
+        <div class="element jour-semaine">
+            @if(estPetiteTaille())
+            {
+                {{ element.abreviation }}
+            }
+            @else 
+            {
+                {{ element.nom }}
+            }
+        </div>
+    }
+
+    @for (element of listeJourMois(); track $index) 
+    {
+        <div [class.vide]="!element.date" class="element" (click)="ElementClicker(element.date)">
+            @if(element.date)
+            {
+                @if(estPetiteTaille())
+                {
+                    {{ element.date.substring(0, 5) }} <br>
+                    Cmd(s): {{ element.nbCommande }}
+                }
+                @else 
+                {
+                    {{ element.date }} <br>
+                    Commande(s): {{ element.nbCommande }}
+                }
+            }
+        </div>
+    }
+</div>

@@ -1,4 +1,7 @@
-﻿namespace Api.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Api.Models;
 
 public partial class Vehicule
 {
@@ -7,6 +10,8 @@ public partial class Vehicule
     public int IdGroupe { get; set; }
 
     public Guid IdPublic { get; set; }
+
+    public string Nom { get; set; } = null!;
 
     public string Immatriculation { get; set; } = null!;
 

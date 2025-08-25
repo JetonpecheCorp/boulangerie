@@ -1,6 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { InputComponent } from "../../components/input/input.component";
-import { ButtonComponent } from "../../components/button/button.component";
+import { Component, inject, signal } from '@angular/core';
+import { InputComponent } from "@component/input/input.component";
+import { ButtonComponent } from "@component/button/button.component";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,11 +19,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
-  selector: 'app-ajouter-modifier-fournisseur',
-  standalone: true,
-  imports: [MatIconModule, MatChipsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, InputComponent, ButtonComponent],
-  templateUrl: './ajouter-modifier-fournisseur.component.html',
-  styleUrl: './ajouter-modifier-fournisseur.component.scss'
+    selector: 'app-ajouter-modifier-fournisseur',
+    imports: [MatIconModule, MatChipsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, InputComponent, ButtonComponent],
+    templateUrl: './ajouter-modifier-fournisseur.component.html',
+    styleUrl: './ajouter-modifier-fournisseur.component.scss'
 })
 export class AjouterModifierFournisseurComponent 
 {

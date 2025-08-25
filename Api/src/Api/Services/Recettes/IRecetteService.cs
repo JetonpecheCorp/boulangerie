@@ -1,5 +1,4 @@
-﻿using Api.Extensions;
-using Api.Models;
+﻿using Api.Models;
 using Api.ModelsExports.Recettes;
 
 namespace Api.Services.Recettes;
@@ -12,7 +11,7 @@ public interface IRecetteService
     /// <param name="_idPublicProduit">id public du produit conserné</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns></returns>
-    Task<RecetteExport[]> ListerAsync(string _idPublicProduit, int _idGroupe);
+    Task<RecetteExport[]> ListerAsync(Guid _idPublicProduit, int _idGroupe);
 
     /// <summary>
     /// Ajouter une recette
@@ -30,8 +29,8 @@ public interface IRecetteService
     /// <param name="_quantite">nouvelle quantite</param>
     /// <returns><see langword="true"/> si modifié, sinon <see langword="false"/></returns>
     Task<bool> ModifierQteAsync(
-        string _idPublicProduit, 
-        string _idPublicIngredient, 
+        Guid _idPublicProduit, 
+        Guid _idPublicIngredient, 
         decimal _quantite,
         int _idGroupe
     );
@@ -43,7 +42,7 @@ public interface IRecetteService
     /// <param name="_idPublicIngredient">ingredient conserné</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns><see langword="true"/> si supprimé, sinon <see langword="false"/></returns>
-    Task<bool> SupprimerAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe);
+    Task<bool> SupprimerAsync(Guid _idPublicProduit, Guid _idPublicIngredient, int _idGroupe);
 
     /// <summary>
     /// Verifier que l'ingredient et le produit existe dans la recette
@@ -52,5 +51,5 @@ public interface IRecetteService
     /// <param name="_idPublicIngredient">id public d l'ingredient</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns><see langword="true"/> si existe, sinon <see langword="false"/></returns>
-    Task<bool> ExisteAsync(string _idPublicProduit, string _idPublicIngredient, int _idGroupe);
+    Task<bool> ExisteAsync(Guid _idPublicProduit, Guid _idPublicIngredient, int _idGroupe);
 }

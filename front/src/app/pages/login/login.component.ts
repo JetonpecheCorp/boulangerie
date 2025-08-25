@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -6,17 +6,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthentificationService } from '@service/Authentification.service'
 import { ThemeService } from '@service/ThemeService.Service';
-import { InputComponent } from "../../components/input/input.component";
+import { InputComponent } from "@component/input/input.component";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { environment } from '../../../environments/environment';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ButtonComponent } from "@component/button/button.component";
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [MatProgressSpinnerModule, MatCardModule, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, InputComponent],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+    selector: 'app-login',
+    imports: [RouterLink, MatProgressSpinnerModule, MatCardModule, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, InputComponent, ButtonComponent],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit
 {
@@ -25,18 +25,18 @@ export class LoginComponent implements OnInit
 
   private authentificationServ = inject(AuthentificationService);
   private serv = inject(ThemeService);
-  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
   ngOnInit(): void 
   {
     this.form = new FormGroup({
-      login: new FormControl<String>("", [Validators.required, Validators.maxLength(10), Validators.email]),
+      login: new FormControl<String>("", [Validators.required, Validators.email]),
       mdp: new FormControl<String>("", [Validators.required])
     });
   }
 
   protected OnConnexion(): void
-  {
+  {    
     if(this.form.invalid || this.btnClicker())
       return;
 
@@ -44,11 +44,16 @@ export class LoginComponent implements OnInit
 
     const FORM = this.form.value;
 
-    this.authentificationServ.Connexion(FORM.login, FORM.mdp).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.authentificationServ.Connexion(FORM.login, FORM.mdp).subscribe({
       next: (retour) =>
       {
-        environment.utilisateur = retour;
         this.btnClicker.set(false);
+        
+        retour.role = JSON.parse(atob(retour.jwt.split(".")[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        
+        environment.utilisateur = retour;        
+        this.router.navigateByUrl("/planning");
+        localStorage.setItem("utilisateur", JSON.stringify(environment.utilisateur));
       },
       error: () => this.btnClicker.set(false)
     });

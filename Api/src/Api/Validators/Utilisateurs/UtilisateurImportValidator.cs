@@ -19,7 +19,7 @@ public class UtilisateurImportValidator: AbstractValidator<UtilisateurImport>
             if (string.IsNullOrWhiteSpace(info.Mail))
                 context.AddFailure("Mail", "Le mail ne peux pas être vide");
 
-            if (await _utilisateurServ.MailExisteAsync(info.Mail, info.IdGroupe))
+            if (await _utilisateurServ.MailExisteAsync(info.Mail))
                 context.AddFailure("Mail", "Le mail existe déjà");
         });
 

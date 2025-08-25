@@ -1,0 +1,11 @@
+.container-flex
+{
+    display: flex;
+    gap: 5px;
+}
+
+app-calendrier-jour
+{
+    display: inline;
+    width: calc(100% / 7);
+}

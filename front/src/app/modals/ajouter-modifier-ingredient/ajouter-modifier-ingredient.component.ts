@@ -9,11 +9,10 @@ import { Ingredient } from '@model/Ingredient';
 import { ButtonComponent } from "@component/button/button.component";
 
 @Component({
-  selector: 'app-ajouter-modifier-ingredient',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
-  templateUrl: './ajouter-modifier-ingredient.component.html',
-  styleUrl: './ajouter-modifier-ingredient.component.scss'
+    selector: 'app-ajouter-modifier-ingredient',
+    imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
+    templateUrl: './ajouter-modifier-ingredient.component.html',
+    styleUrl: './ajouter-modifier-ingredient.component.scss'
 })
 export class AjouterModifierIngredientComponent implements OnInit
 {

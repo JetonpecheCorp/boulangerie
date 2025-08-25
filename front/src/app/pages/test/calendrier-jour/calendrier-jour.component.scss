@@ -1,0 +1,37 @@
+mat-card
+{
+    width: 100%
+}
+
+mat-card-header
+{
+    background-color: var(--sys-primary);
+    color: var(--sys-on-primary);
+    display: block;
+    text-align: center;
+    border-top-left-radius: var(--mat-card-outlined-container-shape, var(--mat-app-corner-medium));
+    border-top-right-radius: var(--mat-card-outlined-container-shape, var(--mat-app-corner-medium));
+    padding: 0;
+}
+
+mat-card-content, mat-card-header
+{
+    padding: 5px;
+}
+
+.element
+{
+    position: relative;
+
+    .btnsAction
+    {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+    }
+
+    &:not(:last-child)
+    {
+        border-bottom: 1px solid black;
+    }
+}

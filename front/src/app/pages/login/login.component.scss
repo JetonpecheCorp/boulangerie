@@ -7,14 +7,29 @@
 
 .cardConnexion
 {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* décalage de 50% de sa propre taille */
-    max-width: 500px;
+    margin-left: 30%;
+    margin-right: 30%;
 }
 
 .padding
 {
     padding: 16px;
+}
+
+@media screen and (max-width: 768px)
+{
+    .cardConnexion
+    {
+        margin-left: 20%;
+        margin-right: 20%;
+    }
+}
+
+@media screen and (max-width: 426px)
+{
+    .cardConnexion
+    {
+        margin-left: 0;
+        margin-right: 0;
+    }
 }

@@ -1,0 +1,38 @@
+.calendrier-header
+{
+    display: flex;
+}
+
+.calendrier-body
+{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-auto-rows: 1fr;
+}
+
+.jour-semaine
+{
+    background-color: var(--sys-primary);
+    color: var(--sys-on-primary);
+    font-size: 1.5em;
+    cursor: default !important;
+}
+
+.element
+{
+    text-align: center;
+    border: 1px solid black;
+    height: 70px;
+    cursor: pointer;
+
+    &.vide
+    {
+        cursor: default !important;
+    }
+    
+    &:hover:not(.jour-semaine, .vide)
+    {
+        background-color: lightgray;
+    }
+}

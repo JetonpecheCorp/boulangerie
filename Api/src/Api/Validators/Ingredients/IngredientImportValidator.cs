@@ -16,7 +16,7 @@ public class IngredientImportValidator: AbstractValidator<IngredientImport>
         {
             if(x.Mode == Enums.EModeImport.Modifier)
             {
-                if (string.IsNullOrEmpty(x.IdPublic))
+                if (x.IdPublic == Guid.Empty)
                     context.AddFailure("IdPublic", "IdPublic ne peux pas être null ou vide");
             }
         });

@@ -10,4 +10,5 @@ public sealed record ConnexionExport
 }
 
 [JsonSerializable(typeof(ConnexionExport))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class ConnexionExportContext: JsonSerializerContext { }

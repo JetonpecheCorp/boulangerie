@@ -22,7 +22,7 @@
                 <mat-icon>{{ mdpVisible() ? "visibility_off" : "visibility" }}</mat-icon>
             </button>
         }
-        @else if(type() == "text" && maxLength() > 0)
+        @else if((type() == "text" || type() == "email" || type() == "phone") && maxLength() > 0)
         {
             <mat-hint align="end">{{ controle().value ? controle().value.length : 0 }} / {{ maxLength() }}</mat-hint>
         }
@@ -38,6 +38,14 @@
         @else if (controle().hasError("min")) 
         {
             <mat-error>La valeur minimum est de <strong>{{ controle().getError('min').min }}</strong></mat-error>
+        }
+        @else if (controle().hasError("minlength")) 
+        {
+            <mat-error>Doit comporter au minumum <strong>{{ controle().getError('minlength').requiredLength }} caractères</strong></mat-error>
+        }
+        @else if(estInputMdp && controle().hasError("pattern"))
+        {
+            <mat-error>Le mot de passe doit être composé de <strong>1 majuscule, 1 minuscule, 1 chiffre et un caractère spécial (#?!&#64;$%^&*-_=+;.,§£§)</strong></mat-error>
         }
     </mat-form-field>
 }

@@ -1,0 +1,30 @@
+<mat-dialog-content class="mat-typography">
+    <div>
+        <mat-form-field>
+            <mat-label>Filtre par status</mat-label>
+            <mat-select (selectionChange)="FiltrerParStatus($event.value)">
+                <mat-option [value]="eStatusCommande.Tout">
+                    {{ ConvertionEnumCommande(eStatusCommande.Tout) }}
+                </mat-option>
+                <mat-option [value]="eStatusCommande.Valider">
+                    {{ ConvertionEnumCommande(eStatusCommande.Valider) }}
+                </mat-option>
+                <mat-option [value]="eStatusCommande.EnAttenteValidation">
+                    {{ ConvertionEnumCommande(eStatusCommande.EnAttenteValidation) }}
+                </mat-option>
+                <mat-option [value]="eStatusCommande.Annuler">
+                    {{ ConvertionEnumCommande(eStatusCommande.Annuler) }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <br>
+
+    <app-calendrier-jour [dateJour]="info.date" 
+                         [listeCommande]="listeCommandeFiltrer()" />
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-flat-button (click)="Fermer()">Fermer</button>&nbsp;
+
+    <app-button label="Ajouter" (onClick)="OuvrirModalAjouterCommande()" />
+</mat-dialog-actions>

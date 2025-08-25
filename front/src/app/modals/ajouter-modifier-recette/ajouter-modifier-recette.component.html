@@ -29,9 +29,13 @@
   
   <app-button (onClick)="Valider(false)"
               [btnClicker]="btnClicker()"
-              label="ajouter" />&nbsp;
+              [label]="modeModifier() ? 'Modifier' : 'Ajouter'" />&nbsp;
 
-  <app-button (onClick)="Valider(true)"
-              [btnClicker]="btnClicker()"
-              label="ajouter et fermer" />
+  @if (!modeModifier()) 
+  {
+    <app-button (onClick)="Valider(true)"
+                [btnClicker]="btnClicker()"
+                label="Ajouter et fermer" />
+  }
+
 </mat-dialog-actions>

@@ -17,11 +17,10 @@ import { RecetteExport } from '@model/exports/RecetteExport';
 import { Recette } from '@model/Recette';
 
 @Component({
-  selector: 'app-ajouter-modifier-recette',
-  standalone: true,
-  imports: [MatInputModule, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatDialogModule, MatListModule, MatButtonModule, InputComponent, ButtonComponent],
-  templateUrl: './ajouter-modifier-recette.component.html',
-  styleUrl: './ajouter-modifier-recette.component.scss'
+    selector: 'app-ajouter-modifier-recette',
+    imports: [MatInputModule, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatDialogModule, MatListModule, MatButtonModule, InputComponent, ButtonComponent],
+    templateUrl: './ajouter-modifier-recette.component.html',
+    styleUrl: './ajouter-modifier-recette.component.scss'
 })
 export class AjouterModifierRecetteComponent implements OnInit
 {
@@ -56,9 +55,7 @@ export class AjouterModifierRecetteComponent implements OnInit
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (valeur?: string) =>
-        {
-          console.log(valeur);
-          
+        {          
           let liste = this.dataSource()
             .filter(option => option.nom.toLowerCase().includes(valeur?.toLocaleLowerCase() || ''));
 

@@ -22,7 +22,7 @@ public interface IIngredientService
     /// <param name="_idPublicIngredient">id public de id ingredient conserné</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns>id ingredient, sinon 0</returns>
-    Task<int> RecupererIdAsync(string _idPublicIngredient, int _idGroupe);
+    Task<int> RecupererIdAsync(Guid _idPublicIngredient, int _idGroupe);
 
     /// <summary>
     /// Ajouter un nouvelle ingredient
@@ -38,7 +38,7 @@ public interface IIngredientService
     /// <param name="_idPublic">id public de l'ingredient</param>
     /// <param name="_builder">les infos modifier</param>
     /// <returns><see langword="true"/> si modifié, sinon <see langword="false"/></returns>
-    Task<bool> ModifierAsync(int _idGroupe, string _idPublic, SetPropertyBuilder<Ingredient> _builder);
+    Task<bool> ModifierAsync(int _idGroupe, Guid _idPublic, SetPropertyBuilder<Ingredient> _builder);
 
     /// <summary>
     /// Verifier que l'ingredient existe dans le groupe
@@ -46,5 +46,5 @@ public interface IIngredientService
     /// <param name="_idPublicIngredient">id public du produit</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns><see langword="true"/> si existe, sinon <see langword="false"/></returns>
-    Task<bool> ExisteAsync(string _idPublicIngredient, int _idGroupe);
+    Task<bool> ExisteAsync(Guid _idPublicIngredient, int _idGroupe);
 }

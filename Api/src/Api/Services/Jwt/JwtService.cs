@@ -15,7 +15,7 @@ public sealed class JwtService : IJwtService
         Issuer = _issuer;
     }
 
-    public string Generer(Claim[] _tabClaim)
+    public string Generer(Claim[] _tabClaim, TimeSpan? _tempsValide = null)
     {
         var gestionnaireJwt = new JsonWebTokenHandler();
 
@@ -32,6 +32,7 @@ public sealed class JwtService : IJwtService
             // OBLIGATOIRE => qui est l'émeteur
             // en général mettre URL
             Issuer = Issuer,
+            Expires = DateTime.Now.Add(_tempsValide ?? TimeSpan.FromHours(1)),
 
             SigningCredentials = new SigningCredentials(cle, SecurityAlgorithms.RsaSha256)
         });

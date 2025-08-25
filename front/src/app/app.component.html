@@ -9,13 +9,6 @@
 
   <span>Boulangerie</span>
   <span class="spacer"></span>
-  <button mat-icon-button aria-label="Example icon-button with heart icon">
-    <mat-icon>favorite</mat-icon>
-  </button>
-
-  <button mat-icon-button aria-label="Example icon-button with share icon">
-    <mat-icon>share</mat-icon>
-  </button>
 </mat-toolbar>
 
 <mat-drawer-container 
@@ -28,9 +21,11 @@
       <a mat-list-item routerLink="categorie" routerLinkActive="active">Catégorie</a>
       <a mat-list-item routerLink="vehicule" routerLinkActive="active">Véhicule</a>
       <a mat-list-item routerLink="fournisseur" routerLinkActive="active">Fournisseur</a>
-      <a mat-list-item>Client</a>
-      <a mat-list-item>Employé</a>
-      <a mat-list-item>Planning</a>
+      <a mat-list-item routerLink="client" routerLinkActive="active">Client</a>
+      <a mat-list-item routerLink="employe" routerLinkActive="active">Employé</a>
+      <a mat-list-item routerLink="groupe" routerLinkActive="active">Groupe</a>
+      <a mat-list-item routerLink="planning" routerLinkActive="active">Planning</a>
+      <a mat-list-item routerLink="livraison" routerLinkActive="active">Livraison</a>
     </mat-nav-list>
   </mat-drawer>
   <mat-drawer-content [class.open]="drawer.opened && drawerMode == 'push'" class="marginTopDrawer">

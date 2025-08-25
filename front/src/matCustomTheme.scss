@@ -1,15 +1,18 @@
 @use '@angular/material' as mat;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Define the theme object.
 $angular-material-theming-css-vars-theme: mat.define-theme(
   (
     color: (
-      use-system-variables: true
+      use-system-variables: true,
+    system-variables-prefix: sys,
     ),
     typography: (
-      use-system-variables: true
+      use-system-variables: true,
+    system-variables-prefix: sys,
     ),
     density: (
       scale: 0,

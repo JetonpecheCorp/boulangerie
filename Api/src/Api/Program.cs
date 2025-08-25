@@ -3,13 +3,22 @@ using Api.Extensions;
 using Api.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Services.Mail;
 using System.Security.Cryptography;
+
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
 string cheminCleRsa = builder.Configuration.GetValue<string>("cheminCleRsa")!;
 
 RSA rsa = RSA.Create();
+
+if(!Directory.Exists("Rsa"))
+    Directory.CreateDirectory("Rsa");
 
 // creer la clé une seule fois
 if (!File.Exists(cheminCleRsa))
@@ -23,8 +32,27 @@ if (!File.Exists(cheminCleRsa))
 rsa.ImportRSAPrivateKey(File.ReadAllBytes(cheminCleRsa), out _);
 
 builder.Services.AddAuthorizationBuilder()
-    .AddDefaultPolicy(NomPolicyJwt.DefautClient, x => x.RequireRole("client").RequireClaim("idUtilisateur").RequireClaim("idGroupe"))
-    .AddPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur"));
+    .AddDefaultPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur"))
+    .AddPolicy(NomPolicyJwt.DefautClient, x => x.RequireRole("client").RequireClaim("idUtilisateur").RequireClaim("idGroupe"))
+    .AddPolicy(NomPolicyJwt.ResetMdp, x => x.RequireClaim("mdp-oublie").RequireClaim("idUtilisateur").RequireClaim("idGroupe"));
+
+builder.Services.AddHealthChecks();
+
+// add prometheus exporter
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(opt =>
+
+        opt
+            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(builder.Environment.ApplicationName))
+            .AddMeter("boulangerie")
+            .AddAspNetCoreInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddProcessInstrumentation()
+            .AddOtlpExporter(opts =>
+            {
+                opts.Endpoint = new Uri("http://otel-collector:4317");
+            })
+    );
 
 builder.Services.AjouterSecuriteJwt(rsa);
 builder.Services.AddDbContext<BoulangerieContext>(x =>
@@ -44,38 +72,40 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AjouterSwagger();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-builder.Services.AddCors(x => x.AddDefaultPolicy(y => y.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+builder.Services.AddCors(x => x.AddDefaultPolicy(y => y.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("Content-Disposition")));
 builder.Services.AjouterService(rsa);
 builder.Services.AjouterOutputCache();
+builder.Services.AjouterRateLimiter();
 
-//builder.Services.AddSingleton<IMailService>(new MailService(new MailOptions
-//{
-//    Expediteur = "",
-//    Mdp = "",
-//    NomSmtp = "smtp.gmail.com",
-//    NumeroPortSmtp = 587
-//}));
-
+builder.Services.AddSingleton<IMailService>(new MailService(new MailOptions
+{
+    Expediteur = "nicolas.np63@gmail.com",
+    Mdp = "cewy qbhb crqd mvsi",
+    NomSmtp = "smtp.gmail.com",
+    NumeroPortSmtp = 587
+}));
 
 var app = builder.Build();
 
 app.UseCors();
+app.UseHttpsRedirection();
+app.MapHealthChecks("api/sante");
+
 // l'ordre est important
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
 
     // cacher la liste des models import / export dans swagger
     app.UseSwaggerUI(x => x.DefaultModelsExpandDepth(-1));
-}
+
 
 app.UseOutputCache();
 app.AjouterRouteAPI();
+app.UseRateLimiter();
 
 app.Run();
 
-// Scaffold-DbContext "server=localhost;database=Boulangerie;User=root;Pwd=root;GuidFormat=Char36" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
+// Scaffold-DbContext "server=mysql;database=Boulangerie;User=root;Pwd=root;GuidFormat=Char36" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force

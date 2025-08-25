@@ -1,4 +1,7 @@
-﻿namespace Api.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Api.Models;
 
 public partial class Utilisateur
 {
@@ -22,5 +25,5 @@ public partial class Utilisateur
 
     public virtual Groupe IdGroupeNavigation { get; set; } = null!;
 
-    public virtual ICollection<PlanningProduitUtilisateur> PlanningProduitUtilisateurs { get; set; } = new List<PlanningProduitUtilisateur>();
+    public virtual ICollection<Livraison> Livraisons { get; set; } = new List<Livraison>();
 }

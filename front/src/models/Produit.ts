@@ -14,3 +14,10 @@ export type Produit =
     tva: Tva,
     categorie: Categorie
 }
+
+export type ProduitLeger = 
+{
+    idPublic: string,
+    nom: string,
+    prixHt: number
+}

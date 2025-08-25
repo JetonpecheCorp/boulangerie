@@ -1,0 +1,8 @@
+<div class="container-flex">
+
+    @for (element of listeJourSemaine(); track $index) 
+    {
+        <app-calendrier-jour [dateJour]="element.date" 
+                             [listeCommande]="listeCommande()" />
+    }
+</div>

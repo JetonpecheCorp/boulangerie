@@ -27,11 +27,10 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new ProduitExport
             {
-                IdPublic = x.IdPublic.ToString("D"),
+                IdPublic = x.IdPublic,
                 Nom = x.Nom,
                 CodeInterne = x.CodeInterne,
                 Stock = x.Stock,
@@ -73,13 +72,50 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
         return pagination;
     }
 
-    public async Task<int> RecupererIdAsync(string _idPublicProduit, int _idGroupe)
+    public async Task<PaginationExport<ProduitLegerExport>> ListerLegerAsync(PaginationImport _pagination, int _idGroupe)
+    {
+        var requete = _context.Produits.Where(x => x.IdGroupe == _idGroupe);
+
+        if (_pagination.ThermeRecherche is not null)
+        {
+#pragma warning disable CS8602 // Déréférencement d'une éventuelle référence null.
+            requete = requete.Where(x =>
+                x.Nom.Contains(_pagination.ThermeRecherche) || x.CodeInterne.Contains(_pagination.ThermeRecherche)
+            );
+#pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null.
+        }
+
+        requete = requete.OrderBy(x => x.Nom);
+
+        int total = await requete.CountAsync();
+
+        var liste = await requete
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
+            .Select(x => new ProduitLegerExport
+            {
+                IdPublic = x.IdPublic,
+                Nom = x.Nom,
+                PrixHt = x.PrixHt
+            }).ToArrayAsync();
+
+        PaginationExport<ProduitLegerExport> pagination = new()
+        {
+            NumPage = _pagination.NumPage,
+            NbParPage = _pagination.NbParPage,
+            Total = total,
+            Liste = liste
+        };
+
+        return pagination;
+    }
+
+    public async Task<int> RecupererIdAsync(Guid _idPublicProduit, int _idGroupe)
     {
         int id = 0;
 
-        if (Guid.TryParse(_idPublicProduit, out Guid idPublicProduit))
+        if (_idPublicProduit != Guid.Empty)
         {
-            id = await _context.Produits.Where(x => x.IdPublic == idPublicProduit && x.IdGroupe == _idGroupe)
+            id = await _context.Produits.Where(x => x.IdPublic == _idPublicProduit && x.IdGroupe == _idGroupe)
                     .Select(x => x.Id)
                     .FirstOrDefaultAsync();
         }
@@ -95,25 +131,25 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
         return nb > 0;
     }
 
-    public async Task<bool> ModifierAsync(int _idGroupe, string _idPublic, SetPropertyBuilder<Produit> _builder)
+    public async Task<bool> ModifierAsync(int _idGroupe, Guid _idPublic, SetPropertyBuilder<Produit> _builder)
     {
         int nb = 0;
 
-        if(Guid.TryParse(_idPublic, out Guid idPublic))
+        if(_idPublic != Guid.Empty)
         {
             nb = await _context.Produits
-                .Where(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublic)
+                .Where(x => x.IdGroupe == _idGroupe && x.IdPublic == _idPublic)
                 .ExecuteUpdateAsync(_builder.SetPropertyCalls);
         }
 
         return nb > 0;
     }
 
-    public async Task<bool> ExisteAsync(string _idPublicProduit, int _idGroupe)
+    public async Task<bool> ExisteAsync(Guid _idPublicProduit, int _idGroupe)
     {
-        if(Guid.TryParse(_idPublicProduit, out Guid idPublicProduit))
-            return await _context.Produits.AnyAsync(x => x.IdPublic == idPublicProduit);
+        if(_idPublicProduit == Guid.Empty)
+            return false;
 
-        return false;
+        return await _context.Produits.AnyAsync(x => x.IdPublic == _idPublicProduit);
     }
 }

@@ -4,8 +4,8 @@ namespace Api.ModelsImports.Recettes;
 
 public record RecetteModifierQteImport
 {
-    public required string IdPublicIngredient { get; init; }
-    public required string IdPublicProduit { get; init; }
+    public required Guid IdPublicIngredient { get; init; }
+    public required Guid IdPublicProduit { get; init; }
     public decimal Quantite { get; init; }
 }
 

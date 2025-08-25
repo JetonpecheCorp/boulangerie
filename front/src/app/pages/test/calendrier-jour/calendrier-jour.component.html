@@ -1,0 +1,85 @@
+<mat-card appearance="outlined">
+    <mat-card-header>
+        <p style="margin-bottom: 5px;"><b>{{ jourSemaine().nom }}</b> <br> {{ jourSemaine().date.toLocaleDateString() }}</p>
+
+        <!-- btn vue alternative -->
+        <button mat-mini-fab (click)="
+            vueAlternatifActiver.set(!vueAlternatifActiver()); 
+            Alternatif()
+        "
+        matTooltip="Vue Alternative"
+        aria-label="Bouton vuee alternative">
+            <mat-icon>compare_arrows</mat-icon>
+        </button>&nbsp;
+
+        <!-- btn programmer les livraisons -->
+        <button mat-mini-fab 
+                (click)="OuvrirModalProgrammerLivraison()"
+                matTooltip="Programmer les livraisons"
+                aria-label="Bouton programmer les livraisons">
+            <mat-icon>local_shipping</mat-icon>
+        </button>
+    </mat-card-header>
+
+    @if(vueAlternatifActiver())
+    {
+        @for (element of listeCommandeAlternatif(); track element.idPublic) 
+        {
+            <mat-card-content class="element">
+                <p>
+                    <b>Nom:</b> {{ element.nom }} <br>
+                    <b>Quantité:</b> {{ element.quantite }}
+                </p>
+            </mat-card-content>
+        }
+    }
+    @else 
+    {
+        @for (element of listeCommande(); track element.numero)
+        {
+            <mat-card-content class="element" (click)="OuvrirModalModifierCommande(element)">
+                <p>
+                    <b>Nom:</b> {{ element.client == null ? "Interne" : element.client.nom }} <br>
+                    <b>N°</b> {{ element.numero }} <br>
+                    <b>Status:</b> {{ element.nomStatus }}
+                </p>
+    
+                <ul style="padding-left: 25px;">
+                    @for (element2 of element.listeProduit; track element2.idPublic) 
+                    {
+                        <li>{{ element2.nom }} X{{ element2.quantite }}</li>
+                    }
+                </ul>
+
+                <div class="btnsAction">
+                    @if(element.status != eStatusCommande.Valider)
+                    {
+                        <button mat-icon-button stop-propagation 
+                                matTooltip="Valider la commande"
+                                (click)="ValiderCommande(element.numero)">
+                            <mat-icon>check_circle</mat-icon>
+                        </button> 
+                        <br>
+                    }
+
+                    @if(element.status != eStatusCommande.Annuler && element.status != eStatusCommande.Livrer)
+                    {
+                        <button mat-icon-button stop-propagation
+                                matTooltip="Invalider la commande" 
+                                (click)="AnnulerCommande(element.numero)">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                        <br>
+                    }
+
+                    <button mat-icon-button stop-propagation 
+                            matTooltip="Télécharger la facture de la commande"
+                            (click)="TelechargerFacture(element.numero)">
+                        <mat-icon>download</mat-icon>
+                    </button>
+                </div>
+            </mat-card-content>
+        }
+    }
+
+</mat-card>

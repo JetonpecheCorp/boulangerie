@@ -9,8 +9,8 @@ public sealed record FournisseurImport
     public string? Telephone { get; init; }
     public string? Mail { get; init; }
 
-    public string[] ListeIdPublicIngredient { get; init; } = [];
-    public string[] ListeIdPublicProduit { get; init; } = [];
+    public Guid[] ListeIdPublicIngredient { get; init; } = [];
+    public Guid[] ListeIdPublicProduit { get; init; } = [];
 }
 
 [JsonSerializable(typeof(FournisseurImport))]

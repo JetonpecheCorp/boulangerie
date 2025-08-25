@@ -45,8 +45,7 @@ public class CategorieService(BoulangerieContext _context): ICategorieService
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_pagination.NumPage - 1) * _pagination.NbParPage)
-            .Take(_pagination.NbParPage)
+            .Paginer(_pagination.NumPage, _pagination.NbParPage)
             .Select(x => new CategorieExport
             {
                 IdPublic = x.IdPublic.ToString("D"),
@@ -63,12 +62,12 @@ public class CategorieService(BoulangerieContext _context): ICategorieService
 
         return pagination;
     }
-    public async Task<int> RecupererIdAsync(string _idPublicCategorie, int _idGroupe)
+    public async Task<int> RecupererIdAsync(Guid _idPublicCategorie, int _idGroupe)
     {
-        if (Guid.TryParse(_idPublicCategorie, out Guid idPublic))
+        if (_idPublicCategorie != Guid.Empty)
         {
             return await _context.Categories
-                .Where(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublic)
+                .Where(x => x.IdGroupe == _idGroupe && x.IdPublic == _idPublicCategorie)
                 .Select(x => x.Id)
                 .FirstOrDefaultAsync();
         }
@@ -91,13 +90,13 @@ public class CategorieService(BoulangerieContext _context): ICategorieService
         return nb > 0 ? categorie.IdPublic : Guid.Empty;
     }
 
-    public async Task<bool> ModifierAsync(string _nom, string _idPublicCategorie, int _idGroupe)
+    public async Task<bool> ModifierAsync(string _nom, Guid _idPublicCategorie, int _idGroupe)
     {
-        if (Guid.TryParse(_idPublicCategorie, out Guid idPublic))
+        if (_idPublicCategorie != Guid.Empty)
         {
 
             int nb = await _context.Categories
-                .Where(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublic)
+                .Where(x => x.IdGroupe == _idGroupe && x.IdPublic == _idPublicCategorie)
                 .ExecuteUpdateAsync(x => x.SetProperty(y => y.Nom, _nom.XSS()));
 
             return nb > 0;
@@ -106,11 +105,11 @@ public class CategorieService(BoulangerieContext _context): ICategorieService
         return false;
     }
 
-    public async Task<bool> ExisteAsync(string _idPublicCategorie, int _idGroupe)
+    public async Task<bool> ExisteAsync(Guid _idPublicCategorie, int _idGroupe)
     {
-        if (Guid.TryParse(_idPublicCategorie, out Guid idPublic))
-            return await _context.Categories.AnyAsync(x => x.IdGroupe == _idGroupe && x.IdPublic == idPublic);
+        if (_idPublicCategorie == Guid.Empty)
+            return false;
 
-        return false;
+        return await _context.Categories.AnyAsync(x => x.IdGroupe == _idGroupe && x.IdPublic == _idPublicCategorie);
     }
 }

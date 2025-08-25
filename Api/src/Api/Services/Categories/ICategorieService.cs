@@ -27,7 +27,7 @@ public interface ICategorieService
     /// <param name="_idPublicCategorie">id public de id categorie conserné</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns>id categorie, sinon 0</returns>
-    Task<int> RecupererIdAsync(string _idPublicCategorie, int _idGroupe);
+    Task<int> RecupererIdAsync(Guid _idPublicCategorie, int _idGroupe);
 
     /// <summary>
     /// Ajouter une categorie
@@ -44,7 +44,7 @@ public interface ICategorieService
     /// <param name="_idPublicCategorie">id oublic de la categorie conserné</param>
     /// <param name="_idGroupe">id groupe conserné</param>
     /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
-    Task<bool> ModifierAsync(string _nom, string _idPublicCategorie, int _idGroupe);
+    Task<bool> ModifierAsync(string _nom, Guid _idPublicCategorie, int _idGroupe);
 
     /// <summary>
     /// Vérifier que la catégorie exite
@@ -52,5 +52,5 @@ public interface ICategorieService
     /// <param name="_idPublicCategorie">id public categorie a vérifier</param>
     /// <param name="_idGroupe">id groupe de la categorie a vérifier</param>
     /// <returns><see langword="true"/> si existe, sinon <see langword="false"/></returns>
-    Task<bool> ExisteAsync(string _idPublicCategorie, int _idGroupe);
+    Task<bool> ExisteAsync(Guid _idPublicCategorie, int _idGroupe);
 }

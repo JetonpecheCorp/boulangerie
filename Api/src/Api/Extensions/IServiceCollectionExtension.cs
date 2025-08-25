@@ -1,7 +1,11 @@
 ﻿using Api.Services.Categories;
+using Api.Services.Clients;
+using Api.Services.Commandes;
 using Api.Services.Fournisseurs;
 using Api.Services.Groupes;
+using Api.Services.Imports;
 using Api.Services.Ingredients;
+using Api.Services.Livraisons;
 using Api.Services.Produits;
 using Api.Services.Recettes;
 using Api.Services.Tvas;
@@ -18,6 +22,7 @@ using Services.Mdp;
 using Services.QrCodes;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Threading.RateLimiting;
 
 namespace Api.Extensions;
 
@@ -33,7 +38,11 @@ public static class IServiceCollectionExtension
             .AddScoped<ICategorieService, CategorieService>()
             .AddScoped<IProduitService, ProduitService>()
             .AddScoped<IVehiculeService, VehiculeService>()
-            .AddScoped<IFournisseurService, FournisseurService>();
+            .AddScoped<IFournisseurService, FournisseurService>()
+            .AddScoped<ICommandeService, CommandeService>()
+            .AddScoped<IClientService, ClientService>()
+            .AddScoped<ILivraisonService, LivraisonService>()
+            .AddScoped<IImportService, ImportService>();
 
         _service.AddSingleton<IJwtService>(new JwtService(_rsa, ""))
             .AddSingleton<IMdpService, MdpService>();
@@ -125,6 +134,28 @@ public static class IServiceCollectionExtension
                     },
                     new string[]{}
                 }
+            });
+        });
+
+        return _service;
+    }
+
+    public static IServiceCollection AjouterRateLimiter(this IServiceCollection _service)
+    {
+        _service.AddRateLimiter(opt =>
+        {
+            opt.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            opt.AddPolicy("connexion-limiteur", httpContext =>
+            {
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    httpContext.Connection.RemoteIpAddress?.ToString(),
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 3,
+                        Window = TimeSpan.FromSeconds(10)
+                    }
+                );
             });
         });
 

@@ -17,11 +17,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { ButtonComponent } from "@component/button/button.component";
 
 @Component({
-  selector: 'app-ajouter-modifier-produit',
-  standalone: true,
-  imports: [MatDialogModule, MatSelectModule, MatIconModule, MatChipsModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
-  templateUrl: './ajouter-modifier-produit.component.html',
-  styleUrl: './ajouter-modifier-produit.component.scss'
+    selector: 'app-ajouter-modifier-produit',
+    imports: [MatDialogModule, MatSelectModule, MatIconModule, MatChipsModule, MatButtonModule, MatFormFieldModule, ReactiveFormsModule, InputComponent, ButtonComponent],
+    templateUrl: './ajouter-modifier-produit.component.html',
+    styleUrl: './ajouter-modifier-produit.component.scss'
 })
 export class AjouterModifierProduitComponent implements OnInit
 {
