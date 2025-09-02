@@ -11,7 +11,7 @@ public class VehiculeService(BoulangerieContext _context) : IVehiculeService
 {
     public async Task<PaginationExport<VehiculeExport>> ListerAsync(PaginationImport _pagination, int _idGroupe)
     {
-        var requete = _context.Vehicules.Where(x => x.IdGroupe == _idGroupe);
+        var requete = _context.Vehicules.Where(x => x.IdGroupe == _idGroupe && !x.EstSupprimer);
 
         if (_pagination.ThermeRecherche is not null)
         {
@@ -82,6 +82,35 @@ public class VehiculeService(BoulangerieContext _context) : IVehiculeService
         }
 
         return false;
+    }
+
+    public async Task<bool> SupprimerAsync(Guid _idPublic, int _idGroupe)
+    {
+        if (_idPublic == Guid.Empty)
+            return false;
+
+        int total = 0;
+
+        bool existe = await _context.Livraisons
+            .AnyAsync(x => 
+                x.IdVehiculeNavigation.IdPublic == _idPublic &&
+                x.IdVehiculeNavigation.IdGroupe == _idGroupe
+            );
+
+        if(existe)
+        {
+            total = await _context.Vehicules
+                .Where(x => x.IdPublic == _idPublic)
+                .ExecuteUpdateAsync(x => x.SetProperty(y => y.EstSupprimer, true));
+        }
+        else
+        {
+            total = await _context.Vehicules
+                .Where(x => x.IdPublic == _idPublic)
+                .ExecuteDeleteAsync();
+        }
+
+        return total > 0;
     }
 
     public async Task<bool> ExisteAsync(Guid _idPublic, int _idGroupe)

@@ -31,6 +31,11 @@ public static class VehiculeRoute
             .ProducesNotFound()
             .ProducesNoContent();
 
+        builder.MapDelete("supprimer/{idPublicVehicule:guid}", SupprimerAsync)
+            .WithDescription("Supprimer un véhicule")
+            .ProducesNotFound()
+            .ProducesNoContent();
+
         return builder;
     }
 
@@ -104,5 +109,18 @@ public static class VehiculeRoute
         );
 
         return estModifier ? Results.NoContent() : Results.NotFound("Le véhicule n'existe pas");
+    }
+
+    async static Task<IResult> SupprimerAsync(
+        HttpContext _httpContext,
+        [FromServices] IVehiculeService _vehiculeServ,
+        [FromRoute(Name = "idPublicVehicule")] Guid _idPublicVehicule
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        bool retour = await _vehiculeServ.SupprimerAsync(_idPublicVehicule, idGroupe);
+
+        return retour ? Results.NoContent() : Results.NotFound();
     }
 }

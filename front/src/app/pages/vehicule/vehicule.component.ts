@@ -16,6 +16,8 @@ import { StopPropagationDirective } from '@directive/stop-propagation.directive'
 import { Vehicule } from '@model/Vehicule';
 import { VehiculeService } from '@service/Vehicule.service';
 import { AjouterModifierVehiculeComponent } from '@modal/ajouter-modifier-vehicule/ajouter-modifier-vehicule.component';
+import { ThemeService } from '@service/ThemeService.Service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-vehicule',
@@ -30,6 +32,8 @@ export class VehiculeComponent
   estEnChargement = signal(false);
 
   vehiculeServ = inject(VehiculeService);
+  toastrServ = inject(ToastrService);
+  themeServ = inject(ThemeService);
   destroyRef = inject(DestroyRef);
   matDialog = inject(MatDialog);
 
@@ -63,6 +67,24 @@ export class VehiculeComponent
       takeUntilDestroyed(this.destroyRef)
     )
     .subscribe(() =>this.Lister());
+  }
+
+  protected OuvrirModalConfirmation(_vehicule: Vehicule): void
+  {
+    this.themeServ.OuvrirConfirmation(
+      "Supression véhicule", 
+      "Confirmez-vous la suppression du véhicule ?"
+    );
+
+    this.themeServ.retourConfirmation.subscribe({
+      next: (retour) =>
+      {
+        if(!retour)
+          return;
+
+        this.Supprimer(_vehicule.idPublic);
+      }
+    })
   }
 
   protected OuvrirModal(_vehicule?: Vehicule): void
@@ -113,6 +135,23 @@ export class VehiculeComponent
         this.estEnChargement.set(false);
       },
       error: () =>this.estEnChargement.set(false)
+    });
+  }
+
+  private Supprimer(_idPublicVehicule: string): void
+  {
+    this.vehiculeServ.Supprimer(_idPublicVehicule).subscribe({
+      next: () =>
+      {
+        this.dataSource.update(x => 
+        {
+          x.data = x.data.filter(x => x.idPublic != _idPublicVehicule);
+
+          return x;
+        });
+
+        this.toastrServ.success("Le véhicule a été supprimé");
+      }
     });
   }
 }

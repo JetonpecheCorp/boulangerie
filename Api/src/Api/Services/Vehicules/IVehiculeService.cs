@@ -42,6 +42,14 @@ public interface IVehiculeService
     Task<bool> ModifierAsync(string _nom, string _immatriculation, string? _infoSup, string _idPublicVehicule, int _idGroupe);
 
     /// <summary>
+    /// Supprimer un vehicule soft si utilisée sinon en dur
+    /// </summary>
+    /// <param name="_idPublic">id public véhicule a supprimer</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns><see langword="true"/> si supprimé, sinon <see langword="false"/></returns>
+    Task<bool> SupprimerAsync(Guid _idPublic, int _idGroupe);
+
+    /// <summary>
     /// Verifier si un vehicule existe
     /// </summary>
     /// <param name="_idPublic">id public du vehicule</param>

@@ -29,4 +29,9 @@ export class VehiculeService
   {
     return this.http.put<void>(`${this.BASE_API}/modifier/${_idPublicVehicule}`, _vehicule).pipe(takeUntilDestroyed(this.destroyRef));
   }
+
+  Supprimer(_idPublicVehicule: string): Observable<void>
+  {
+    return this.http.delete<void>(`${this.BASE_API}/supprimer/${_idPublicVehicule}`).pipe(takeUntilDestroyed(this.destroyRef));
+  }
 }
