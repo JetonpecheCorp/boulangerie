@@ -41,6 +41,14 @@ public interface IIngredientService
     Task<bool> ModifierAsync(int _idGroupe, Guid _idPublic, SetPropertyBuilder<Ingredient> _builder);
 
     /// <summary>
+    /// Supprimer un ingrédient soft si utilisé sinon en dur
+    /// </summary>
+    /// <param name="_idPublic">id public de l'ingrédient conserné</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
+    Task<bool> SupprimerAsync(Guid _idPublic, int _idGroupe);
+
+    /// <summary>
     /// Verifier que l'ingredient existe dans le groupe
     /// </summary>
     /// <param name="_idPublicIngredient">id public du produit</param>

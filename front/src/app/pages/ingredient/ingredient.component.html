@@ -53,6 +53,10 @@
             <td mat-cell *matCellDef="let row">
                 <button mat-mini-fab (click)="OuvrirModal(row)">
                     <mat-icon>edit</mat-icon>
+                </button>&nbsp;
+
+                <button mat-mini-fab (click)="OuvrirModalConfirmation(row)">
+                    <mat-icon>delete</mat-icon>
                 </button>
             </td>
         </ng-container>

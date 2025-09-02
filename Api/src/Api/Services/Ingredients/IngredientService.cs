@@ -86,6 +86,33 @@ public class IngredientService(BoulangerieContext _context): IIngredientService
         return nb > 0;
     }
 
+    public async Task<bool> SupprimerAsync(Guid _idPublic, int _idGroupe)
+    {
+        if(_idPublic == Guid.Empty)
+            return false;
+
+        int idIngredient = await RecupererIdAsync(_idPublic, _idGroupe);
+        int total = 0;
+
+        bool existe = await _context.Recettes.AnyAsync(x => x.IdIngredient == idIngredient) ||
+            await _context.Fournisseurs.AnyAsync(x => x.IdIngredients.Any(y => y.Id == idIngredient));
+
+        if (existe)
+        {
+            total = await _context.Ingredients
+                .Where(x => x.Id == idIngredient)
+                .ExecuteUpdateAsync(x => x.SetProperty(y => y.EstSupprimer, true));
+        }
+        else
+        {
+            total = await _context.Ingredients
+                .Where(x => x.Id == idIngredient)
+                .ExecuteDeleteAsync();
+        }
+
+        return total > 0;
+    }
+
     public async Task<bool> ExisteAsync(Guid _idPublicIngredient, int _idGroupe)
     {
         if (_idPublicIngredient == Guid.Empty)

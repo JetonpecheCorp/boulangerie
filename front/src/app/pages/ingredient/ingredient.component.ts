@@ -15,6 +15,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AjouterModifierIngredientComponent } from '@modal/ajouter-modifier-ingredient/ajouter-modifier-ingredient.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ThemeService } from '@service/ThemeService.Service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-ingredient',
@@ -29,6 +31,8 @@ export class IngredientComponent implements AfterViewInit
   estEnChargement = signal(false);
 
   ingredentServ = inject(IngredientService);
+  themeServ = inject(ThemeService);
+  toastrServ = inject(ToastrService);
   destroyRef = inject(DestroyRef);
   matDialog = inject(MatDialog);
 
@@ -86,6 +90,41 @@ export class IngredientComponent implements AfterViewInit
         else if(!_ingredient && retour)
           this.Lister();
       });
+  }
+
+  protected OuvrirModalConfirmation(_ingredient: Ingredient): void
+  {
+    this.themeServ.OuvrirConfirmation(
+      "Supression ingrédient", 
+      "Confirmez-vous la suppression d'un ingrédient ?"
+    );
+
+    this.themeServ.retourConfirmation.subscribe({
+      next: (retour) =>
+      {
+        if(!retour)
+          return;
+
+        this.Supprimer(_ingredient.idPublic);
+      }
+    });
+  }
+  
+  private Supprimer(_idPublicIngredient: string): void
+  {
+    this.ingredentServ.Supprimer(_idPublicIngredient).subscribe({
+      next: () =>
+      {
+        this.toastrServ.success("L'ingrédient a été supprimé");
+        
+        this.dataSource.update(x =>
+        {
+          x.data = x.data.filter(y => y.idPublic != _idPublicIngredient);
+
+          return x;
+        });
+      }
+    });
   }
 
   private Lister(): void

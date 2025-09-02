@@ -31,6 +31,11 @@ public static class IngredientRoute
             .ProducesNoContent()
             .ProducesNotFound();
 
+        builder.MapDelete("supprimer/{idPublicIngredient:guid}", SupprimerAsync)
+            .WithDescription("Supprimer un ingredient")
+            .ProducesNoContent()
+            .ProducesNotFound();
+
         return builder;
     }
 
@@ -111,5 +116,18 @@ public static class IngredientRoute
         bool estModifier = await _ingredientServ.ModifierAsync(idGroupe, _ingredientImport.IdPublic!.Value, builder);
 
         return estModifier ? Results.NoContent() : Results.NotFound("La ressource n'existe pas");
+    }
+
+    async static Task<IResult> SupprimerAsync(
+        HttpContext _httpContext,
+        [FromServices] IIngredientService _ingredientServ,
+        [FromRoute(Name = "idPublicIngredient")] Guid _idPublicIngredient
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        bool retour = await _ingredientServ.SupprimerAsync(_idPublicIngredient, idGroupe);
+
+        return retour ? Results.NoContent() : Results.NotFound();
     }
 }

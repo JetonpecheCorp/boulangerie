@@ -29,4 +29,9 @@ export class IngredientService
   {
     return this.http.put<void>(`${this.BASE_API}/modifier`, _ingredient).pipe(takeUntilDestroyed(this.destroyRef));
   }
+
+  Supprimer(_idPublicIngredient: string): Observable<void>
+  {
+    return this.http.delete<void>(`${this.BASE_API}/supprimer/${_idPublicIngredient}`).pipe(takeUntilDestroyed(this.destroyRef));
+  }
 }
