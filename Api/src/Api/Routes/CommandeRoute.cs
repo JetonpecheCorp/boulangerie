@@ -225,6 +225,7 @@ public static class CommandeRoute
             IdClient = idClient == 0 ? null : idClient,
             IdGroupe = idGroupe,
             Numero = $"{prefixGrp}{numero}",
+            EstLivraison = _commandeImport.EstLivraison,
             DatePourLe = _commandeImport.Date.ToDateTime(TimeOnly.MinValue)
         };
 

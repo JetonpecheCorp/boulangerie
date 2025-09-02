@@ -6,13 +6,21 @@
         <div class="row">
 
             <!-- date pour le -->
-            <div class="col-12">
+            <div class="col-6">
                 <mat-form-field style="margin-top: 10px; margin-bottom: 10px;">
                     <mat-label>Pour le</mat-label>
                     <input matInput [matDatepicker]="picker" formControlName="date">
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
+            </div>
+
+            <!-- defini si pour livraison -->
+            <div class="col-6" style="margin: auto 0">
+                  <mat-checkbox aria-label="Livraison ?"
+                                formControlName="estLivraison">
+                    Livraison ?
+                </mat-checkbox>
             </div>
 
             <!-- client -->

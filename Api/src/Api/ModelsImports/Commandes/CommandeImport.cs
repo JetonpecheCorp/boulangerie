@@ -5,6 +5,7 @@ namespace Api.ModelsImports.Commandes;
 public sealed record CommandeImport
 {
     public Guid? IdPublicClient { get; init; }
+    public bool EstLivraison { get; init; }
     public DateOnly Date { get; init; }
     public required ProduitCommandeImport[] ListeProduit { get; init; }
 }

@@ -157,6 +157,7 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
             .FirstOrDefaultAsync();
 
         commande.IdClient = idClient == 0 ? null : idClient;
+        commande.EstLivraison = _commande.EstLivraison;
         commande.DatePourLe = _commande.Date.ToDateTime(TimeOnly.MinValue);
 
         await _context.ProduitCommandes.Where(x => x.IdCommande == commande.Id).ExecuteDeleteAsync();
@@ -177,7 +178,7 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
 
     public async Task<bool> ModifierStatusAsync(string _numero, EStatusCommandeModifier _status, int _idGroupe)
     {
-        if (_numero is "")
+        if (string.IsNullOrWhiteSpace(_numero))
             return false;
 
         SetPropertyBuilder<Commande> builder = new();

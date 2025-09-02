@@ -20,6 +20,7 @@ import { CommandeService } from '@service/Commande.service';
 import { CommandeExport } from '@model/exports/CommandeExport';
 import { ClientService } from '@service/Client.service';
 import { ClientLeger } from '@model/Client';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ConvertionEnum, EStatusCommande } from '../../../enums/EStatusCommande';
 
 type Info = 
@@ -30,7 +31,7 @@ type Info =
 
 @Component({
     selector: 'app-modal-ajouter-commmande',
-    imports: [FormsModule, MatIconModule, MatButtonModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, ButtonComponent, ReactiveFormsModule],
+    imports: [MatCheckboxModule, FormsModule, MatIconModule, MatButtonModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, ButtonComponent, ReactiveFormsModule],
     templateUrl: './modal-ajouter-commmande.component.html',
     styleUrl: './modal-ajouter-commmande.component.scss'
 })
@@ -66,6 +67,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
     this.ListerClient();
 
     this.form = new FormGroup({
+      estLivraison: new FormControl(this.dialogData.commande?.estLivraison ?? false),
       autoComplete: new FormControl(""),
       autoCompleteClient: new FormControl<string | null>(this.dialogData.commande?.client?.nom ?? null),
       listeProduit: new FormControl<ProduitCommande[]>(this.dialogData.commande?.listeProduit ?? [], [Validators.required]),
@@ -183,6 +185,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
     const CLIENT = this.dataSourceClient().find(x => x.nom == this.form.value.autoCompleteClient);
 
     const INFOS: CommandeExport = {
+      estLivraison: this.form.value.estLivraison,
       date: (this.form.controls["date"].value as Date).toISOFormat(),
       idPublicClient: CLIENT?.idPublic,
       listeProduit: listeProduit
@@ -220,7 +223,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
             status: EStatusCommande.EnAttenteValidation,
             nomStatus: ConvertionEnum.StatusCommande(EStatusCommande.EnAttenteValidation),
   
-            estLivraison: false,
+            estLivraison: this.form.value.estLivraison,
             numero: numeroCommande,
             listeProduit: this.form.controls["listeProduit"].value
           };

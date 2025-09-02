@@ -84,7 +84,7 @@ services:
     image: front
     build: 
       context: ../front
-      dockerfile: ../front/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "9000:80"
 

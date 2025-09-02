@@ -55,17 +55,18 @@ public class CommandeTest
     }
 
     [Theory]
-    [InlineData("0a1ea0c8-c898-4c54-8492-44d19b4ebcae", "2025-07-12", 5, HttpStatusCode.Created)]
-    [InlineData("", "", -5, HttpStatusCode.BadRequest)]
-    [InlineData("0a1ea0c8-c898-4c54-8492-44d19b4e", "2025-01-01", 5, HttpStatusCode.BadRequest)]
-    [InlineData("0a1ea0c8-c898-4c54-8492-44d19b4ebcae", "2020/01/01", 5, HttpStatusCode.BadRequest)]
-    public async Task Ajouter_commande(string _idPublicClient, string _date, int _qte, HttpStatusCode _codeRetour)
+    [InlineData("0a1ea0c8-c898-4c54-8492-44d19b4ebcae", true, "2025-07-12", 5, HttpStatusCode.Created)]
+    [InlineData("", false, "", -5, HttpStatusCode.BadRequest)]
+    [InlineData("0a1ea0c8-c898-4c54-8492-44d19b4e", true, "2025-01-01", 5, HttpStatusCode.BadRequest)]
+    [InlineData("0a1ea0c8-c898-4c54-8492-44d19b4ebcae", false, "2020/01/01", 5, HttpStatusCode.BadRequest)]
+    public async Task Ajouter_commande(string _idPublicClient, bool _estLivraison, string _date, int _qte, HttpStatusCode _codeRetour)
     {
         await Connexion.AdministrateurAsync();
 
         var reponse = await Connexion.HttpClient.PostAsJsonAsync(
             $"{baseUrl}/ajouter", new CommandeRequete(
                 _idPublicClient,
+                _estLivraison,
                 _date,
                 [
                     new ("c8b114a3-8ab6-485d-9aef-b864371f8504", _qte)
@@ -84,6 +85,7 @@ public class CommandeTest
         var reponse = await Connexion.HttpClient.PostAsJsonAsync(
             $"{baseUrl}/ajouter", new CommandeRequete(
                 "0a1ea0c8-c898-4c54-8492-44d19b4ebcae",
+                false,
                 "2025-08-12",
                 [
                     new ("c8b114a3-8ab6-485d-9aef-b864371f8504", 5)
@@ -115,4 +117,4 @@ public class CommandeTest
 public record CommandeModifierStatusRequete(string Numero, int Status);
 
 public record ProduitCommandeRequete(string IdPublic, int Quantite);
-public record CommandeRequete(string IdPublicClient, string Date, ProduitCommandeRequete[] ListeProduit);
+public record CommandeRequete(string IdPublicClient, bool EstLivraison, string Date, ProduitCommandeRequete[] ListeProduit);
