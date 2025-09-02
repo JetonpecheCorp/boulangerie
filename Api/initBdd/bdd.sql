@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Vehicule (
     Nom VARCHAR(100) NOT NULL,
     Immatriculation VARCHAR(15) NOT NULL,
     InfoComplementaire VARCHAR(1000) NULL,
+    EstSupprimer TINYINT(1) NOT NULL DEFAULT 0,
 
     FOREIGN KEY (IdGroupe) REFERENCES Groupe (Id)
 );

@@ -17,6 +17,8 @@ public partial class Vehicule
 
     public string? InfoComplementaire { get; set; }
 
+    public bool EstSupprimer { get; set; }
+
     public virtual Groupe IdGroupeNavigation { get; set; } = null!;
 
     public virtual ICollection<Livraison> Livraisons { get; set; } = new List<Livraison>();
