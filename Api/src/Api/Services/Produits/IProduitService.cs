@@ -49,6 +49,14 @@ public interface IProduitService
     Task<bool> ModifierAsync(int _idGroupe, Guid _idPublic, SetPropertyBuilder<Produit> _builder);
 
     /// <summary>
+    /// Supprimer un produit soft si utilisé sinon en dur
+    /// </summary>
+    /// <param name="_idPublic">id public du produit conserné</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
+    Task<bool> SupprimerAsync(Guid _idPublic, int _idGroupe);
+
+    /// <summary>
     /// Verifier que le produit existe dans le groupe
     /// </summary>
     /// <param name="_idPublicProduit">id public du produit</param>

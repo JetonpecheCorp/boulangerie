@@ -35,6 +35,11 @@ public static class ProduitRoute
            .ProducesNotFound()
            .ProducesNoContent();
 
+        builder.MapDelete("supprimer/{idPublicProduit:guid}", SupprimerAsync)
+           .WithDescription("Supprimer un produit")
+           .ProducesNotFound()
+           .ProducesNoContent();
+
         return builder;
     }
 
@@ -151,5 +156,18 @@ public static class ProduitRoute
         bool estModifier = await _produitServ.ModifierAsync(idGroupe, _produitImport.IdPublic!.Value, builder);
 
         return estModifier ? Results.NoContent() : Results.NotFound("Le produit n'existe pas");
+    }
+
+    async static Task<IResult> SupprimerAsync(
+        HttpContext _httpContext,
+        [FromServices] IProduitService _produitServ,
+        [FromRoute(Name = "idPublicProduit")] Guid _idPublicProduit
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        bool retour = await _produitServ.SupprimerAsync(_idPublicProduit, idGroupe);
+
+        return retour ? Results.NoContent() : Results.NotFound();
     }
 }

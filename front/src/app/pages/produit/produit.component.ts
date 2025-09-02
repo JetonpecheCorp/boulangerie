@@ -18,6 +18,8 @@ import { AjouterModifierProduitComponent } from '@modal/ajouter-modifier-produit
 import { RecetteProduitComponent } from '@modal/recette-produit/recette-produit.component';
 import { StopPropagationDirective } from '@directive/stop-propagation.directive';
 import { ExportService } from '@service/Export.service';
+import { ThemeService } from '@service/ThemeService.Service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-produit',
@@ -32,6 +34,8 @@ export class ProduitComponent implements AfterViewInit
   estEnChargement = signal(false);
 
   produitServ = inject(ProduitService);
+  themeServ = inject(ThemeService);
+  toastrServ = inject(ToastrService);
   exportServ = inject(ExportService);
   destroyRef = inject(DestroyRef);
   matDialog = inject(MatDialog);
@@ -111,6 +115,41 @@ export class ProduitComponent implements AfterViewInit
               this.Lister();
         }
       });
+  }
+
+  protected OuvrirModalConfirmation(_produit: Produit): void
+  {
+    this.themeServ.OuvrirConfirmation(
+      "Supression produit", 
+      "Confirmez-vous la suppression du produit ?"
+    );
+
+    this.themeServ.retourConfirmation.subscribe({
+      next: (retour) =>
+      {
+        if(!retour)
+          return;
+
+        this.Supprimer(_produit.idPublic);
+      }
+    });
+  }
+
+  private Supprimer(_idPublicProduit: string): void
+  {
+    this.produitServ.Supprimer(_idPublicProduit).subscribe({
+      next: () =>
+      {
+        this.toastrServ.success("Le produit a été supprimé");
+        
+        this.dataSource.update(x =>
+        {
+          x.data = x.data.filter(y => y.idPublic != _idPublicProduit);
+
+          return x;
+        });
+      }
+    });
   }
 
   private Lister(): void

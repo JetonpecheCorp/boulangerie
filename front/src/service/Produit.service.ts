@@ -34,4 +34,9 @@ export class ProduitService
   {
     return this.http.put<void>(`${this.BASE_API}/modifier`, _produit).pipe(takeUntilDestroyed(this.destroyRef));
   }
+
+  Supprimer(_idPublicProduit: string): Observable<void>
+  {
+    return this.http.delete<void>(`${this.BASE_API}/supprimer/${_idPublicProduit}`).pipe(takeUntilDestroyed(this.destroyRef));
+  }
 }

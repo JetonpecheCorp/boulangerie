@@ -11,7 +11,7 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
 {
     public async Task<PaginationExport<ProduitExport>> ListerAsync(PaginationImport _pagination, int _idGroupe)
     {
-        var requete = _context.Produits.Where(x => x.IdGroupe == _idGroupe);
+        var requete = _context.Produits.Where(x => x.IdGroupe == _idGroupe && !x.EstSupprimer);
 
         if (_pagination.ThermeRecherche is not null)
         {
@@ -74,7 +74,7 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
 
     public async Task<PaginationExport<ProduitLegerExport>> ListerLegerAsync(PaginationImport _pagination, int _idGroupe)
     {
-        var requete = _context.Produits.Where(x => x.IdGroupe == _idGroupe);
+        var requete = _context.Produits.Where(x => x.IdGroupe == _idGroupe && !x.EstSupprimer);
 
         if (_pagination.ThermeRecherche is not null)
         {
@@ -143,6 +143,30 @@ public sealed class ProduitService(BoulangerieContext _context) : IProduitServic
         }
 
         return nb > 0;
+    }
+
+    public async Task<bool> SupprimerAsync(Guid _idPublic, int _idGroupe)
+    {
+        if (_idPublic == Guid.Empty)
+            return false;
+
+        int idProduit = await RecupererIdAsync(_idPublic, _idGroupe);
+        int total = 0;
+
+        bool existe = await _context.ProduitCommandes.AnyAsync(x => x.IdProduit == idProduit) ||
+            await _context.Fournisseurs.AnyAsync(x => x.IdProduits.Any(y => y.Id == idProduit)) ||
+            await _context.Recettes.AnyAsync(x => x.IdProduit == idProduit);
+
+        if (existe)
+        {
+            total = await _context.Produits
+                .Where(x => x.Id == idProduit)
+                .ExecuteUpdateAsync(x => x.SetProperty(y => y.EstSupprimer, true));
+        }
+        else
+            total = await _context.Produits.Where(x => x.Id == idProduit).ExecuteDeleteAsync();
+
+        return total > 0;
     }
 
     public async Task<bool> ExisteAsync(Guid _idPublicProduit, int _idGroupe)

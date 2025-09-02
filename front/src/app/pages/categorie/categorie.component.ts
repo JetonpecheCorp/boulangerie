@@ -107,14 +107,14 @@ export class CategorieComponent implements AfterViewInit
     });
   }
 
-  private Supprimer(_idPublicVehicule: string): void
+  private Supprimer(_idPublicCategorie: string): void
   {
-    this.categorieServ.Supprimer(_idPublicVehicule).subscribe({
+    this.categorieServ.Supprimer(_idPublicCategorie).subscribe({
       next: () =>
       {
         this.dataSource.update(x => 
         {
-          x.data = x.data.filter(x => x.idPublic != _idPublicVehicule);
+          x.data = x.data.filter(x => x.idPublic != _idPublicCategorie);
 
           return x;
         });
