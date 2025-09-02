@@ -84,7 +84,7 @@ export class VehiculeComponent
 
         this.Supprimer(_vehicule.idPublic);
       }
-    })
+    });
   }
 
   protected OuvrirModal(_vehicule?: Vehicule): void

@@ -35,4 +35,9 @@ export class CategorieService
     const INFOS = { nom: _nom };
     return this.http.put<void>(`${this.BASE_API}/modifier/${_idPublic}`, INFOS).pipe(takeUntilDestroyed(this.destroyRef));
   }
+
+  Supprimer(_idPublic: string): Observable<void>
+  {
+    return this.http.delete<void>(`${this.BASE_API}/supprimer/${_idPublic}`).pipe(takeUntilDestroyed(this.destroyRef));
+  }
 }

@@ -15,6 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { CategorieService } from '@service/Categorie.service';
 import { Categorie } from '@model/Categorie';
 import { AjouterModifierCategorieComponent } from '@modal/ajouter-modifier-categorie/ajouter-modifier-categorie.component';
+import { ThemeService } from '@service/ThemeService.Service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-categorie',
@@ -29,6 +31,8 @@ export class CategorieComponent implements AfterViewInit
   estEnChargement = signal(false);
 
   categorieServ = inject(CategorieService);
+  themeServ = inject(ThemeService);
+  toastrServ = inject(ToastrService);
   destroyRef = inject(DestroyRef);
   matDialog = inject(MatDialog);
 
@@ -83,6 +87,41 @@ export class CategorieComponent implements AfterViewInit
         else if(!_categorie && retour)
           this.Lister();
       });
+  }
+
+  protected OuvrirModalConfirmation(_categorie: Categorie): void
+  {
+    this.themeServ.OuvrirConfirmation(
+      "Supression catégorie", 
+      "Confirmez-vous la suppression de la catégorie ?"
+    );
+
+    this.themeServ.retourConfirmation.subscribe({
+      next: (retour) =>
+      {
+        if(!retour)
+          return;
+
+        this.Supprimer(_categorie.idPublic);
+      }
+    });
+  }
+
+  private Supprimer(_idPublicVehicule: string): void
+  {
+    this.categorieServ.Supprimer(_idPublicVehicule).subscribe({
+      next: () =>
+      {
+        this.dataSource.update(x => 
+        {
+          x.data = x.data.filter(x => x.idPublic != _idPublicVehicule);
+
+          return x;
+        });
+
+        this.toastrServ.success("La catégorie a été supprimée");
+      }
+    });
   }
 
   private Lister(): void

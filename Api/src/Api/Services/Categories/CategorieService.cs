@@ -105,6 +105,32 @@ public class CategorieService(BoulangerieContext _context): ICategorieService
         return false;
     }
 
+    public async Task<bool> SupprimerAsync(Guid _idPublicCategorie, int _idGroupe)
+    {
+        if (_idPublicCategorie == Guid.Empty)
+            return false;
+
+        int total = 0;
+
+        bool existe = await _context.Produits
+            .AnyAsync(x => x.IdGroupe == _idGroupe && x.IdCategorieNavigation.IdPublic == _idPublicCategorie);
+
+        if(existe)
+        {
+            total = await _context.Categories
+                .Where(x => x.IdPublic == _idPublicCategorie)
+                .ExecuteUpdateAsync(x => x.SetProperty(y => y.EstSupprimer, true));
+        }
+        else
+        {
+            total = await _context.Categories
+                .Where(x => x.IdPublic == _idPublicCategorie)
+                .ExecuteDeleteAsync();
+        }
+
+        return total > 0;
+    }
+
     public async Task<bool> ExisteAsync(Guid _idPublicCategorie, int _idGroupe)
     {
         if (_idPublicCategorie == Guid.Empty)

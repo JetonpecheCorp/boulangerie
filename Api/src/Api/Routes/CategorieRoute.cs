@@ -35,6 +35,11 @@ public static class CategorieRoute
             .ProducesNotFound()
             .ProducesNoContent();
 
+        builder.MapDelete("supprimer/{idPublicCategorie:guid}", SupprimerAsync)
+            .WithDescription("Supprimer une categorie au groupe")
+            .ProducesNotFound()
+            .ProducesNoContent();
+
         return builder;
     }
 
@@ -127,5 +132,18 @@ public static class CategorieRoute
         }
 
         return Results.NotFound("La categorie n'existe pas");
+    }
+
+    async static Task<IResult> SupprimerAsync(
+        HttpContext _httpContext,
+        [FromServices] ICategorieService _categorieServ,
+        [FromRoute(Name = "idPublicCategorie")] Guid _idPublicCategorie
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        bool retour = await _categorieServ.SupprimerAsync(_idPublicCategorie, idGroupe);
+
+        return retour ? Results.NoContent() : Results.NotFound();
     }
 }

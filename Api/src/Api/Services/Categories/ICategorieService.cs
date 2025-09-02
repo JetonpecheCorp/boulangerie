@@ -47,6 +47,14 @@ public interface ICategorieService
     Task<bool> ModifierAsync(string _nom, Guid _idPublicCategorie, int _idGroupe);
 
     /// <summary>
+    /// Supprimer une catégorie soft si utilisée sinon en dur
+    /// </summary>
+    /// <param name="_idPublicCategorie">id oublic de la categorie conserné</param>
+    /// <param name="_idGroupe">id groupe conserné</param>
+    /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
+    Task<bool> SupprimerAsync(Guid _idPublicCategorie, int _idGroupe);
+
+    /// <summary>
     /// Vérifier que la catégorie exite
     /// </summary>
     /// <param name="_idPublicCategorie">id public categorie a vérifier</param>
