@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { CalendrierJourComponent } from "../../pages/test/calendrier-jour/calendrier-jour.component";
+import { CalendrierJourComponent } from "../../pages/planning/calendrier-jour/calendrier-jour.component";
 import { ButtonComponent } from "../../components/button/button.component";
 import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/modal-ajouter-commmande.component';
 import { Commande } from '@model/Commande';

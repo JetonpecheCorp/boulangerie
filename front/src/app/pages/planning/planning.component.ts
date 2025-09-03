@@ -27,12 +27,12 @@ enum EModeCalendrier
 }
 
 @Component({
-    selector: 'app-test',
+    selector: 'app-planning',
     imports: [MatSelectModule, MatTooltipModule, MatSidenavModule, MatButtonToggleModule, MatButtonModule, MatIconModule, MatCardModule, CalendrierSemaineComponent, CalendrierJourComponent, CalendrierMoisComponent],
-    templateUrl: './test.component.html',
-    styleUrl: './test.component.scss'
+    templateUrl: './planning.component.html',
+    styleUrl: './planning.component.scss'
 })
-export class TestComponent implements OnInit
+export class PlanningComponent implements OnInit
 {
   dateJour = signal(new Date());
   listeCommande = signal<Commande[]>([]);

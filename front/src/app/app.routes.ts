@@ -46,7 +46,7 @@ export const routes: Routes = [
     {
         path: "planning",
         canActivate: [adminGuard],
-        loadComponent: () => import('./pages/test/test.component').then(x => x.TestComponent),
+        loadComponent: () => import('./pages/planning/planning.component').then(x => x.PlanningComponent),
         title: "Planning"
     },
     {
