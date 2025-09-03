@@ -1,0 +1,72 @@
+# Changelog
+
+## V1
+
+- Init Docker
+- Init BDD et PHPMYAdmin
+- Init front et back
+
+### Fonctionnalités
+
+- Connexion
+- Lister, ajouter, modifier 
+    - un ingredient
+    - une catégorie de produit
+    - un véhicule
+    - un fournisseur
+    - un client
+    - un employé
+    - une groupe
+    - une livraison
+    - un produit
+
+- Exporter
+    - les fournisseurs
+    - les clients
+    - les employés
+    - les commandes
+    - les produits
+
+- Importer
+    - les fournisseurs
+    - les clients
+    - les employés
+
+- Supprimer une livraison
+- Plannifier une livraison
+- Rechercher une livraison
+- Télécharger la facture d'une commande
+- Afficher une vue altervative dans le calendrier planning
+- (Dé)bloquer la connexion à un groupe
+- Lister les TVAs
+- Créer un recette d'ingredient pour un produit
+
+## V1.0.1
+- Front Correction bug modifier une catégorie
+- Front Correction bug (Dé)bloquer un groupe
+
+## V1.0.2
+- Api correction bug modifier un fournisseur
+- Front corrction bug modal commande ne se ferme pas apres modification
+
+## V1.1.0
+- Ajout de openTelemetry, grafana et prometheus
+
+## V1.1.1
+- Activation protection authentification et authorisation API et Front
+
+## V1.2.0
+- Mise a jour de Angular vers Angular 20.1 et les packages
+- Configue docker compose pour le front
+- Suppression package npm non utilisé
+
+## 1.3.0
+- Mise à jour de ASP NET API vers dotnet 9
+- Mise à jour des packages
+- Api test ajout tests erreur 401 sur toutes les routes
+
+## 1.3.1
+- Suppression véhicule
+- Suppression produit
+- Suppression ingrédient
+- Suppression catégorie
