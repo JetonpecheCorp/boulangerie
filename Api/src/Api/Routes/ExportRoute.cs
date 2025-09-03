@@ -8,7 +8,6 @@ using Api.Services.Fournisseurs;
 using Api.Services.Produits;
 using Api.Services.Utilisateurs;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.EMMA;
 using Microsoft.AspNetCore.Mvc;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
