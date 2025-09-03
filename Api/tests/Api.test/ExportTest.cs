@@ -40,15 +40,16 @@ public class ExportTest
     }
 
     [Theory]
-    [InlineData("2020-10-01", "2020-12-31")]
-    [InlineData("2020-10-45", "2020-12-31")]
-    [InlineData("2020-10-01", "2020-12-45")]
-    [InlineData("2020-10-01", "2010-12-10")]
-    public async Task Exporter_commande(string _dateDebut, string _dateFin)
+    [InlineData("2020-10-01", "2020-12-31", true)]
+    [InlineData("2020-10-01", "2020-12-31", false)]
+    [InlineData("2020-10-45", "2020-12-31", false)]
+    [InlineData("2020-10-01", "2020-12-45", true)]
+    [InlineData("2021-10-01", "2010-12-10", false)]
+    public async Task Exporter_commande(string _dateDebut, string _dateFin, bool _estFormatExcel)
     {
         await Connexion.AdministrateurAsync();
 
-        var reponse = await Connexion.HttpClient.GetAsync($"{baseUrl}/commande?DateDebut={_dateDebut}&DateFin={_dateFin}&Status=0");
+        var reponse = await Connexion.HttpClient.GetAsync($"{baseUrl}/commande?DateDebut={_dateDebut}&DateFin={_dateFin}&EstFormatExcel={_estFormatExcel}&Status=0");
 
         if (reponse.IsSuccessStatusCode)
             Assert.True(true);
