@@ -1,17 +1,18 @@
 ﻿using Api.Constantes;
 using Api.Extensions;
+using Api.Extensions.PdfStyle;
 using Api.ModelsImports.Exports;
 using Api.Services.Clients;
 using Api.Services.Commandes;
+using Api.Services.Fournisseurs;
+using Api.Services.Produits;
 using Api.Services.Utilisateurs;
-using Api.Extensions.PdfStyle;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.EMMA;
 using Microsoft.AspNetCore.Mvc;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using System.Text;
-using Api.Services.Produits;
-using Api.Services.Fournisseurs;
 
 namespace Api.Routes;
 
@@ -32,6 +33,7 @@ public static class ExportRoute
         builder.MapGet("commande", ExportCommandeAsync)
             .WithDescription("Produit un 'no content' si pas de commande")
             .Produces(StatusCodes.Status200OK, contentType: ContentType.Pdf)
+            .Produces(StatusCodes.Status200OK, contentType: ContentType.Excel)
             .ProducesNoContent();
 
         builder.MapGet("produit", ExportProduitAsync)
@@ -68,6 +70,63 @@ public static class ExportRoute
         if(listeCommande.Length is 0)
             return Results.NoContent();
 
+        if (_dateInterval.EstFormatExcel)
+        {
+            using XLWorkbook workbook = new();
+            var worksheet = workbook.AddWorksheet();
+
+            worksheet.Cell(1, 1).Value = "Nom client";
+            worksheet.Cell(1, 2).Value = "Adresse";
+            worksheet.Cell(1, 3).Value = "Numero";
+            worksheet.Cell(1, 4).Value = "Date";
+            worksheet.Cell(1, 5).Value = "Livraison";
+            worksheet.Cell(1, 6).Value = "Status";
+            worksheet.Cell(1, 7).Value = "Liste des produits";
+
+            int ligneIndex = 2;
+            for (int i = 0; i < listeCommande.Length; i++)
+            {
+                var element = listeCommande[i];
+
+                StringBuilder stringBuilder = new();
+                stringBuilder.Append("[");
+
+                for (int j = 0; j < element.ListeProduit.Length; j++)
+                {
+                    var element2 = element.ListeProduit[j];
+                    stringBuilder.Append($$"""{ "Nom": "{{element2.Nom}}", "Qte": {{element2.Quantite}}, "PrixHT": {{element2.PrixHT}} }""");
+
+                    if (j + 1 < element.ListeProduit.Length)
+                        stringBuilder.Append(",");
+                }
+
+                stringBuilder.Append("]");
+
+                worksheet.Cell(ligneIndex, 1).Value = element.Client?.Nom ?? "interne";
+                worksheet.Cell(ligneIndex, 2).Value = element.Client?.Adresse ?? "interne";
+                worksheet.Cell(ligneIndex, 3).Value = element.Numero;
+                worksheet.Cell(ligneIndex, 4).Value = element.Date.ToString("d");
+                worksheet.Cell(ligneIndex, 5).Value = element.EstLivraison ? "Oui" : "Non";
+                worksheet.Cell(ligneIndex, 6).Value = element.Status.Description();
+                worksheet.Cell(ligneIndex, 7).Value = stringBuilder.ToString();
+
+                ligneIndex++;
+            }
+
+            worksheet.Columns("A:G").AdjustToContents();
+
+            using MemoryStream stream = new();
+
+            workbook.SaveAs(stream);
+            stream.Position = 0;
+
+            return Results.File(
+                stream.ToArray(),
+                ContentType.Excel,
+                "export_commande.xlsx"
+            );
+        }
+
         var listeCommandeGroupeBy = listeCommande.GroupBy(x => x.Date).ToArray();
 
         var doc = Document.Create(doc =>
@@ -75,7 +134,7 @@ public static class ExportRoute
             doc.Page(page =>
             {
                 page.Size(PageSizes.A4.Landscape());
-                
+
                 page.Margin(10);
 
                 page.Header()
@@ -91,8 +150,6 @@ public static class ExportRoute
                         for (int i = 0; i < listeCommandeGroupeBy.Length; i++)
                             x.RelativeColumn();
                     });
-
-                    var liste = listeCommandeGroupeBy.SelectMany(x => x).ToArray();
 
                     for (uint i = 0; i < listeCommandeGroupeBy.Length; i++)
                     {
@@ -117,9 +174,9 @@ public static class ExportRoute
                                 listeStringProduit.AppendLine(element2.Client.Nom);
                                 listeStringProduit.AppendLine(element2.Client.Adresse);
                             }
-                            
+
                             for (int k = 0; k < element2.ListeProduit.Length; k++)
-                            {                  
+                            {
                                 var produit = element2.ListeProduit[k];
 
                                 listeStringProduit.AppendLine($"{produit.Nom} X{produit.Quantite}");
@@ -167,8 +224,6 @@ public static class ExportRoute
         worksheet.Cell(1, 4).Value = "Téléphone";
         worksheet.Cell(1, 5).Value = "Admin";
 
-        worksheet.Columns("A:E").AdjustToContents();
-
         int ligneIndex = 2;
         for (int i = 0; i < info.Liste.Length; i++)
         {
@@ -184,6 +239,8 @@ public static class ExportRoute
         }
 
         using MemoryStream stream = new();
+
+        worksheet.Columns("A:E").AdjustToContents();
 
         workbook.SaveAs(stream);
         stream.Position = 0;

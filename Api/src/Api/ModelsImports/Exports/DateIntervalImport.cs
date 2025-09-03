@@ -8,6 +8,7 @@ public sealed record DateIntervalImport
     public required DateOnly DateDebut { get; init; }
     public required DateOnly DateFin { get; init; }
     public required EStatusCommande Status { get; init; }
+    public required bool EstFormatExcel { get; init; }
 }
 
 [JsonSerializable(typeof(DateIntervalImport))]

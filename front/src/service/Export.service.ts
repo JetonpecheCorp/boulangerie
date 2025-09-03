@@ -33,12 +33,13 @@ export class ExportService
     this.EnvoyerRequete("fournisseur");
   }
 
-  Commande(_dateDebut: Date, _dateFin: Date, _status: EStatusCommande): void
+  Commande(_dateDebut: Date, _dateFin: Date, _status: EStatusCommande, _estFormatExcel: boolean): void
   {    
     const INFO = { 
         dateDebut: _dateDebut.toISOFormat(), 
         dateFin: _dateFin.toISOFormat(), 
-        status: _status 
+        status: _status,
+        estFormatExcel: _estFormatExcel
     };
 
     this.EnvoyerRequete("commande", INFO);

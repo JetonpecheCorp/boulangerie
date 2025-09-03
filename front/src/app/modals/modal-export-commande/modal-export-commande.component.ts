@@ -10,6 +10,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { EStatusCommande } from '@enum/EStatusCommande';
 import { ExportService } from '@service/Export.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 type DateInterval = {
   dateDebut: Date,
@@ -18,7 +19,7 @@ type DateInterval = {
 
 @Component({
     selector: 'app-modal-export-commande',
-    imports: [MatSelectModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatButtonModule, ButtonComponent, MatNativeDateModule, MatDatepickerModule, ReactiveFormsModule],
+    imports: [MatCheckboxModule, MatSelectModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatButtonModule, ButtonComponent, MatNativeDateModule, MatDatepickerModule, ReactiveFormsModule],
     templateUrl: './modal-export-commande.component.html',
     styleUrl: './modal-export-commande.component.scss'
 })
@@ -35,6 +36,7 @@ export class ModalExportCommandeComponent implements OnInit
     this.form = new FormGroup({
       dateDebut: new FormControl<Date | undefined>(this.dialogData.dateDebut, [Validators.required]),
       dateFin: new FormControl<Date | undefined>(this.dialogData.dateFin, [Validators.required]),
+      estFormatExcel: new FormControl<boolean>(false), 
       status: new FormControl<EStatusCommande>(EStatusCommande.Tout, [Validators.required])
     });
   }
@@ -48,7 +50,7 @@ export class ModalExportCommandeComponent implements OnInit
 
     this.btnClicker.set(true);
 
-    this.exportServ.Commande(FORM.dateDebut, FORM.dateFin, FORM.status);
+    this.exportServ.Commande(FORM.dateDebut, FORM.dateFin, FORM.status, FORM.estFormatExcel);
     
     this.btnClicker.set(false);
   }

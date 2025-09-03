@@ -1,8 +1,12 @@
-﻿namespace Api.Enums;
+﻿using System.ComponentModel;
+
+namespace Api.Enums;
 
 public enum EStatusCommande
 {
     Valider,
+
+    [Description("En attente de validation")]
     EnAttenteValidation,
     Annuler,
     Livrer,

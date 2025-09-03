@@ -1,21 +1,34 @@
-<mat-dialog-content class="mat-typography">
-    <div class="row">
-        <div class="col-lg-6 col-xs-12">
+<h2 mat-dialog-title>Exporter les commandes</h2>
+<mat-dialog-content style="padding-bottom: 20px">
+    <div [formGroup]="form" class="row">
+
+        <!-- format excel ? -->
+        <div class="col-12 mp-2">
+            <mat-checkbox aria-label="Format excel ?" 
+                          formControlName="estFormatExcel">
+                Format excel ?
+            </mat-checkbox>
+        </div>
+
+        <!-- date de debut -->
+        <div class="col-lg-6 col-sm-6 col-xs-12">
             <mat-form-field>
                 <mat-label>Date de début</mat-label>
                 <input matInput 
                     [matDatepicker]="pickerDebut" 
-                    [value]="dialogData.dateDebut">
+                    formControlName="dateDebut">
                 <mat-datepicker-toggle matIconSuffix [for]="pickerDebut"></mat-datepicker-toggle>
                 <mat-datepicker #pickerDebut></mat-datepicker>
             </mat-form-field>
         </div>
-        <div class="col-lg-6 col-xs-12">
+
+        <!-- date de fin -->
+        <div class="col-lg-6 col-sm-6 col-xs-12">
             <mat-form-field>
                 <mat-label>Date de fin</mat-label>
                 <input matInput 
                     [matDatepicker]="pickerFin" 
-                    [value]="dialogData.dateFin">
+                    formControlName="dateFin">
                 <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
                 <mat-datepicker #pickerFin></mat-datepicker>
             </mat-form-field>
@@ -23,7 +36,7 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-flat-button mat-dialog-close>Fermer</button>&nbsp;
+    <button mat-button mat-dialog-close>Fermer</button>&nbsp;
 
-    <app-button label="Valider" [btnClicker]="btnClicker()" (onClick)="Exporter()" />
+    <app-button label="Exporter" [btnClicker]="btnClicker()" (onClick)="Exporter()" />
 </mat-dialog-actions>
