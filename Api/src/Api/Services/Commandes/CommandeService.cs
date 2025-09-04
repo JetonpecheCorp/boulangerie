@@ -5,20 +5,19 @@ using Microsoft.EntityFrameworkCore;
 using Api.Enums;
 using Api.ModelsExports.Commandes;
 using ProduitPrix = (System.Guid IdPublic, int Id, decimal PrixHt);
+using Api.ModelsExports;
 
 namespace Api.Services.Commandes;
 
 public sealed class CommandeService(BoulangerieContext _context): ICommandeService
 {
-    public async Task<CommandeExport[]> ListerAsync(CommandeFiltreImport _filtre, int _idGroupe)
+    public async Task<PaginationExport<CommandeExport>> ListerAsync(CommandeFiltreImport _filtre, int _idGroupe)
     {
         var requete = _context.Commandes
             .Where(x => x.IdGroupe == _idGroupe);
 
-        if (_filtre.IdPublicLivraison is not null)
-#pragma warning disable CS8602 // Déréférencement d'une éventuelle référence null.
-            requete = requete.Where(x => x.IdLivraisonNavigation.IdPublic == _filtre.IdPublicLivraison);
-#pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null.
+        if (!string.IsNullOrWhiteSpace(_filtre.ThermeRecherche))
+            requete = requete.Where(x => x.Numero.Contains(_filtre.ThermeRecherche));
 
         else if (_filtre.SansLivraison.HasValue)
         {
@@ -40,43 +39,61 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
             _ => requete
         };
 
-        var liste = await requete.Where(x =>
+        if(_filtre.IdPublicClient is not null)
+        {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            requete = requete.Where(x => x.IdClientNavigation.IdPublic == _filtre.IdPublicClient);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        requete = requete.Where(x =>
             x.DatePourLe.Date >= _filtre.DateDebut.ToDateTime(TimeOnly.MinValue) &&
             x.DatePourLe.Date <= _filtre.DateFin.ToDateTime(TimeOnly.MinValue)
-        )
-        .Select(x => new CommandeExport
-        {
-            Numero = x.Numero,
-            Date = x.DatePourLe,
-            EstLivraison = x.EstLivraison,
-            Status = _filtre.Status == EStatusCommande.Tout ? x.DateValidation.HasValue ? EStatusCommande.Valider : x.DateAnnulation.HasValue ? EStatusCommande.Annuler : EStatusCommande.EnAttenteValidation : _filtre.Status,
+        );
+
+        int total = await requete.CountAsync();
+
+        var liste = await requete 
+            .Paginer(_filtre.NumPage, _filtre.NbParPage)
+            .Select(x => new CommandeExport
+            {
+                Numero = x.Numero,
+                Date = x.DatePourLe,
+                EstLivraison = x.EstLivraison,
+                Status = _filtre.Status == EStatusCommande.Tout ? x.DateValidation.HasValue ? EStatusCommande.Valider : x.DateAnnulation.HasValue ? EStatusCommande.Annuler : EStatusCommande.EnAttenteValidation : _filtre.Status,
             
-            Client = x.IdClientNavigation != null ? new CommandeClientExport
-            {
-                IdPublic = x.IdClientNavigation.IdPublic,
-                Nom = x.IdClientNavigation.Nom,
-                Adresse = x.IdClientNavigation.Adresse
-            } : null,
+                Client = x.IdClientNavigation != null ? new CommandeClientExport
+                {
+                    IdPublic = x.IdClientNavigation.IdPublic,
+                    Nom = x.IdClientNavigation.Nom,
+                    Adresse = x.IdClientNavigation.Adresse
+                } : null,
 
-            Livraison = x.IdLivraisonNavigation != null ? new CommandeLivraisonExport
-            {
-                IdPublic = x.IdLivraisonNavigation.IdPublic,
-                Ordre = x.OrdreLivraison.GetValueOrDefault()
-            } : null,
+                Livraison = x.IdLivraisonNavigation != null ? new CommandeLivraisonExport
+                {
+                    IdPublic = x.IdLivraisonNavigation.IdPublic,
+                    Ordre = x.OrdreLivraison.GetValueOrDefault()
+                } : null,
 
-            ListeProduit = x.ProduitCommandes.Select(y => new CommandeProduitExport
-            {
-                IdPublic = y.IdProduitNavigation.IdPublic,
-                Nom = y.IdProduitNavigation.Nom,
-                Quantite = y.Quantite,
-                PrixHT = y.PrixHt,
-                Tva = y.IdProduitNavigation.IdTvaNavigation.Valeur
-            }).ToArray()
-        })
-        .OrderBy(x => x.Date)
-        .ToArrayAsync();
+                ListeProduit = x.ProduitCommandes.Select(y => new CommandeProduitExport
+                {
+                    IdPublic = y.IdProduitNavigation.IdPublic,
+                    Nom = y.IdProduitNavigation.Nom,
+                    Quantite = y.Quantite,
+                    PrixHT = y.PrixHt,
+                    Tva = y.IdProduitNavigation.IdTvaNavigation.Valeur
+                }).ToArray()
+            })
+            .OrderBy(x => x.Date)
+            .ToArrayAsync();
 
-        return liste;
+        return new PaginationExport<CommandeExport>
+        { 
+            Liste = liste,
+            NumPage = _filtre.NumPage,
+            NbParPage = _filtre.NbParPage,
+            Total = total
+        };
     }
 
     public async Task<CommandeExport?> InfoAsync(string _numero, int _idGroupe)
@@ -212,6 +229,23 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
         int nb = await requete.ExecuteUpdateAsync(builder.SetPropertyCalls);
 
         return nb > 0;
+    }
+
+    public async Task<EReponseSupprimerCommande> SupprimerAsync(string _numero, int _idGroupe)
+    {
+        var commande = await InfoAsync(_numero, _idGroupe);
+
+        if (commande is null)
+            return EReponseSupprimerCommande.ExistePas;
+
+        if (commande.Date <= DateTime.UtcNow)
+            return EReponseSupprimerCommande.PeutPasEtreSupprimer;
+
+            int total = await _context.Commandes
+                .Where(x => x.IdGroupe == _idGroupe && x.Numero == _numero)
+                .ExecuteDeleteAsync();
+
+        return total > 0 ? EReponseSupprimerCommande.Ok : EReponseSupprimerCommande.ExistePas;
     }
 
     public async Task<bool> ExisteAsync(string _numero, int _idGroupe)

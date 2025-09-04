@@ -59,14 +59,16 @@ public static class ExportRoute
 
         int idGroupe = _httpContext.RecupererIdGroupe();
 
-        var listeCommande = await _commandeServ.ListerAsync(new ModelsImports.Commandes.CommandeFiltreImport
+        var commandePaginer = await _commandeServ.ListerAsync(new ModelsImports.Commandes.CommandeFiltreImport
         {
+            NbParPage = 1_000_000,
+            NumPage = 1,
             DateDebut = _dateInterval.DateDebut,
             DateFin = _dateInterval.DateFin,
             Status = _dateInterval.Status
         }, idGroupe);
 
-        if(listeCommande.Length is 0)
+        if(commandePaginer.Liste.Length is 0)
             return Results.NoContent();
 
         if (_dateInterval.EstFormatExcel)
@@ -83,9 +85,9 @@ public static class ExportRoute
             worksheet.Cell(1, 7).Value = "Liste des produits";
 
             int ligneIndex = 2;
-            for (int i = 0; i < listeCommande.Length; i++)
+            for (int i = 0; i < commandePaginer.Liste.Length; i++)
             {
-                var element = listeCommande[i];
+                var element = commandePaginer.Liste[i];
 
                 StringBuilder stringBuilder = new();
                 stringBuilder.Append("[");
@@ -126,7 +128,7 @@ public static class ExportRoute
             );
         }
 
-        var listeCommandeGroupeBy = listeCommande.GroupBy(x => x.Date).ToArray();
+        var listeCommandeGroupeBy = commandePaginer.Liste.GroupBy(x => x.Date).ToArray();
 
         var doc = Document.Create(doc =>
         {

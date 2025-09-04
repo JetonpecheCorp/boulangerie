@@ -56,6 +56,12 @@ export const routes: Routes = [
         title: "Livraison"
     },
     {
+        path: "commande",
+        canActivate: [adminGuard],
+        loadComponent: () => import('./pages/commande/commande.component').then(x => x.CommandeComponent),
+        title: "Commande"
+    },
+    {
         path: "employe",
         canActivate: [adminGuard],
         loadComponent: () => import('./pages/utilisateur/utilisateur.component').then(x => x.UtilisateurComponent),

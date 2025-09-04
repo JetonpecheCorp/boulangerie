@@ -1,5 +1,6 @@
 ﻿using Api.Enums;
 using Api.Models;
+using Api.ModelsExports;
 using Api.ModelsExports.Commandes;
 using Api.ModelsImports.Commandes;
 
@@ -13,7 +14,7 @@ public interface ICommandeService
     /// <param name="_filtre"></param>
     /// <param name="_idGroupe">groupe conserné</param>
     /// <returns></returns>
-    Task<CommandeExport[]> ListerAsync(CommandeFiltreImport _filtre, int _idGroupe);
+    Task<PaginationExport<CommandeExport>> ListerAsync(CommandeFiltreImport _filtre, int _idGroupe);
 
     /// <summary>
     /// Recuperer une commande
@@ -47,6 +48,14 @@ public interface ICommandeService
     /// <param name="_idGroupe">id groupe conserner</param>
     /// <returns><see langword="true"/> si ok, sinon <see langword="false"/></returns>
     Task<bool> ModifierStatusAsync(string _numero, EStatusCommandeModifier _status, int _idGroupe);
+
+    /// <summary>
+    /// Supprimer une commande
+    /// </summary>
+    /// <param name="_numero">numero de la commande</param>
+    /// <param name="_idGroupe">id groupe conserner</param>
+    /// <returns></returns>
+    Task<EReponseSupprimerCommande> SupprimerAsync(string _numero, int _idGroupe);
 
     /// <summary>
     /// Verifier si une commande existe

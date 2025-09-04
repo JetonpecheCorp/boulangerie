@@ -7,12 +7,11 @@ import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { PaginationExport } from '@model/exports/PaginationExport';
+import { CommandeFiltreExport, PaginationExport } from '@model/exports/PaginationExport';
 import { UtilisateurLeger } from '@model/Utilisateur';
 import { CommandeService } from '@service/Commande.service';
 import { UtilisateurService } from '@service/Utilisateur.service';
 import { EStatusCommande } from '../../../enums/EStatusCommande';
-import { CommandeFiltreExport } from '@model/exports/CommandeExport';
 import { Commande } from '@model/Commande';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -229,6 +228,8 @@ export class ProgrammerLivraisonComponent implements OnInit
 
     const INFOS: CommandeFiltreExport = 
     {
+      nbParPage: 1_000_000,
+      numPage: 1,
       dateDebut: this.dialogData.date!,
       dateFin: this.dialogData.date!,
       status: EStatusCommande.Valider,
@@ -238,7 +239,7 @@ export class ProgrammerLivraisonComponent implements OnInit
     this.commandeServ.Lister(INFOS).subscribe({
       next: (retour) =>
       {
-        this.listeCommande.set(retour);  
+        this.listeCommande.set(retour.liste);  
       }
     });
   }

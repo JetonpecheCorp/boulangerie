@@ -1,3 +1,5 @@
+import { EStatusCommande } from "@enum/EStatusCommande"
+
 export type PaginationExport =
 {
     numPage: number,
@@ -12,4 +14,14 @@ export type PaginationFiltreLivraisonExport = PaginationExport &
 
     idPublicClient?: string | null
     idPublicConducteur?: string | null
+}
+
+export type CommandeFiltreExport = PaginationExport & 
+{
+    dateDebut: Date,
+    dateFin: Date,
+
+    status: EStatusCommande,
+    sansLivraison?: boolean,
+    idPublicClient?: string
 }

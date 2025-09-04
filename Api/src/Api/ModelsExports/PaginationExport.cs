@@ -1,5 +1,6 @@
 ﻿using Api.ModelsExports.Categories;
 using Api.ModelsExports.Clients;
+using Api.ModelsExports.Commandes;
 using Api.ModelsExports.Fournisseurs;
 using Api.ModelsExports.Ingredients;
 using Api.ModelsExports.Livraisons;
@@ -31,6 +32,7 @@ public sealed record PaginationExport<T> where T : class
 [JsonSerializable(typeof(PaginationExport<FournisseurExport>))]
 [JsonSerializable(typeof(PaginationExport<ClientExport>))]
 [JsonSerializable(typeof(PaginationExport<ClientLegerExport>))]
+[JsonSerializable(typeof(PaginationExport<CommandeExport>))]
 [JsonSerializable(typeof(PaginationExport<UtilisateurLegerExport>))]
 [JsonSerializable(typeof(PaginationExport<UtilisateurExport>))]
 [JsonSerializable(typeof(PaginationExport<LivraisonExport>))]

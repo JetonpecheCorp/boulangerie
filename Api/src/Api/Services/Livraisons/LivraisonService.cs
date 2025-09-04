@@ -39,8 +39,7 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
         int total = await requete.CountAsync();
 
         var liste = await requete
-            .Skip((_filtre.NumPage - 1) * _filtre.NbParPage)
-            .Take(_filtre.NbParPage)
+            .Paginer(_filtre.NumPage, _filtre.NbParPage)
             .Select(x => new LivraisonExport
             {
                 IdPublic = x.IdPublic,

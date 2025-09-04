@@ -199,6 +199,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
         next: () =>
         {
           this.btnClicker.set(false);
+          this.toastrServ.success("La commande a été modifiée");
           this.dialogRef.close();
         },
         error: () => this.btnClicker.set(false)
@@ -228,6 +229,7 @@ export class ModalAjouterCommmandeComponent implements OnInit
             listeProduit: this.form.controls["listeProduit"].value
           };
   
+          this.toastrServ.success("La commande a été créée");
           this.btnClicker.set(false);
   
           this.dialogRef.close(CMD);

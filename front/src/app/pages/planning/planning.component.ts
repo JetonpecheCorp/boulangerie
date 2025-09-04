@@ -13,11 +13,11 @@ import { ModalCalendrierJourComponent } from '@modal/modal-calendrier-jour/modal
 import { RetourCalendrierMois } from '@model/calendrier/RetourCalendrier';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CommandeFiltreExport } from '@model/exports/CommandeExport';
 import { EStatusCommande, ConvertionEnum } from '@enum/EStatusCommande';
 import {MatSelectModule} from '@angular/material/select';
 import { ModalExportCommandeComponent } from '@modal/modal-export-commande/modal-export-commande.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { CommandeFiltreExport } from '@model/exports/PaginationExport';
 
 enum EModeCalendrier 
 {
@@ -159,15 +159,17 @@ export class PlanningComponent implements OnInit
 
     const INFOS: CommandeFiltreExport =
     {
+      numPage: 1,
+      nbParPage: 1_000_000,
       dateDebut: dateJour,
       dateFin: dateFin,
       status: _status
     };
     
     this.commandeServ.Lister(INFOS).subscribe({
-      next: (liste) =>
+      next: (retour) =>
       {
-        this.listeCommande.set(liste);
+        this.listeCommande.set(retour.liste);
       }
     });
   }

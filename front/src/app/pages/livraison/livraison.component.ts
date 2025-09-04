@@ -89,6 +89,9 @@ export class LivraisonComponent implements OnInit, AfterContentInit
             .filter(x => x.nom.toLowerCase().includes(valeur?.toLowerCase() || ""));
 
           this.listeClientFiltrer.set(liste);
+
+          if(!valeur)
+            this.ListerLivraison();
         }
       });
 

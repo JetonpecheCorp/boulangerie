@@ -2,6 +2,7 @@
 using Api.Extensions;
 using Api.Extensions.PdfStyle;
 using Api.Models;
+using Api.ModelsExports;
 using Api.ModelsExports.Commandes;
 using Api.ModelsImports.Commandes;
 using Api.Services.Clients;
@@ -24,10 +25,10 @@ public static class CommandeRoute
         builder.MapGet("lister", ListerAsync)
             .WithDescription("""
                 Lister les commandes (Status: 0 => Valider, 1 => En attente de validation, 2 => Annuler, 3 => Livrer (terminer), 4 => Tout)  
-                ATTENTION: IdPublicLivraison et sansLivraison NE SONT PAS CUMULABLES
+                ATTENTION: IdPublicClient et sansLivraison NE SONT PAS CUMULABLES
             """)
-            .Produces<CommandeExport[]>()
-            .ProducesBadRequest();
+            .ProducesBadRequest()
+            .Produces<PaginationExport<CommandeExport>>();
 
         builder.MapGet("facture/{numero}", GenererFactureAsync)
             .WithDescription("Ajouter une nouvelle commande")
@@ -40,13 +41,19 @@ public static class CommandeRoute
 
         builder.MapPut("modifierAdmin/{numeroCommande}", ModifierAsync)
             .WithDescription("Modifier une commande")
-            .ProducesNoContent()
-            .ProducesBadRequestErreurValidation();
+            .ProducesBadRequestErreurValidation()
+            .ProducesNoContent();
 
         builder.MapPut("modifierStatus", ModifierStatusAsync)
             .WithDescription("Modifier le status d'une commande")
-            .ProducesNoContent()
-            .ProducesNotFound();
+            .ProducesNotFound()
+            .ProducesNoContent();
+
+        builder.MapDelete("supprimer/{numeroCommande}", SupprimerAsync)
+            .WithDescription("Supprimer une commande")
+            .ProducesBadRequest()
+            .ProducesNotFound()
+            .ProducesNoContent();
 
         return builder;
     }
@@ -195,7 +202,7 @@ public static class CommandeRoute
 
         var liste = await _commandeServ.ListerAsync(_commandeFiltre, idGroupe);
 
-        return Results.Extensions.OK(liste, CommandeExportContext.Default);
+        return Results.Extensions.OK(liste, PaginationExportContext.Default);
     }
 
     async static Task<IResult> AjouterAsync(
@@ -266,5 +273,25 @@ public static class CommandeRoute
         bool ok = await _commandeServ.ModifierStatusAsync(_commande.Numero, _commande.Status, idGroupe);
 
         return ok ? Results.NoContent() : Results.NotFound();
+    }
+
+    async static Task<IResult> SupprimerAsync(
+        HttpContext _httpContext,
+        [FromServices] ICommandeService _commandeServ,
+        [FromRoute(Name = "numeroCommande")] string _numeroCommande
+    )
+    {
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        var etat = await _commandeServ.SupprimerAsync(_numeroCommande, idGroupe);
+
+        return etat switch
+        {
+            EReponseSupprimerCommande.Ok => Results.NoContent(),
+            EReponseSupprimerCommande.ExistePas => Results.NotFound(),
+            EReponseSupprimerCommande.PeutPasEtreSupprimer => Results.BadRequest("La commande ne peut pas être supprimée"),
+           _ => Results.NoContent()
+        };
+
     }
 }
