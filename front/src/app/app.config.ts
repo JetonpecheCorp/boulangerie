@@ -17,7 +17,7 @@ import { RecetteService } from '@service/Recette.service';
 import { VehiculeService } from '@service/Vehicule.service';
 import { FournissseurService } from '@service/Fournisseur.service';
 import { CommandeService } from '@service/Commande.service';
-import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_LOCALE, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { ClientService } from '@service/Client.service';
 import { UtilisateurService } from '@service/Utilisateur.service';
 import { LivraisonService } from '@service/Livraison.service';
@@ -29,6 +29,24 @@ const matInput: MatFormFieldDefaultOptions = {
   appearance: 'outline',
   subscriptSizing: 'dynamic'
 };
+
+class FrancaisDateAdapter extends NativeDateAdapter 
+{
+  override parse(value: any): Date | null 
+  {
+    if (typeof value == 'string' && value.indexOf('/') > -1) 
+    {
+      const str = value.split('/');
+      const ANNEE = Number(str[2]);
+      const MOIS = Number(str[1]) - 1;
+      const JOUR = Number(str[0]);
+      
+      return new Date(ANNEE, MOIS, JOUR);
+    }
+
+    return super.parse(value);
+  }
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -58,6 +76,7 @@ export const appConfig: ApplicationConfig = {
     { provide: GroupeService, useClass: GroupeService },
 
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matInput },
-    { provide: MAT_DATE_LOCALE, useValue: navigator.language }
+    { provide: MAT_DATE_LOCALE, useValue: navigator.language },
+    { provide: DateAdapter, useClass: FrancaisDateAdapter }
   ]
 };
