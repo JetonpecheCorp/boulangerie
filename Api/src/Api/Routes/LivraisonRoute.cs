@@ -20,7 +20,7 @@ public static class LivraisonRoute
         builder.WithOpenApi().ProducesServiceUnavailable();
 
         builder.MapGet("lister", ListerAsync)
-            .WithDescription("Lister les livraisons")
+            .WithDescription("Lister les livraisons, Recherche prioritaire non cumulable (numero de livraison)")
             .Produces<PaginationExport<LivraisonExport>>();
 
         builder.MapGet("detail/{idPublicLivraison:guid}", DetailAsync)

@@ -21,20 +21,22 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
                 x.Numero.Contains(_filtre.ThermeRecherche)
             );
         }
+        else
+        {
+            if (_filtre.DateDebut is not null)
+                requete = requete.Where(x => x.Date >= _filtre.DateDebut);
 
-        if(_filtre.DateDebut is not null)
-            requete = requete.Where(x => x.Date >= _filtre.DateDebut);
+            if (_filtre.DateFin is not null)
+                requete = requete.Where(x => x.Date <= _filtre.DateFin);
 
-        if(_filtre.DateFin is not null)
-            requete = requete.Where(x => x.Date <= _filtre.DateFin);
-
-        if (_filtre.IdPublicClient is not null && _filtre.IdPublicClient != Guid.Empty)
+            if (_filtre.IdPublicClient is not null && _filtre.IdPublicClient != Guid.Empty)
 #pragma warning disable CS8602 // Déréférencement d'une éventuelle référence null.
-            requete = requete.Where(x => x.Commandes.Any(y => y.IdClientNavigation.IdPublic == _filtre.IdPublicClient));
+                requete = requete.Where(x => x.Commandes.Any(y => y.IdClientNavigation.IdPublic == _filtre.IdPublicClient));
 #pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null.
 
-        if (_filtre.IdPublicConducteur is not null)
-            requete = requete.Where(x => x.IdUtilisateurNavigation.IdPublic == _filtre.IdPublicConducteur);
+            if (_filtre.IdPublicConducteur is not null)
+                requete = requete.Where(x => x.IdUtilisateurNavigation.IdPublic == _filtre.IdPublicConducteur);
+        }
 
         int total = await requete.CountAsync();
 

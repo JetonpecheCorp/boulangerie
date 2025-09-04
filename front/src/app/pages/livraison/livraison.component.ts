@@ -181,8 +181,6 @@ export class LivraisonComponent implements OnInit, AfterContentInit
     if(this.estEnChargement())
       return;
 
-    this.estEnChargement.set(true);
-
     if(this.form.value.dateDebut && this.form.value.dateFin)
     {
       if(this.form.value.dateDebut > this.form.value.dateFin)
@@ -191,6 +189,8 @@ export class LivraisonComponent implements OnInit, AfterContentInit
         return;
       }
     }
+
+    this.estEnChargement.set(true);
 
     const ID_PUBLIC_CLIENT = this.idPublicClient() ?? this.listeClient()
       .find(x => x.nom == this.autoCompleteClientFormCtrl.value)?.idPublic;

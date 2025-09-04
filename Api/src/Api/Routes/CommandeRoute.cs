@@ -25,7 +25,7 @@ public static class CommandeRoute
         builder.MapGet("lister", ListerAsync)
             .WithDescription("""
                 Lister les commandes (Status: 0 => Valider, 1 => En attente de validation, 2 => Annuler, 3 => Livrer (terminer), 4 => Tout)  
-                ATTENTION: IdPublicClient et sansLivraison NE SONT PAS CUMULABLES
+                ATTENTION: Recherche prioritaire et non cumulable (numéro de commande)
             """)
             .ProducesBadRequest()
             .Produces<PaginationExport<CommandeExport>>();
