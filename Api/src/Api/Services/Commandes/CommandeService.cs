@@ -19,37 +19,40 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
         if (!string.IsNullOrWhiteSpace(_filtre.ThermeRecherche))
             requete = requete.Where(x => x.Numero.Contains(_filtre.ThermeRecherche));
 
-        else if (_filtre.SansLivraison.HasValue)
+        else
         {
-            // commande sans livraison
-            if (_filtre.SansLivraison.Value)
-                requete = requete.Where(x => x.IdLivraison == null && x.EstLivraison);
+            if (_filtre.SansLivraison.HasValue)
+            {
+                // commande sans livraison
+                if (_filtre.SansLivraison.Value)
+                    requete = requete.Where(x => x.IdLivraison == null && x.EstLivraison);
 
-            // commande avec livraison
-            else
-                requete = requete.Where(x => x.IdLivraison != null);
-        }
+                // commande avec livraison
+                else
+                    requete = requete.Where(x => x.IdLivraison != null);
+            }
 
-        requete = _filtre.Status switch
-        {
-            EStatusCommande.Valider => requete.Where(x => x.DateValidation.HasValue),
-            EStatusCommande.EnAttenteValidation => requete.Where(x => !x.DateValidation.HasValue && !x.DateAnnulation.HasValue),
-            EStatusCommande.Annuler => requete.Where(x => x.DateAnnulation.HasValue),
-            EStatusCommande.Livrer => requete.Where(x => x.DatLivraison.HasValue),
-            _ => requete
-        };
+            requete = _filtre.Status switch
+            {
+                EStatusCommande.Valider => requete.Where(x => x.DateValidation.HasValue),
+                EStatusCommande.EnAttenteValidation => requete.Where(x => !x.DateValidation.HasValue && !x.DateAnnulation.HasValue),
+                EStatusCommande.Annuler => requete.Where(x => x.DateAnnulation.HasValue),
+                EStatusCommande.Livrer => requete.Where(x => x.DatLivraison.HasValue),
+                _ => requete
+            };
 
-        if(_filtre.IdPublicClient is not null)
-        {
+            if (_filtre.IdPublicClient is not null)
+            {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            requete = requete.Where(x => x.IdClientNavigation.IdPublic == _filtre.IdPublicClient);
+                requete = requete.Where(x => x.IdClientNavigation.IdPublic == _filtre.IdPublicClient);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-        }
+            }
 
-        requete = requete.Where(x =>
-            x.DatePourLe.Date >= _filtre.DateDebut.ToDateTime(TimeOnly.MinValue) &&
-            x.DatePourLe.Date <= _filtre.DateFin.ToDateTime(TimeOnly.MinValue)
-        );
+            requete = requete.Where(x =>
+                x.DatePourLe.Date >= _filtre.DateDebut.ToDateTime(TimeOnly.MinValue) &&
+                x.DatePourLe.Date <= _filtre.DateFin.ToDateTime(TimeOnly.MinValue)
+            );
+        }
 
         int total = await requete.CountAsync();
 
