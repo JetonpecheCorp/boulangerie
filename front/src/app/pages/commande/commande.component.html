@@ -98,10 +98,15 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> Action </th>
             <td mat-cell *matCellDef="let row">
-                <app-button (onClick)="TelechargerFacture(row.numero)" 
-                            toolTip="Télécharger la facture" 
-                            icon="download" 
-                            [style]="'miniFab'" />&nbsp;
+
+                <!-- status validé ou livré -->
+                @if(row.status == 0 || row.status == 3)
+                {
+                    <app-button (onClick)="TelechargerFacture(row.numero)" 
+                                toolTip="Télécharger la facture" 
+                                icon="download" 
+                                [style]="'miniFab'" />&nbsp;
+                }
 
                 @if(row.date >= dateJour || true)
                 {
