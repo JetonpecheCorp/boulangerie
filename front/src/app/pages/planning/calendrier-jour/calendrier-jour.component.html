@@ -52,31 +52,25 @@
                 </ul>
 
                 <div class="btnsAction">
-                    @if(element.status != eStatusCommande.Valider)
-                    {
-                        <button mat-icon-button stop-propagation 
-                                matTooltip="Valider la commande"
-                                (click)="ValiderCommande(element.numero)">
-                            <mat-icon>check_circle</mat-icon>
-                        </button> 
-                        <br>
-                    }
 
-                    @if(element.status != eStatusCommande.Annuler && element.status != eStatusCommande.Livrer)
+                    @if(element.date >= dateJour() || true)
                     {
-                        <button mat-icon-button stop-propagation
-                                matTooltip="Invalider la commande" 
-                                (click)="AnnulerCommande(element.numero)">
-                            <mat-icon>clear</mat-icon>
-                        </button>
-                        <br>
+                        @if(element.status == eStatusCommande.EnAttenteValidation || element.status == eStatusCommande.Annuler)
+                        {
+                            <app-button icon="check_circle" 
+                                        toolTip="Valider la commande"
+                                        [style]="'icon'"
+                                        (onClick)="ValiderCommande(element.numero)" />
+                            <br>
+                        }
+                        @else
+                        {
+                            <app-button icon="clear" 
+                                        toolTip="Invalider la commande"
+                                        [style]="'icon'"
+                                        (onClick)="AnnulerCommande(element.numero)" />
+                        }
                     }
-
-                    <button mat-icon-button stop-propagation 
-                            matTooltip="Télécharger la facture de la commande"
-                            (click)="TelechargerFacture(element.numero)">
-                        <mat-icon>download</mat-icon>
-                    </button>
                 </div>
             </mat-card-content>
         }

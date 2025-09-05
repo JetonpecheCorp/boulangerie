@@ -9,15 +9,15 @@ import { ProgrammerLivraisonComponent } from '@modal/programmer-livraison/progra
 import { MatIconModule } from '@angular/material/icon';
 import { CommandeService } from '@service/Commande.service';
 import { ConvertionEnum, EStatusCommande } from '@enum/EStatusCommande';
-import { StopPropagationDirective } from '@directive/stop-propagation.directive';
 import { ThemeService } from '@service/ThemeService.Service';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/modal-ajouter-commmande.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ButtonComponent } from "@component/button/button.component";
 
 @Component({
     selector: 'app-calendrier-jour',
-    imports: [MatTooltipModule, StopPropagationDirective, MatIconModule, MatCardModule, MatSlideToggleModule, MatButtonModule],
+    imports: [ButtonComponent, MatTooltipModule, MatIconModule, MatCardModule, MatSlideToggleModule, MatButtonModule, ButtonComponent],
     templateUrl: './calendrier-jour.component.html',
     styleUrl: './calendrier-jour.component.scss'
 })
@@ -54,11 +54,6 @@ export class CalendrierJourComponent implements OnInit, OnChanges
   protected ValiderCommande(_numero: string): void
   {
     this.ModifierStatusCommande(_numero, EStatusCommande.Valider);
-  }
-
-  protected TelechargerFacture(_numero: string): void
-  {
-    this.commandeServ.TelechargerFacture(_numero);
   }
 
   protected AnnulerCommande(_numero: string): void
