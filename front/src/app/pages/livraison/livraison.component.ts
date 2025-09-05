@@ -151,20 +151,6 @@ export class LivraisonComponent implements OnInit, AfterContentInit
     });
   }
 
-  protected OuvrirModalSupprimerLivraison(_livraison: Livraison): void
-  {
-    const MESSAGE = `Confirmez-vous la suppression de la livraison numero: ${_livraison.numero} ?`;
-    this.themeServ.OuvrirConfirmation("Suppression livraison", MESSAGE);
-    
-    this.themeServ.retourConfirmation.subscribe(retour => 
-    {
-      if(retour === false)
-        return;
-
-      this.SupprimerLivraison(_livraison.idPublic);
-    });
-  }
-
   protected OuvrirModalModifierLivraison(_livraison: Livraison): void
   {
     const DIALOG_REF = this.matDialog.open(ProgrammerLivraisonComponent, {
@@ -227,35 +213,6 @@ export class LivraisonComponent implements OnInit, AfterContentInit
       },
       error: () => this.estEnChargement.set(false)
     })
-  }
-
-  private SupprimerLivraison(_idPublicLivraison: string): void
-  {
-    if(this.estEnChargement())
-      return;
-
-    this.estEnChargement.set(true);
-
-    this.livraisonServ.Supprimer(_idPublicLivraison).subscribe({
-      next: () =>
-      {
-        this.dataSource.update(x =>
-        {
-          const INDEX = x.data.findIndex(x => x.idPublic == _idPublicLivraison);
-
-          if(INDEX == -1)
-            return x;
-
-          x.data.splice(INDEX, 1);
-
-          return x;
-        });
-
-        this.ToastrServ.success("La livraison a été supprimé");
-        this.estEnChargement.set(false);
-      },
-      error: () => this.estEnChargement.set(false)
-    });
   }
 
   private ListerClient(): void
