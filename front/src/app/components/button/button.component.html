@@ -80,6 +80,24 @@
             }
         </button>
     }
+    @case ("icon") 
+    {
+        <button stop-propagation mat-icon-button [matTooltip]="toolTip()" (click)="Onclick()">
+            @if(btnClicker())
+            {
+                <mat-spinner [diameter]="diametreSpinner()"
+                             [class]="classSpinner()">
+                </mat-spinner>
+            }
+            @else 
+            {
+                @if(icon())
+                {
+                    <mat-icon>{{ icon() }}</mat-icon>
+                }                
+            }
+        </button>
+    }
 }
 
 
