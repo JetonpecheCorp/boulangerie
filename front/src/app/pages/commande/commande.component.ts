@@ -138,6 +138,11 @@ export class CommandeComponent implements OnInit, AfterContentInit
     })
   }
 
+  protected TelechargerFacture(_numeroCommande: string): void
+  {
+    this.commandeServ.TelechargerFacture(_numeroCommande);
+  }
+
   protected ListerCommande(): void
   {
     this.estEnChargement.set(true);

@@ -3,10 +3,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { StopPropagationDirective } from '@directive/stop-propagation.directive';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-button',
-    imports: [StopPropagationDirective, MatIconModule, MatProgressSpinnerModule, MatButtonModule],
+    imports: [MatTooltipModule, StopPropagationDirective, MatIconModule, MatProgressSpinnerModule, MatButtonModule],
     templateUrl: './button.component.html',
     styleUrl: './button.component.scss'
 })
@@ -18,6 +19,7 @@ export class ButtonComponent
   btnClicker = model<boolean>(false);
   icon = input<string | null>(null);
   style = input<"flat" | "raised" | "miniFab" | "basic">("flat");
+  toolTip = input<string>("");
 
   onClick = output();
 

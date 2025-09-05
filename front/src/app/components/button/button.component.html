@@ -2,7 +2,7 @@
 {
     @case ("flat") 
     {
-        <button stop-propagation mat-flat-button (click)="Onclick()">
+        <button stop-propagation mat-flat-button [matTooltip]="toolTip()" (click)="Onclick()">
             @if(btnClicker())
             {
                 <mat-spinner [diameter]="diametreSpinner()"
@@ -22,7 +22,7 @@
     }
     @case ("raised") 
     {
-        <button stop-propagation mat-raised-button (click)="Onclick()">
+        <button stop-propagation mat-raised-button  [matTooltip]="toolTip()"(click)="Onclick()">
             @if(btnClicker())
             {
                 <mat-spinner [diameter]="diametreSpinner()"
@@ -42,7 +42,7 @@
     }
     @case ("miniFab") 
     {
-        <button stop-propagation mat-mini-fab (click)="Onclick()">
+        <button stop-propagation mat-mini-fab [matTooltip]="toolTip()" (click)="Onclick()">
             @if(btnClicker())
             {
                 <mat-spinner [diameter]="diametreSpinner()"
@@ -62,7 +62,7 @@
     }
     @case ("basic") 
     {
-        <button stop-propagation mat-button (click)="Onclick()">
+        <button stop-propagation mat-button [matTooltip]="toolTip()" (click)="Onclick()">
             @if(btnClicker())
             {
                 <mat-spinner [diameter]="diametreSpinner()"

@@ -98,6 +98,11 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> Action </th>
             <td mat-cell *matCellDef="let row">
+                <app-button (onClick)="TelechargerFacture(row.numero)" 
+                            toolTip="Télécharger la facture" 
+                            icon="download" 
+                            [style]="'miniFab'" />&nbsp;
+
                 @if(row.date >= dateJour || true)
                 {
                     <app-button (onClick)="OuvrirModalCommande(row)" icon="edit" [style]="'miniFab'" />&nbsp;
