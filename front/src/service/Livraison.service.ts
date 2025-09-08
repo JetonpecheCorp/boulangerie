@@ -7,6 +7,8 @@ import { LivraisonExport } from '@model/exports/LivraisonExport';
 import { Livraison, LivraisonAjoutReponse, LivraisonDetail } from '@model/Livraison';
 import { Pagination } from '@model/Pagination';
 import { PaginationFiltreLivraisonExport } from '@model/exports/PaginationExport';
+import { LivraisonLivreur } from '@model/LivraisonLivreur';
+import { ConvertionEnum } from '@enum/EStatusCommande';
 
 export class LivraisonService 
 {
@@ -53,6 +55,23 @@ export class LivraisonService
           return retour;
         })
       );
+  }
+
+  ListerPourLivreur(_date: Date): Observable<LivraisonLivreur[]>
+  {
+    return this.http.get<LivraisonLivreur[]>(`${this.BASE_API}/lister-pour-livreur/${_date.toISOFormat()}`)
+      .pipe(takeUntilDestroyed(this.destroyRef),
+      map(livraison => 
+      {
+        for (const element of livraison) 
+        {
+          for (const element2 of element.listeCommande) 
+            element2.nomStatus = ConvertionEnum.StatusCommande(element2.status);
+        }
+
+        return livraison;
+      })
+    );
   }
 
   Detail(_idPublicLivraison: string): Observable<LivraisonDetail>

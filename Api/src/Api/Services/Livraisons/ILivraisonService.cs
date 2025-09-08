@@ -23,6 +23,14 @@ public interface ILivraisonService
     Task<LivraisonDetailExport?> RecupererDetailAsync(Guid _idPublicLivraison);
 
     /// <summary>
+    /// Recuperer les livraisons pour le conducteur
+    /// </summary>
+    /// <param name="_idPublicConducteur">id public du conducteur conserné</param>
+    /// <param name="_date">date des livraisons</param>
+    /// <returns></returns>
+    Task<LivraisonLivreurExport[]> ListerDetailLivreurAsync(Guid _idPublicConducteur, DateOnly _date);
+
+    /// <summary>
     /// Ajouter une livraison
     /// </summary>
     /// <param name="_livraison">info livraison (sans les commandes)</param>

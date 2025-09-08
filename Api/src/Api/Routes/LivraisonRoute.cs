@@ -23,6 +23,11 @@ public static class LivraisonRoute
             .WithDescription("Lister les livraisons, Recherche prioritaire non cumulable (numero de livraison)")
             .Produces<PaginationExport<LivraisonExport>>();
 
+        builder.MapGet("lister-pour-livreur/{date}", ListerPourLivreurAsync)
+            .WithDescription("Lister les livraisons à effectuer")
+            .ProducesBadRequest()
+            .Produces<LivraisonLivreurExport>();
+
         builder.MapGet("detail/{idPublicLivraison:guid}", DetailAsync)
             .WithDescription("Detail de la livraison")
             .ProducesNotFound()
@@ -57,6 +62,25 @@ public static class LivraisonRoute
         var retour = await _livraisonServ.ListerAsync(_filtre, idGroupe);
 
         return Results.Extensions.OK(retour, PaginationExportContext.Default);
+    }
+
+    async static Task<IResult> ListerPourLivreurAsync(
+        HttpContext _httpContext,
+        ILivraisonService _livraisonServ,
+        [FromRoute(Name = "date")] string _dateString
+    )
+    {
+        Guid idPublicUtilisateur = Guid.Parse(_httpContext.RecupererIdPublique());
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        if (DateOnly.TryParse(_dateString, out var date))
+        {
+            var liste = await _livraisonServ.ListerDetailLivreurAsync(idPublicUtilisateur, date);
+
+            return Results.Extensions.OK(liste, LivraisonLivreurExportContext.Default);
+        }
+
+        return Results.BadRequest("Format de la date invalide (JJ-MM-AAAA)");
     }
 
     async static Task<IResult> DetailAsync(

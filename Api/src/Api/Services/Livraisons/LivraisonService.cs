@@ -1,10 +1,11 @@
-﻿using Api.ModelsExports.Livraisons;
-using Api.ModelsExports;
-using Api.Models;
-using Microsoft.EntityFrameworkCore;
-using Api.ModelsImports.Livraisons;
-using Api.ModelsExports.Commandes;
+﻿using Api.Enums;
 using Api.Extensions;
+using Api.Models;
+using Api.ModelsExports;
+using Api.ModelsExports.Commandes;
+using Api.ModelsExports.Livraisons;
+using Api.ModelsImports.Livraisons;
+using Microsoft.EntityFrameworkCore;
 using LivraisonInfoId = (int Id, System.Guid IdPublicUtilisateur, System.Guid IdPublicVehicule);
 
 namespace Api.Services.Livraisons;
@@ -57,6 +58,46 @@ public sealed class LivraisonService(BoulangerieContext _context): ILivraisonSer
             NumPage = _filtre.NumPage,
             NbParPage = _filtre.NbParPage
         };
+    }
+
+    public async Task<LivraisonLivreurExport[]> ListerDetailLivreurAsync(Guid _idPublicConducteur, DateOnly _date)
+    {
+        if (_idPublicConducteur == Guid.Empty)
+            return [];
+
+        var liste = await _context.Livraisons
+            .Where(x => x.IdUtilisateurNavigation.IdPublic == _idPublicConducteur && x.Date == _date)
+            .Select(x => new LivraisonLivreurExport
+            {
+                IdPublic = x.IdPublic,
+
+                Vehicule = new LivraisonVehiculeExport
+                {
+                    IdPublic = x.IdVehiculeNavigation.IdPublic,
+                    Immatriculation = x.IdVehiculeNavigation.Immatriculation,
+                    Nom = x.IdVehiculeNavigation.Nom
+                },
+
+                ListeCommande = x.Commandes.OrderBy(y => y.OrdreLivraison).Select(y => new LivreurCommandeExport
+                {
+                    Numero = y.Numero,
+                    Status = y.DatLivraison.HasValue ? EStatusCommande.Livrer : y.DateValidation.HasValue ? EStatusCommande.Valider : y.DateAnnulation.HasValue ? EStatusCommande.Annuler : EStatusCommande.EnAttenteValidation,
+                    Client = y.IdClientNavigation != null ? new LivreurCommandeClientExport
+                    {
+                        Adresse = y.IdClientNavigation.Adresse,
+                        Nom = y.IdClientNavigation.Nom
+                    } : null,
+
+                    ListeProduit = y.ProduitCommandes.Select(z => new LivreurCommandeProduitExport
+                    {
+                        Nom = z.IdProduitNavigation.Nom,
+                        Quantite = z.Quantite
+                    }).ToArray()
+                }).ToArray()
+            })
+            .ToArrayAsync();
+
+        return liste;
     }
 
     public async Task<LivraisonDetailExport?> RecupererDetailAsync(Guid _idPublicLivraison)

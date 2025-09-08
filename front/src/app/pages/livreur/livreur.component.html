@@ -1,0 +1,52 @@
+<h1>Livraisons pour vous</h1>
+
+<mat-form-field class="mb-3">
+    <mat-label>Choisir livraison</mat-label>
+    <mat-select (valueChange)="LivraisonChoisi($event)">
+
+        @for (element of listeLivraison(); track $index)
+        {
+            <mat-option value="{{ $index }}">
+                {{ element.vehicule.nom }} ({{ element.vehicule.immatriculation }})
+            </mat-option>
+        }
+    </mat-select>
+</mat-form-field>
+
+@for (element of livraison(); track $index) 
+{
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <mat-card-title>Livraison n°{{ $index + 1 }}</mat-card-title>
+            <mat-card-subtitle>{{ element.nomStatus }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            Numéro: {{ element.numero }} <br>
+            Client: {{ element.client?.nom }} <br>
+            Adresse: {{ element.client?.adresse }} 
+
+            <hr>
+
+            @for (element2 of element.listeProduit; track element2.nom)
+            {
+                {{ element2.nom }} (x{{ element2.quantite }}) 
+            }
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+            @if(element.client)
+            {
+                <button matButton="filled"
+                        [cdkCopyToClipboard]="element.client.adresse" 
+                        aria-label="Copier l'adresse" 
+                        matTooltip="Copier l'adresse">
+                    <mat-icon style="margin: 0">content_copy</mat-icon>
+                </button>&nbsp;
+            }
+
+            <app-button (onClick)="LivraisonFaite(element)" 
+                        [btnClicker]="btnClicker()" 
+                        label="Livraison faite" />
+        </mat-card-actions>
+    </mat-card>
+}

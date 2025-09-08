@@ -78,5 +78,11 @@ export const routes: Routes = [
         canActivate: [adminGuard],
         loadComponent: () => import('./pages/groupe/groupe.component').then(x => x.GroupeComponent),
         title: "Groupe"
+    },
+    {
+        path: "livreur",
+        canActivate: [adminGuard],
+        loadComponent: () => import('./pages/livreur/livreur.component').then(x => x.LivreurComponent),
+        title: "Livreur"
     }
 ];
