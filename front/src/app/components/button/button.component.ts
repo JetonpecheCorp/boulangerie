@@ -18,8 +18,9 @@ export class ButtonComponent
   classSpinner = input<string>("spinnerBtn");
   btnClicker = model<boolean>(false);
   icon = input<string | null>(null);
-  style = input<"flat" | "raised" | "miniFab" | "basic" | "icon">("flat");
+  style = input<"filled" | "text" | "tonal" | "outlined" | "icon" | "miniFab">("filled");
   toolTip = input<string>("");
+  ariaLabel = input<string | null>(null);
 
   onClick = output();
 

@@ -1,7 +1,6 @@
 import { Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
@@ -13,7 +12,7 @@ import { ButtonComponent } from "@component/button/button.component";
 
 @Component({
     selector: 'app-importer-donnee',
-    imports: [ReactiveFormsModule, MatDialogModule, MatButtonModule, MatSelectModule, MatFormFieldModule, ButtonComponent],
+    imports: [ReactiveFormsModule, MatDialogModule, MatSelectModule, MatFormFieldModule, ButtonComponent],
     templateUrl: './importer-donnee.component.html',
     styleUrl: './importer-donnee.component.scss'
 })

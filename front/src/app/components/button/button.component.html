@@ -1,103 +1,75 @@
 @switch (style()) 
 {
-    @case ("flat") 
-    {
-        <button stop-propagation mat-flat-button [matTooltip]="toolTip()" (click)="Onclick()">
-            @if(btnClicker())
-            {
-                <mat-spinner [diameter]="diametreSpinner()"
-                             [class]="classSpinner()">
-                </mat-spinner>
-            }
-            @else 
-            {
-                @if(icon())
-                {
-                    <mat-icon>{{ icon() }}</mat-icon>
-                }
-
-                {{ label() }}
-            }
-        </button>
-    }
-    @case ("raised") 
-    {
-        <button stop-propagation mat-raised-button  [matTooltip]="toolTip()"(click)="Onclick()">
-            @if(btnClicker())
-            {
-                <mat-spinner [diameter]="diametreSpinner()"
-                             [class]="classSpinner()">
-                </mat-spinner>
-            }
-            @else 
-            {
-                @if(icon())
-                {
-                    <mat-icon>{{ icon() }}</mat-icon>
-                }
-                
-                {{ label() }}
-            }
-        </button>
-    }
-    @case ("miniFab") 
-    {
-        <button stop-propagation mat-mini-fab [matTooltip]="toolTip()" (click)="Onclick()">
-            @if(btnClicker())
-            {
-                <mat-spinner [diameter]="diametreSpinner()"
-                             [class]="classSpinner()">
-                </mat-spinner>
-            }
-            @else 
-            {
-                @if(icon())
-                {
-                    <mat-icon>{{ icon() }}</mat-icon>
-                }
-                
-                {{ label() }}
-            }
-        </button>
-    }
-    @case ("basic") 
-    {
-        <button stop-propagation mat-button [matTooltip]="toolTip()" (click)="Onclick()">
-            @if(btnClicker())
-            {
-                <mat-spinner [diameter]="diametreSpinner()"
-                             [class]="classSpinner()">
-                </mat-spinner>
-            }
-            @else 
-            {
-                @if(icon())
-                {
-                    <mat-icon>{{ icon() }}</mat-icon>
-                }
-                
-                {{ label() }}
-            }
-        </button>
-    }
     @case ("icon") 
     {
-        <button stop-propagation mat-icon-button [matTooltip]="toolTip()" (click)="Onclick()">
+        <button stop-propagation 
+                matIconButton
+                [matTooltip]="toolTip()"
+                (click)="Onclick()">
             @if(btnClicker())
             {
                 <mat-spinner [diameter]="diametreSpinner()"
-                             [class]="classSpinner()">
+                                [class]="classSpinner()">
+                </mat-spinner>
+            }
+            @else 
+            {
+                <mat-icon>{{ icon() }}</mat-icon>
+            }
+        </button>
+    }
+    @case("miniFab")
+    {
+        <button stop-propagation 
+                [class.matIconButton]="style() == 'icon' ? true : null"
+                [attr.matMiniFab]="style() == 'miniFab' ? '' : null" 
+                [matButton]="$any(style() != 'icon' && style() != 'miniFab' ? style() : null)"
+                [matTooltip]="toolTip()"
+                (click)="Onclick()">
+            @if(btnClicker())
+            {
+                <mat-spinner [diameter]="diametreSpinner()"
+                                [class]="classSpinner()">
                 </mat-spinner>
             }
             @else 
             {
                 @if(icon())
                 {
-                    <mat-icon>{{ icon() }}</mat-icon>
-                }                
+                    <mat-icon [style]="!label() && style() == 'icon' && style() == 'miniFab' ? 'margin: 0' : ''">
+                        {{ icon() }}
+                    </mat-icon>
+                }   
+                
+                {{ label() }}
+            }
+        </button>
+    }
+    @default 
+    {
+        <button stop-propagation 
+                [matButton]="$any(style())"
+                [matTooltip]="toolTip()"
+                [attr.aria-label]="ariaLabel() ?? label()"
+                (click)="Onclick()">
+                
+            @if(btnClicker())
+            {
+                <mat-spinner [diameter]="diametreSpinner()"
+                                [class]="classSpinner()">
+                </mat-spinner>
+            }
+            @else 
+            {
+                @if(icon())
+                {
+                    <mat-icon [style]="!label() ? 'margin: 0' : ''">
+                        {{ icon() }}
+                    </mat-icon>
+                }   
+                
+                {{ label() }}
             }
         </button>
     }
 }
-
-

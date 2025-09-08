@@ -24,7 +24,6 @@
                          [listeCommande]="listeCommandeFiltrer()" />
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-flat-button (click)="Fermer()">Fermer</button>&nbsp;
-
+    <app-button label="Fermer" (onClick)="Fermer()" />&nbsp;
     <app-button label="Ajouter" (onClick)="OuvrirModalAjouterCommande()" />
 </mat-dialog-actions>

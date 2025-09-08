@@ -150,7 +150,7 @@
       
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button mat-dialog-close>Fermer</button>
+    <button matButton="text" mat-dialog-close>Fermer</button>
     <app-button [btnClicker]="btnClicker()" 
                 [label]="dialogData.livraison ? 'Modifier' : 'Ajouter'"
                 (onClick)="AjouterOuModifier()" />

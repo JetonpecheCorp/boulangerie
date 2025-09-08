@@ -13,9 +13,7 @@
     </mat-form-field>
 
     <!-- btn choisir fichier -->
-    <button mat-flat-button (click)="inputFile.click()">
-        Choisissez votre fichier (CSV)
-    </button>
+     <app-button label="Choisissez votre fichier (CSV)" (onClick)="inputFile.click()" />
     <br>
     <p style="margin-top: 10px;">Fichier: {{ nomFichier() }}</p>
   
@@ -39,7 +37,7 @@
 
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button mat-dialog-close>Fermer</button>&nbsp;
+    <button matButton="text" mat-dialog-close>Fermer</button>&nbsp;
     <app-button [btnClicker]="btnClicker()" 
                 (onClick)="Importer()" 
                 label="Importer" />
