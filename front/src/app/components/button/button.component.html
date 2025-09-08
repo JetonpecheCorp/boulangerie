@@ -21,9 +21,7 @@
     @case("miniFab")
     {
         <button stop-propagation 
-                [class.matIconButton]="style() == 'icon' ? true : null"
-                [attr.matMiniFab]="style() == 'miniFab' ? '' : null" 
-                [matButton]="$any(style() != 'icon' && style() != 'miniFab' ? style() : null)"
+                matMiniFab
                 [matTooltip]="toolTip()"
                 (click)="Onclick()">
             @if(btnClicker())
