@@ -21,16 +21,24 @@
             <mat-card-subtitle>{{ element.nomStatus }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            Numéro: {{ element.numero }} <br>
-            Client: {{ element.client?.nom }} <br>
-            Adresse: {{ element.client?.adresse }} 
-
-            <hr>
-
-            @for (element2 of element.listeProduit; track element2.nom)
-            {
-                {{ element2.nom }} (x{{ element2.quantite }}) 
-            }
+            <div class="row">
+                <div class="col-lg-6 col-xs-12">
+                    <p>
+                        <b>Numéro:</b> {{ element.numero }} <br>
+                        <b>Client:</b> {{ element.client?.nom }} <br>
+                        <b>Adresse:</b> {{ element.client?.adresse }} 
+                    </p>
+                </div>
+                <div class="col-lg-6 col-xs-12">
+                    <p class="m-0"><b>Produits</b></p>
+                    <ul style="margin: 0; padding: 0;">
+                        @for (element2 of element.listeProduit; track element2.nom)
+                        {
+                            <li>{{ element2.nom }} (x{{ element2.quantite }})</li>
+                        }
+                    </ul>
+                </div>
+            </div>
         </mat-card-content>
 
         <mat-card-actions align="end">
