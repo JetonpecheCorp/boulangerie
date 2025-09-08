@@ -108,7 +108,7 @@
                                 [style]="'miniFab'" />&nbsp;
                 }
 
-                @if(row.date >= dateJour || true)
+                @if(dateJour <= row.date)
                 {
                     <app-button (onClick)="OuvrirModalCommande(row)" icon="edit" [style]="'miniFab'" />&nbsp;
                     <app-button (onClick)="OuvrirModalConfirmation(row)" icon="delete" [style]="'miniFab'" />
