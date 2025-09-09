@@ -2,13 +2,20 @@
 
   @if (EstConnecter()) 
   {
-    <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <button matIconButton (click)="drawer.toggle()" aria-label="Menu vertical">
       <mat-icon>menu</mat-icon>
     </button>
   }
 
   <span>Boulangerie</span>
   <span class="spacer"></span>
+
+  <button matIconButton aria-label="Déconnexion" (click)="Deconnexion()">
+    <mat-icon></mat-icon>
+  </button>
+  <button matIconButton aria-label="Menu paramètre" (click)="OuvrirModalParametre()">
+    <mat-icon>settings</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-drawer-container 
