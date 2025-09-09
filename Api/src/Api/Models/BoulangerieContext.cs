@@ -71,8 +71,13 @@ public partial class BoulangerieContext : DbContext
 
             entity.Property(e => e.Adresse).HasMaxLength(800);
             entity.Property(e => e.AdresseFacturation).HasMaxLength(800);
+            entity.Property(e => e.ConnexionBloquer)
+                .IsRequired()
+                .HasDefaultValueSql("'1'");
             entity.Property(e => e.InfoComplementaire).HasMaxLength(1000);
+            entity.Property(e => e.Login).HasMaxLength(30);
             entity.Property(e => e.Mail).HasMaxLength(250);
+            entity.Property(e => e.Mdp).HasMaxLength(300);
             entity.Property(e => e.Nom).HasMaxLength(300);
             entity.Property(e => e.Telephone).HasMaxLength(20);
 

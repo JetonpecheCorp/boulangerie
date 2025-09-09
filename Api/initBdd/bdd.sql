@@ -26,9 +26,12 @@ CREATE TABLE IF NOT EXISTS Boulangerie.Client (
     Nom VARCHAR(300) NOT NULL,
     Mail VARCHAR(250) NULL,
     Telephone VARCHAR(20) NULL,
+    Login VARCHAR(30) NULL,
+    Mdp VARCHAR(300) NULL,
     Adresse VARCHAR(800) NOT NULL,
     AdresseFacturation VARCHAR(800) NOT NULL,
     InfoComplementaire VARCHAR(1000) NULL,
+    ConnexionBloquer TINYINT(1) NOT NULL DEFAULT 1,
 
     FOREIGN KEY (IdGroupe) REFERENCES Groupe (Id)
 );

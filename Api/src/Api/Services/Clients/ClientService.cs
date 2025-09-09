@@ -34,7 +34,9 @@ public sealed class ClientService(BoulangerieContext _context): IClientService
                 AdresseFacturation = x.AdresseFacturation,
                 InfoComplementaire = x.InfoComplementaire,
                 Mail = x.Mail,
-                Telephone = x.Telephone
+                Telephone = x.Telephone,
+                ConnexionBloquer = x.ConnexionBloquer,
+                PossedeCompte = x.Login != null && x.Mdp != null
             }).ToArrayAsync();
 
         PaginationExport<ClientExport> pagination = new()

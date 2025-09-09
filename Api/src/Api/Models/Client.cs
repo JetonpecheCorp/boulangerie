@@ -17,11 +17,17 @@ public partial class Client
 
     public string? Telephone { get; set; }
 
+    public string? Login { get; set; }
+
+    public string? Mdp { get; set; }
+
     public string Adresse { get; set; } = null!;
 
     public string AdresseFacturation { get; set; } = null!;
 
     public string? InfoComplementaire { get; set; }
+
+    public bool ConnexionBloquer { get; set; }
 
     public virtual ICollection<Commande> Commandes { get; set; } = new List<Commande>();
 

@@ -17,6 +17,8 @@ public sealed record ClientExport
     public required string AdresseFacturation { get; init; }
 
     public required string? InfoComplementaire { get; init; }
+    public required bool PossedeCompte { get; init; }
+    public required bool ConnexionBloquer { get; init; }
 }
 
 [JsonSerializable(typeof(ClientExport[]))]
