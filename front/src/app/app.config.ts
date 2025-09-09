@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, Injectable, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -30,6 +30,7 @@ const matInput: MatFormFieldDefaultOptions = {
   subscriptSizing: 'dynamic'
 };
 
+@Injectable()
 class FrancaisDateAdapter extends NativeDateAdapter 
 {
   override parse(value: any): Date | null 
