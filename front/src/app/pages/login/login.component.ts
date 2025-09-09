@@ -5,12 +5,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthentificationService } from '@service/Authentification.service'
-import { ThemeService } from '@service/ThemeService.Service';
 import { InputComponent } from "@component/input/input.component";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { environment } from '../../../environments/environment';
 import { ButtonComponent } from "@component/button/button.component";
 import { Router, RouterLink } from '@angular/router';
+import { Location } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-login',
@@ -24,15 +25,37 @@ export class LoginComponent implements OnInit
   protected btnClicker = signal(false);
 
   private authentificationServ = inject(AuthentificationService);
-  private serv = inject(ThemeService);
+  private location = inject(Location);
+  private toastrServ = inject(ToastrService);
   private router = inject(Router);
 
   ngOnInit(): void 
   {
     this.form = new FormGroup({
-      login: new FormControl<String>("", [Validators.required, Validators.email]),
-      mdp: new FormControl<String>("", [Validators.required])
-    });
+      login: new FormControl<string>("", [Validators.required, Validators.email]),
+      mdp: new FormControl<string>("", [Validators.required])
+    }); 
+    
+    // reconnexion automatique
+    setTimeout(() => 
+    {
+      if(sessionStorage.getItem("utilisateur"))
+      {      
+        environment.utilisateur = JSON.parse(sessionStorage.getItem("utilisateur")!);
+
+        const EXP = +JSON.parse(atob(environment.utilisateur.jwt.split(".")[1]))["exp"];
+
+        // JWT expiré
+        if(new Date(EXP * 1_000).getTime() < new Date().getTime())
+        {
+          sessionStorage.clear();
+          return;
+        }
+          
+        this.toastrServ.clear();
+        this.location.back();
+      }
+    }, 0);
   }
 
   protected OnConnexion(): void
@@ -53,14 +76,9 @@ export class LoginComponent implements OnInit
         
         environment.utilisateur = retour;        
         this.router.navigateByUrl("/planning");
-        localStorage.setItem("utilisateur", JSON.stringify(environment.utilisateur));
+        sessionStorage.setItem("utilisateur", JSON.stringify(environment.utilisateur));
       },
       error: () => this.btnClicker.set(false)
     });
-  }
-
-  generateDynamicTheme(ev: Event)
-  {
-    this.serv.generateDynamicTheme(ev);
   }
 }
