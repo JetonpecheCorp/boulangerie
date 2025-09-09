@@ -40,6 +40,7 @@
             <td mat-cell *matCellDef="let row"> 
                 <app-button [style]="'miniFab'" 
                             [icon]="row.connexionBloquer ? 'lock' : 'lock_open'" 
+                            toolTip="(Dé)bloquer la connexion aux membres du groupe"
                             [btnClicker]="btnClicker()"
                             (onClick)="BloquerDebloquerConnexion(row)" />
             </td>
@@ -49,13 +50,7 @@
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> Action </th>
             <td mat-cell *matCellDef="let row">
-                <button mat-mini-fab (click)="OuvrirModal(row)">
-                    <mat-icon>edit</mat-icon>
-                </button>&nbsp;
-
-                <button mat-mini-fab matTooltip="Se connecter au groupe">
-                    <mat-icon>power_settings_new</mat-icon>
-                </button>
+                <app-button [style]="'miniFab'" icon="edit" (onClick)="OuvrirModal(row)" />
             </td>
         </ng-container>
 

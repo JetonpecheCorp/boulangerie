@@ -15,11 +15,11 @@ import { GroupeService } from '@service/Groupe.service';
 import { Groupe } from '@model/Groupe';
 import { AjouterModifierGroupeComponent } from '@modal/ajouter-modifier-groupe/ajouter-modifier-groupe.component';
 import { ButtonComponent } from "@component/button/button.component";
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-groupe',
-    imports: [MatTooltipModule, MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule, ButtonComponent],
+    imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule, ReactiveFormsModule, MatProgressSpinnerModule, MatPaginatorModule, MatSortModule, MatFormFieldModule, MatInputModule, ButtonComponent],
     templateUrl: './groupe.component.html',
     styleUrl: './groupe.component.scss'
 })
@@ -31,6 +31,7 @@ export class GroupeComponent implements AfterViewInit
   btnClicker = signal(false);
 
   groupeServ = inject(GroupeService);
+  toastrServ = inject(ToastrService);
   destroyRef = inject(DestroyRef);
   matDialog = inject(MatDialog);
 
@@ -94,6 +95,7 @@ export class GroupeComponent implements AfterViewInit
       next: () =>
       {
         _groupe.connexionBloquer = !_groupe.connexionBloquer;
+        this.toastrServ.success(`La connexion est ${_groupe.connexionBloquer ? 'bloquée' : 'débloquée'}`)
       }
     });
   }
