@@ -22,6 +22,7 @@ import { Client } from '@model/Client';
 import { ModalInfoComponent } from './modal-info/modal-info.component';
 import { AjouterModifierClientComponent } from '@modal/ajouter-modifier-client/ajouter-modifier-client.component';
 import { ModalLivraisonComponent } from '@modal/modal-livraison/modal-livraison.component';
+import { ThemeService } from '@service/ThemeService.Service';
 
 @Component({
     selector: 'app-client',
@@ -45,6 +46,7 @@ export class ClientComponent
 
   private clientServ = inject(ClientService);
   private exportServ = inject(ExportService);
+  private themeServ = inject(ThemeService);
   private destroyRef = inject(DestroyRef);
   private matDialog = inject(MatDialog);
 
@@ -98,9 +100,50 @@ export class ClientComponent
     this.matDialog.open(ModalInfoComponent, { data: { info: _info }});
   }
 
+  protected OuvrirModalConfirmationGenererCompte(_client: Client): void
+  {
+    this.themeServ.OuvrirConfirmation(
+      "Création de compte", 
+      "Confirmez-vous la création d'un compte ?"
+    );
+
+    this.themeServ.retourConfirmation.subscribe({
+      next: (retour) =>
+      {
+        this.dataSource.update(x =>
+        {
+          const INDEX = x.data.findIndex(x => x.idPublic == _client.idPublic);
+          
+          x.data[INDEX].possedeCompte = true;
+          x.data[INDEX].connexionBloquer = false;
+
+          return x;
+        });
+      }
+    });
+  }
+
   protected Exporter(): void
   {
     this.exportServ.Client();
+  }
+
+  private GenererCompte(_idPublicClient: string): void
+  {
+    this.clientServ.GenererCompte(_idPublicClient).subscribe({
+      next: () =>
+      {
+        this.dataSource.update(x =>
+        {
+          const INDEX = x.data.findIndex(x => x.idPublic == _idPublicClient);
+
+          x.data[INDEX].possedeCompte = true;
+          x.data[INDEX].connexionBloquer = false;
+
+          return x;
+        });
+      }
+    });
   }
 
   private Lister(): void

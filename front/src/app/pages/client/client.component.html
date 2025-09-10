@@ -1,17 +1,17 @@
 <h1>Gestion des clients</h1>
 
 <div style="display: flex; justify-content: center; margin-bottom: 10px;">
-    <button mat-flat-button (click)="OuvrirModal()">
+    <button matButton="filled" (click)="OuvrirModal()">
         <mat-icon>add</mat-icon>
         Ajouter un client
     </button>&nbsp;
 
-    <button mat-flat-button (click)="Exporter()">
+    <button matButton="filled" (click)="Exporter()">
         <mat-icon>download</mat-icon>
         Exporter les clients
     </button>&nbsp;
 
-    <button mat-flat-button (click)="OuvrirModalImporter()">
+    <button matButton="filled" (click)="OuvrirModalImporter()">
         <mat-icon>upload</mat-icon>
         Importer les clients
     </button>
@@ -66,7 +66,7 @@
         <ng-container matColumnDef="infoComplementaire">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Infos </th>
             <td mat-cell *matCellDef="let row">
-                <button mat-mini-fab 
+                <button matMiniFab
                         stop-propagation 
                         (click)="OuvrirModalInfo(row.infoComplementaire)"
                         [disabled]="!row.infoComplementaire">
@@ -80,16 +80,23 @@
             <th mat-header-cell *matHeaderCellDef> Action </th>
             <td mat-cell *matCellDef="let row">
 
-                <button mat-mini-fab 
+                <button matMiniFab 
                         stop-propagation 
                         (click)="OuvrirModalLivraison(row)">
                     <mat-icon>local_shipping</mat-icon>
                 </button>&nbsp;
 
-                <button mat-mini-fab 
+                <button matMiniFab 
                         stop-propagation 
                         (click)="OuvrirModal(row)">
                     <mat-icon>edit</mat-icon>
+                </button>&nbsp;
+
+                <button matMiniFab
+                        stop-propagation 
+                        (click)="OuvrirModalConfirmationGenererCompte(row)"
+                        [disabled]="row.possedeCompte">
+                    <mat-icon>person_add</mat-icon>
                 </button>
             </td>
         </ng-container>

@@ -6,7 +6,9 @@ export type Client =
     telephone?: string,
     adresse: string,
     adresseFacturation: string,
-    infoComplementaire?: string
+    infoComplementaire?: string,
+    possedeCompte: boolean,
+    connexionBloquer: boolean
 };
 
 export type ClientLeger =
