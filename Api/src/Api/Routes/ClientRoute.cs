@@ -6,6 +6,8 @@ using Api.ModelsImports;
 using Api.Services.Clients;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Services.Mail;
+using Services.Mdp;
 
 namespace Api.Routes;
 
@@ -32,6 +34,11 @@ public static class ClientRoute
         builder.MapPut("modifier/{idPublicClient:guid}", ModifierAsync)
             .WithDescription("Modifier un client")
             .ProducesBadRequestErreurValidation()
+            .ProducesNotFound()
+            .ProducesNoContent();
+
+        builder.MapPut("generer-compte/{idPublicClient:guid}", GenererCompteAsync)
+            .WithDescription("Créer un compte pour le client")
             .ProducesNotFound()
             .ProducesNoContent();
 
@@ -137,5 +144,59 @@ public static class ClientRoute
         bool ok = await _clientServ.ModifierAsync(builder, idGroupe, _idPublicClient);
 
         return ok ? Results.NoContent() : Results.NotFound();
+    }
+
+    async static Task<IResult> GenererCompteAsync(
+        HttpContext _httpContext,
+        [FromServices] IClientService _clientServ,
+        [FromServices] IMdpService _mdpServ,
+        [FromServices] IMailService _mailServ,
+        [FromRoute(Name = "idPublicClient")] Guid _idPublicClient
+    )
+    {
+        if (_idPublicClient == Guid.Empty)
+            return Results.NotFound();
+
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        var client = await _clientServ.InfoAsync(_idPublicClient, idGroupe);
+
+        if(client is null)
+            return Results.NotFound();
+
+        if (client.Mail is null)
+            return Results.BadRequest("Aucune adresse mail enregistré, création impossible");
+
+        if (client.Login is not null && client.Mdp is not null)
+            return Results.BadRequest("Un compte existe déjà");
+
+        var mdp = _mdpServ.Generer(8, false);
+        var login = $"client_{client.Id}";
+
+        SetPropertyBuilder<Client> builder = new();
+        builder.SetProperty(x => x.Login, login)
+            .SetProperty(x => x.Mdp, _mdpServ.Hasher(mdp))
+            .SetProperty(x => x.ConnexionBloquer, false);
+
+        await _clientServ.ModifierAsync(builder, idGroupe, _idPublicClient);
+ 
+        string message =
+            $"""
+            <p>
+            Bonjour, <br><br>
+
+            votre espace personne sur Baguette à bicyclette à été créé ! <br>
+            vos identifiants sont: <br>
+            Login: {login} <br>
+            Mot de passe: {mdp} <br><br>
+                
+            <b>Note: Nous vous recommandons de modifier votre mot de passe et votre login</b>
+            </p>
+            """;
+
+        await _mailServ.EnvoyerAsync([client.Mail], "Création compte", message, true)
+            .ConfigureAwait(false);
+
+        return Results.Created();
     }
 }
