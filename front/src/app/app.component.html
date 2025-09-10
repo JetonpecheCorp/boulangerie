@@ -33,18 +33,22 @@
 
   <mat-drawer #drawer class="drawer" [mode]="drawerMode" [opened]="EstConnecter()">
     <mat-nav-list role="navigation">
-      <a mat-list-item routerLink="produit" routerLinkActive="active">Produit</a>
-      <a mat-list-item routerLink="ingredient" routerLinkActive="active">Ingredient</a>
-      <a mat-list-item routerLink="categorie" routerLinkActive="active">Catégorie</a>
-      <a mat-list-item routerLink="vehicule" routerLinkActive="active">Véhicule</a>
-      <a mat-list-item routerLink="fournisseur" routerLinkActive="active">Fournisseur</a>
-      <a mat-list-item routerLink="client" routerLinkActive="active">Client</a>
-      <a mat-list-item routerLink="employe" routerLinkActive="active">Employé</a>
-      <a mat-list-item routerLink="groupe" routerLinkActive="active">Groupe</a>
-      <a mat-list-item routerLink="planning" routerLinkActive="active">Planning</a>
-      <a mat-list-item routerLink="livraison" routerLinkActive="active">Livraison</a>
+      @if(EstAdmin())
+      {
+        <a mat-list-item routerLink="produit" routerLinkActive="active">Produit</a>
+        <a mat-list-item routerLink="ingredient" routerLinkActive="active">Ingredient</a>
+        <a mat-list-item routerLink="categorie" routerLinkActive="active">Catégorie</a>
+        <a mat-list-item routerLink="vehicule" routerLinkActive="active">Véhicule</a>
+        <a mat-list-item routerLink="fournisseur" routerLinkActive="active">Fournisseur</a>
+        <a mat-list-item routerLink="client" routerLinkActive="active">Client</a>
+        <a mat-list-item routerLink="employe" routerLinkActive="active">Employé</a>
+        <a mat-list-item routerLink="groupe" routerLinkActive="active">Groupe</a>
+        <a mat-list-item routerLink="planning" routerLinkActive="active">Planning</a>
+        <a mat-list-item routerLink="livraison" routerLinkActive="active">Livraison</a>
+        <a mat-list-item routerLink="livreur" routerLinkActive="active">Livreur</a>
+      }
+      
       <a mat-list-item routerLink="commande" routerLinkActive="active">Commande</a>
-      <a mat-list-item routerLink="livreur" routerLinkActive="active">Livreur</a>
     </mat-nav-list>
   </mat-drawer>
   <mat-drawer-content [class.open]="drawer.opened && drawerMode == 'push'" class="marginTopDrawer">

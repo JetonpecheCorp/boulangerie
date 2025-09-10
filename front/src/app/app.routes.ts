@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './guards/admin.guard';
+import { adminClientGuard } from './guards/admin-client.guard';
 
 export const routes: Routes = [
     {
@@ -57,7 +58,7 @@ export const routes: Routes = [
     },
     {
         path: "commande",
-        canActivate: [adminGuard],
+        canActivate: [adminClientGuard],
         loadComponent: () => import('./pages/commande/commande.component').then(x => x.CommandeComponent),
         title: "Commande"
     },

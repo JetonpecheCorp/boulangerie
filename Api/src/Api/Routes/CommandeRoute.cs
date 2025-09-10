@@ -200,6 +200,12 @@ public static class CommandeRoute
 
         int idGroupe = _httpContext.RecupererIdGroupe();
 
+        if(_httpContext.RecupererRole() == "client")
+        {
+            _commandeFiltre.IdPublicClient = Guid.Parse(_httpContext.RecupererIdPublique());
+            _commandeFiltre.RoleClient = true;
+        }
+
         var liste = await _commandeServ.ListerAsync(_commandeFiltre, idGroupe);
 
         return Results.Extensions.OK(liste, PaginationExportContext.Default);

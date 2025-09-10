@@ -41,9 +41,15 @@ export class AppComponent
     return environment.utilisateur != undefined && environment.utilisateur != null;
   }
 
+  protected EstAdmin(): boolean
+  {
+    return environment.utilisateur  && environment.utilisateur.role == "admin";
+  }
+
   protected Deconnexion(): void
   {
     sessionStorage.clear();
+    environment.utilisateur = null;
     this.router.navigateByUrl("/");
   }
 

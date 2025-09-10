@@ -75,7 +75,13 @@ export class LoginComponent implements OnInit
         retour.role = JSON.parse(atob(retour.jwt.split(".")[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
         
         environment.utilisateur = retour;        
-        this.router.navigateByUrl("/planning");
+
+        if(retour.role == "admin")
+          this.router.navigateByUrl("/planning");
+
+        else if(retour.role == "client")
+          this.router.navigateByUrl("/commande");
+
         sessionStorage.setItem("utilisateur", JSON.stringify(environment.utilisateur));
       },
       error: () => this.btnClicker.set(false)

@@ -23,6 +23,7 @@ import { CommandeService } from '@service/Commande.service';
 import { EStatusCommande } from '@enum/EStatusCommande';
 import { Commande } from '@model/Commande';
 import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/modal-ajouter-commmande.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-commande',
@@ -71,22 +72,25 @@ export class CommandeComponent implements OnInit, AfterContentInit
     });
 
     this.ListerCommande();
-    this.ListerClientLeger();
 
-    this.autoCompleteClientFormCtrl.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (valeur: string | null) =>
-        {
-          let liste = this.listeClient()
-            .filter(x => x.nom.toLowerCase().includes(valeur?.toLowerCase() || ""));
+    if(this.EstAdmin())
+    {
+      this.ListerClientLeger();
+      this.autoCompleteClientFormCtrl.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (valeur: string | null) =>
+          {
+            let liste = this.listeClient()
+              .filter(x => x.nom.toLowerCase().includes(valeur?.toLowerCase() || ""));
 
-          this.listeClientFiltrer.set(liste);
+            this.listeClientFiltrer.set(liste);
 
-          if(!valeur)
-            this.ListerCommande();
-        }
-      });
+            if(!valeur)
+              this.ListerCommande();
+          }
+        });
+    }
 
     this.paginator().page
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -103,6 +107,11 @@ export class CommandeComponent implements OnInit, AfterContentInit
   {         
     this.dataSource().sort = this.sort();
     this.paginator()._intl.itemsPerPageLabel = "Commande par page";
+  }
+
+  protected EstAdmin(): boolean
+  {
+    return environment.utilisateur.role == "admin";
   }
 
   protected OuvrirModalCommande(_commande?: Commande): void
@@ -146,8 +155,13 @@ export class CommandeComponent implements OnInit, AfterContentInit
   protected ListerCommande(): void
   {
     this.estEnChargement.set(true);
-    const ID_PUBLIC_CLIENT = this.idPublicClient() ?? this.listeClient()
-      .find(x => x.nom == this.autoCompleteClientFormCtrl.value)?.idPublic;    
+    let idPublicClient = undefined;
+
+    if(this.EstAdmin())
+    {
+      idPublicClient = this.idPublicClient() ?? this.listeClient()
+        .find(x => x.nom == this.autoCompleteClientFormCtrl.value)?.idPublic;  
+    }
 
     const INFOS: CommandeFiltreExport = 
     {
@@ -157,7 +171,7 @@ export class CommandeComponent implements OnInit, AfterContentInit
       dateFin: this.form.value.dateFin,
       thermeRecherche: this.inputFormCtrl.value,
       status: EStatusCommande.Tout,
-      idPublicClient: ID_PUBLIC_CLIENT
+      idPublicClient: idPublicClient
     };
 
     this.commandeServ.Lister(INFOS).subscribe({

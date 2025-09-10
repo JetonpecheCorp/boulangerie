@@ -1,4 +1,5 @@
 ﻿using Api.Enums;
+using System.Text.Json.Serialization;
 
 namespace Api.ModelsImports.Commandes;
 
@@ -9,4 +10,7 @@ public sealed class CommandeFiltreImport: PaginationImport
     public EStatusCommande Status { get; set; }
     public bool? SansLivraison { get; set; }
     public Guid? IdPublicClient { get; set; }
+
+    [JsonIgnore]
+    public bool RoleClient { get; set; } = false;
 }

@@ -17,8 +17,16 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
             .Where(x => x.IdGroupe == _idGroupe);
 
         if (!string.IsNullOrWhiteSpace(_filtre.ThermeRecherche))
+        {
             requete = requete.Where(x => x.Numero.Contains(_filtre.ThermeRecherche));
 
+            if (_filtre.RoleClient)
+            {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                requete = requete.Where(x => x.IdClientNavigation.IdPublic == _filtre.IdPublicClient);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }
+        }
         else
         {
             if (_filtre.SansLivraison.HasValue)
