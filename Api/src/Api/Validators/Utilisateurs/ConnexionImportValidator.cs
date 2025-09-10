@@ -7,7 +7,7 @@ public class ConnexionImportValidator: AbstractValidator<ConnexionImport>
 {
     public ConnexionImportValidator()
     {
-        RuleFor(x => x.Login).EmailAddress();
+        RuleFor(x => x.Login).NotEmpty();
         RuleFor(x => x.Mdp).NotEmpty();
     }
 }

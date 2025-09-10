@@ -2,6 +2,7 @@
 using Api.Models;
 using Api.ModelsExports.Connexions;
 using Api.ModelsImports.Utilisateurs;
+using Api.Services.Clients;
 using Api.Services.Utilisateurs;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,8 @@ using Services.Jwts;
 using Services.Mail;
 using Services.Mdp;
 using System.Security.Claims;
+using LoginConnexion = (string Login, string Mdp, System.Guid IdPublic, int IdGroupe, string Role, string Nom);
+
 
 namespace Api.Routes;
 
@@ -43,6 +46,7 @@ public static class AuthentificationRoute
         [FromServices] IJwtService _jwtServ,
         [FromServices] IMdpService _mdpServ,
         [FromServices] IUtilisateurService _utilisateurService,
+        [FromServices] IClientService _clientServ,
         [FromBody] ConnexionImport _connexionImport
     )
     {
@@ -50,25 +54,48 @@ public static class AuthentificationRoute
 
         if (!validate.IsValid)
             return Results.Extensions.ErreurValidator(validate.Errors);
-            
+
+        LoginConnexion infoConnexion = new();
+
+
         var utilisateur = await _utilisateurService.InfoAsync(_connexionImport.Login);
 
-        if(utilisateur is null)
-            return Results.BadRequest("Login ou mot de passe incorrect");
+        if (utilisateur is null)
+        {
+            var client = await _clientServ.InfoAsync(_connexionImport.Login);
 
-        if(!_mdpServ.VerifierHash(_connexionImport.Mdp, utilisateur.Mdp))
+            if (client is null || client.Login is null || client.Mdp is null)
+                return Results.BadRequest("Login ou mot de passe incorrect");
+
+            infoConnexion.IdGroupe = client.IdGroupe;
+            infoConnexion.Mdp = client.Mdp;
+            infoConnexion.Login = client.Login;
+            infoConnexion.IdPublic = client.IdPublic;
+            infoConnexion.Nom = client.Nom;
+            infoConnexion.Role = "client";
+        }
+        else
+        {
+            infoConnexion.IdGroupe = utilisateur.IdGroupe;
+            infoConnexion.Mdp = utilisateur.Mdp;
+            infoConnexion.Login = utilisateur.Mail;
+            infoConnexion.IdPublic = utilisateur.IdPublic;
+            infoConnexion.Nom = $"{utilisateur.Nom} {utilisateur.Prenom}";
+            infoConnexion.Role = "admin";
+        }
+
+        if(!_mdpServ.VerifierHash(_connexionImport.Mdp, infoConnexion.Mdp))
             return Results.BadRequest("Login ou mot de passe incorrect");
 
         string jwt = _jwtServ.Generer([
-            new Claim(ClaimTypes.Role, utilisateur.EstAdmin ? "admin" : "client"),
-            new Claim("idUtilisateur", utilisateur.IdPublic.ToString()),
-            new Claim("idGroupe", utilisateur.IdGroupe.ToString())
+            new Claim(ClaimTypes.Role, infoConnexion.Role),
+            new Claim("idUtilisateur", infoConnexion.IdPublic.ToString()),
+            new Claim("idGroupe", infoConnexion.IdGroupe.ToString())
         ]);
 
         var export = new ConnexionExport
         {
-            Nom = utilisateur.Nom,
-            Prenom = utilisateur.Prenom,
+            Nom = infoConnexion.Nom,
             Jwt = jwt
         };
 

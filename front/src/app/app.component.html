@@ -10,12 +10,22 @@
   <span>Boulangerie</span>
   <span class="spacer"></span>
 
-  <button matIconButton aria-label="Déconnexion" (click)="Deconnexion()">
-    <mat-icon></mat-icon>
-  </button>
-  <button matIconButton aria-label="Menu paramètre" (click)="OuvrirModalParametre()">
-    <mat-icon>settings</mat-icon>
-  </button>
+  @if (EstConnecter()) 
+  {
+    <button matIconButton 
+            aria-label="Menu paramètre" 
+            matTooltip="paramètres" 
+            (click)="OuvrirModalParametre()">
+      <mat-icon>settings</mat-icon>
+    </button>
+
+    <button matIconButton 
+            aria-label="Déconnexion" 
+            matTooltip="Se déconnecter" 
+            (click)="Deconnexion()">
+      <mat-icon>logout</mat-icon>
+    </button>
+  }
 </mat-toolbar>
 
 <mat-drawer-container 
