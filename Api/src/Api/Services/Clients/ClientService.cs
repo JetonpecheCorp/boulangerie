@@ -85,6 +85,22 @@ public sealed class ClientService(BoulangerieContext _context): IClientService
         return pagination;
     }
 
+    public async Task<Client?> InfoAsync(string _login)
+    {
+        var client = await _context.Clients.Where(x => x.Login == _login).FirstOrDefaultAsync();
+
+        return client;
+    }
+
+    public async Task<Client?> InfoAsync(Guid _idPublicClient, int _idGroupe)
+    {
+        var client = await _context.Clients
+            .Where(x => x.IdPublic == _idPublicClient && x.IdGroupe == _idGroupe)
+            .FirstOrDefaultAsync();
+
+        return client;
+    }
+
     public async Task<int> RecupererIdAsync(Guid _idPublicClient, int _idGroupe)
     {
         if (_idPublicClient == Guid.Empty)

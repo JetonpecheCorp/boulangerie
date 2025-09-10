@@ -25,6 +25,21 @@ namespace Api.Services.Clients
         Task<PaginationExport<ClientLegerExport>> ListerLegerAsync(PaginationImport _pagination, int _idGroupe);
 
         /// <summary>
+        /// Recuperer le client par son login
+        /// </summary>
+        /// <param name="_login"></param>
+        /// <returns></returns>
+        Task<Client?> InfoAsync(string _login);
+
+        /// <summary>
+        /// Recuperer le client par son id public
+        /// </summary>
+        /// <param name="_idPublicClient">id public conserné</param>
+        /// <param name="_idGroupe">id groupe conserné</param>
+        /// <returns></returns>
+        Task<Client?> InfoAsync(Guid _idPublicClient, int _idGroupe);
+
+        /// <summary>
         /// Recuperer Id du client
         /// </summary>
         /// <param name="_idPublicClient">id public conserné</param>
