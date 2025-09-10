@@ -20,7 +20,7 @@ public sealed class CommandeService(BoulangerieContext _context): ICommandeServi
         {
             requete = requete.Where(x => x.Numero.Contains(_filtre.ThermeRecherche));
 
-            if (_filtre.RoleClient)
+            if (_filtre.roleClient)
             {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 requete = requete.Where(x => x.IdClientNavigation.IdPublic == _filtre.IdPublicClient);

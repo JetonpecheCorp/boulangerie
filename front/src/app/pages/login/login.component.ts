@@ -12,6 +12,7 @@ import { ButtonComponent } from "@component/button/button.component";
 import { Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { ERole } from '@enum/ERole';
 
 @Component({
     selector: 'app-login',
@@ -35,10 +36,10 @@ export class LoginComponent implements OnInit
       login: new FormControl<string>("", [Validators.required]),
       mdp: new FormControl<string>("", [Validators.required])
     }); 
-    
+
     // reconnexion automatique
     setTimeout(() => 
-    {
+    {      
       if(sessionStorage.getItem("utilisateur"))
       {      
         environment.utilisateur = JSON.parse(sessionStorage.getItem("utilisateur")!);
@@ -49,6 +50,7 @@ export class LoginComponent implements OnInit
         if(new Date(EXP * 1_000).getTime() < new Date().getTime())
         {
           sessionStorage.clear();
+          environment.utilisateur = null;
           return;
         }
           
@@ -76,10 +78,10 @@ export class LoginComponent implements OnInit
         
         environment.utilisateur = retour;        
 
-        if(retour.role == "admin")
+        if(retour.role == ERole.Admin)
           this.router.navigateByUrl("/planning");
 
-        else if(retour.role == "client")
+        else if(retour.role == ERole.Client)
           this.router.navigateByUrl("/commande");
 
         sessionStorage.setItem("utilisateur", JSON.stringify(environment.utilisateur));

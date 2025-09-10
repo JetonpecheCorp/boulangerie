@@ -11,6 +11,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { environment } from '../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalParametreComponent } from '@modal/modal-parametre/modal-parametre.component';
+import { ERole } from '@enum/ERole';
 
 @Component({
     selector: 'app-root',
@@ -43,7 +44,7 @@ export class AppComponent
 
   protected EstAdmin(): boolean
   {
-    return environment.utilisateur  && environment.utilisateur.role == "admin";
+    return environment.utilisateur  && environment.utilisateur.role == ERole.Admin;
   }
 
   protected Deconnexion(): void

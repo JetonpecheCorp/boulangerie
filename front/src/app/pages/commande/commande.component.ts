@@ -24,6 +24,7 @@ import { EStatusCommande } from '@enum/EStatusCommande';
 import { Commande } from '@model/Commande';
 import { ModalAjouterCommmandeComponent } from '@modal/modal-ajouter-commmande/modal-ajouter-commmande.component';
 import { environment } from '../../../environments/environment';
+import { ERole } from '@enum/ERole';
 
 @Component({
   selector: 'app-commande',
@@ -111,7 +112,7 @@ export class CommandeComponent implements OnInit, AfterContentInit
 
   protected EstAdmin(): boolean
   {
-    return environment.utilisateur.role == "admin";
+    return environment.utilisateur?.role == ERole.Admin;
   }
 
   protected OuvrirModalCommande(_commande?: Commande): void
