@@ -28,32 +28,38 @@ public static class CommandeRoute
                 ATTENTION: Recherche prioritaire et non cumulable (numéro de commande)
             """)
             .ProducesBadRequest()
-            .Produces<PaginationExport<CommandeExport>>();
+            .Produces<PaginationExport<CommandeExport>>()
+            .RequireAuthorizationOr(NomPolicyJwt.DefautClient, NomPolicyJwt.DefautAdmin);
 
         builder.MapGet("facture/{numero}", GenererFactureAsync)
             .WithDescription("Ajouter une nouvelle commande")
-            .Produces(StatusCodes.Status200OK, contentType: ContentType.Pdf);
+            .Produces(StatusCodes.Status200OK, contentType: ContentType.Pdf)
+            .RequireAuthorization();
 
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter une nouvelle commande")
             .ProducesCreated<string>()
-            .ProducesBadRequestErreurValidation();
+            .ProducesBadRequestErreurValidation()
+            .RequireAuthorization();
 
         builder.MapPut("modifierAdmin/{numeroCommande}", ModifierAsync)
             .WithDescription("Modifier une commande")
             .ProducesBadRequestErreurValidation()
-            .ProducesNoContent();
+            .ProducesNoContent()
+            .RequireAuthorization();
 
         builder.MapPut("modifierStatus", ModifierStatusAsync)
             .WithDescription("Modifier le status d'une commande")
             .ProducesNotFound()
-            .ProducesNoContent();
+            .ProducesNoContent()
+            .RequireAuthorization();
 
         builder.MapDelete("supprimer/{numeroCommande}", SupprimerAsync)
             .WithDescription("Supprimer une commande")
             .ProducesBadRequest()
             .ProducesNotFound()
-            .ProducesNoContent();
+            .ProducesNoContent()
+            .RequireAuthorization();
 
         return builder;
     }
@@ -203,7 +209,7 @@ public static class CommandeRoute
         if(_httpContext.RecupererRole() == "client")
         {
             _commandeFiltre.IdPublicClient = Guid.Parse(_httpContext.RecupererIdPublique());
-            _commandeFiltre.RoleClient = true;
+            _commandeFiltre.roleClient = true;
         }
 
         var liste = await _commandeServ.ListerAsync(_commandeFiltre, idGroupe);

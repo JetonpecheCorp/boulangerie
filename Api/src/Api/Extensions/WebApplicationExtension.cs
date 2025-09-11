@@ -19,7 +19,7 @@ public static class WebApplicationExtension
         apiGroupe.MapGroup("categorie").AjouterRouteCategorie().RequireAuthorization();
         apiGroupe.MapGroup("vehicule").AjouterRouteVehicule().RequireAuthorization();
         apiGroupe.MapGroup("fournisseur").AjouterRouteFournisseur().RequireAuthorization();
-        apiGroupe.MapGroup("commande").AjouterRouteCommande().RequireAuthorization();
+        apiGroupe.MapGroup("commande").AjouterRouteCommande();
         apiGroupe.MapGroup("client").AjouterRouteClient().RequireAuthorization();
         apiGroupe.MapGroup("livraison").AjouterRouteLivraison().RequireAuthorization();
         apiGroupe.MapGroup("export").AjouterRouteExport().RequireAuthorization();
