@@ -34,7 +34,7 @@ public static class CommandeRoute
         builder.MapGet("facture/{numero}", GenererFactureAsync)
             .WithDescription("Ajouter une nouvelle commande")
             .Produces(StatusCodes.Status200OK, contentType: ContentType.Pdf)
-            .RequireAuthorization();
+            .RequireAuthorizationOr(NomPolicyJwt.DefautClient, NomPolicyJwt.DefautAdmin);
 
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter une nouvelle commande")
@@ -45,7 +45,7 @@ public static class CommandeRoute
         builder.MapPut("modifierAdmin/{numeroCommande}", ModifierAsync)
             .WithDescription("Modifier une commande")
             .ProducesBadRequestErreurValidation()
-            .ProducesNoContent()
+            .ProducesNoContent() 
             .RequireAuthorization();
 
         builder.MapPut("modifierStatus", ModifierStatusAsync)
