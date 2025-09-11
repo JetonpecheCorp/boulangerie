@@ -32,9 +32,10 @@ if (!File.Exists(cheminCleRsa))
 rsa.ImportRSAPrivateKey(File.ReadAllBytes(cheminCleRsa), out _);
 
 builder.Services.AddAuthorizationBuilder()
-    .AddDefaultPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur"))
+    .AddDefaultPolicy(NomPolicyJwt.DefautAdmin, x => x.RequireRole("admin").RequireClaim("idUtilisateur").RequireClaim("idGroupe"))
     .AddPolicy(NomPolicyJwt.DefautClient, x => x.RequireRole("client").RequireClaim("idUtilisateur").RequireClaim("idGroupe"))
-    .AddPolicy(NomPolicyJwt.ResetMdp, x => x.RequireClaim("mdp-oublie").RequireClaim("idUtilisateur").RequireClaim("idGroupe"));
+    .AddPolicy(NomPolicyJwt.ResetMdp, x => x.RequireClaim("mdp-oublie").RequireClaim("idUtilisateur").RequireClaim("idGroupe")
+);
 
 builder.Services.AddHealthChecks();
 
