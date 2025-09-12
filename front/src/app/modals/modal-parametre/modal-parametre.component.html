@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Livraison</h2>
+<mat-dialog-content style="padding-top: 10px;">
+    <mat-form-field>
+        <mat-label>Couleur du theme</mat-label>
+        <input matInput type="color" (input)="AppercuTheme($event)">
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button matButton="text" mat-dialog-close>Fermer</button>
+    <button matButton="filled" (click)="Sauvegarder()">Sauvegarder</button>
+</mat-dialog-actions>
