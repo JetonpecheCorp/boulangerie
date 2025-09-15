@@ -23,6 +23,7 @@ import { ModalInfoComponent } from './modal-info/modal-info.component';
 import { AjouterModifierClientComponent } from '@modal/ajouter-modifier-client/ajouter-modifier-client.component';
 import { ModalLivraisonComponent } from '@modal/modal-livraison/modal-livraison.component';
 import { ThemeService } from '@service/ThemeService.Service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-client',
@@ -47,6 +48,7 @@ export class ClientComponent
   private clientServ = inject(ClientService);
   private exportServ = inject(ExportService);
   private themeServ = inject(ThemeService);
+  private toastrServ = inject(ToastrService);
   private destroyRef = inject(DestroyRef);
   private matDialog = inject(MatDialog);
 
@@ -110,15 +112,8 @@ export class ClientComponent
     this.themeServ.retourConfirmation.subscribe({
       next: (retour) =>
       {
-        this.dataSource.update(x =>
-        {
-          const INDEX = x.data.findIndex(x => x.idPublic == _client.idPublic);
-          
-          x.data[INDEX].possedeCompte = true;
-          x.data[INDEX].connexionBloquer = false;
-
-          return x;
-        });
+        if(retour)
+          this.GenererCompte(_client.idPublic);
       }
     });
   }
@@ -142,6 +137,8 @@ export class ClientComponent
 
           return x;
         });
+
+        this.toastrServ.success("Le compte a été créé");
       }
     });
   }

@@ -22,6 +22,8 @@ import { ClientService } from '@service/Client.service';
 import { ClientLeger } from '@model/Client';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ConvertionEnum, EStatusCommande } from '../../../enums/EStatusCommande';
+import { environment } from '../../../environments/environment';
+import { ERole } from '@enum/ERole';
 
 type Info = 
 {
@@ -64,7 +66,9 @@ export class ModalAjouterCommmandeComponent implements OnInit
       this.estModeAjouter.set(false);
 
     this.ListerProduit();
-    this.ListerClient();
+
+    if(this.EstAdmin())
+      this.ListerClient();
 
     this.form = new FormGroup({
       estLivraison: new FormControl(this.dialogData.commande?.estLivraison ?? false),
@@ -74,17 +78,20 @@ export class ModalAjouterCommmandeComponent implements OnInit
       date: new FormControl<Date>(this.dialogData.date, [Validators.required])
     }); 
     
-    this.form.controls['autoCompleteClient'].valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (valeur?: string) =>
-        {
-          let liste = this.dataSourceClient()
-            .filter(option => option.nom.toLowerCase().includes(valeur?.toLocaleLowerCase() || ''));
+    if(this.EstAdmin())
+    {
+      this.form.controls['autoCompleteClient'].valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (valeur?: string) =>
+          {
+            let liste = this.dataSourceClient()
+              .filter(option => option.nom.toLowerCase().includes(valeur?.toLocaleLowerCase() || ''));
 
-          this.dataSourceClientFiltrer.set(liste);
-        }
+            this.dataSourceClientFiltrer.set(liste);
+          }
       });
+    }
 
     this.form.controls['autoComplete'].valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -97,6 +104,11 @@ export class ModalAjouterCommmandeComponent implements OnInit
           this.dataSourceFiltrer.set(liste);
         }
       });
+  }
+
+  protected EstAdmin(): boolean
+  {
+    return environment.utilisateur?.role == ERole.Admin;
   }
 
   protected AjouterProduit(): void
@@ -182,12 +194,15 @@ export class ModalAjouterCommmandeComponent implements OnInit
       return;
     }
 
-    const CLIENT = this.dataSourceClient().find(x => x.nom == this.form.value.autoCompleteClient);
+    let client = undefined;
+
+    if(this.EstAdmin())
+      client = this.dataSourceClient().find(x => x.nom == this.form.value.autoCompleteClient);
 
     const INFOS: CommandeExport = {
       estLivraison: this.form.value.estLivraison,
       date: (this.form.controls["date"].value as Date).toISOFormat(),
-      idPublicClient: CLIENT?.idPublic,
+      idPublicClient: client?.idPublic,
       listeProduit: listeProduit
     };
 
