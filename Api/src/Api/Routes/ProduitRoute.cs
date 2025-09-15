@@ -19,26 +19,31 @@ public static class ProduitRoute
 
         builder.MapGet("lister", ListerAsync)
             .WithDescription("Lister des produits")
-            .Produces<PaginationExport<ProduitExport>>();
+            .Produces<PaginationExport<ProduitExport>>()
+            .RequireAuthorization();
 
         builder.MapGet("listerLeger", ListerLegerAsync)
             .WithDescription("Lister des produits de façon allégé")
-            .Produces<PaginationExport<ProduitLegerExport>>();
+            .Produces<PaginationExport<ProduitLegerExport>>()
+            .RequireAuthorizationOr(NomPolicyJwt.DefautClient, NomPolicyJwt.DefautAdmin);
 
         builder.MapPost("ajouter", AjouterAsync)
             .WithDescription("Ajouter un nouveau produit")
             .ProducesBadRequestErreurValidation()
-            .ProducesCreated<string>();
+            .ProducesCreated<string>()
+            .RequireAuthorization();
 
         builder.MapPut("modifier", ModifierAsync)
            .WithDescription("Modifier un produit")
            .ProducesNotFound()
-           .ProducesNoContent();
+           .ProducesNoContent()
+           .RequireAuthorization();
 
         builder.MapDelete("supprimer/{idPublicProduit:guid}", SupprimerAsync)
            .WithDescription("Supprimer un produit")
            .ProducesNotFound()
-           .ProducesNoContent();
+           .ProducesNoContent()
+           .RequireAuthorization();
 
         return builder;
     }

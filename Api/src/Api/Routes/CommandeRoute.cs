@@ -40,7 +40,7 @@ public static class CommandeRoute
             .WithDescription("Ajouter une nouvelle commande")
             .ProducesCreated<string>()
             .ProducesBadRequestErreurValidation()
-            .RequireAuthorization();
+            .RequireAuthorizationOr(NomPolicyJwt.DefautClient, NomPolicyJwt.DefautAdmin);
 
         builder.MapPut("modifierAdmin/{numeroCommande}", ModifierAsync)
             .WithDescription("Modifier une commande")
@@ -233,6 +233,9 @@ public static class CommandeRoute
             return Results.Extensions.ErreurValidator(validate.Errors);
 
         Guid idPublicClient = _commandeImport.IdPublicClient ?? Guid.Empty;
+
+        if (_httpContext.RecupererRole() == "client")
+            idPublicClient = Guid.Parse(_httpContext.RecupererIdPublique());
 
         int idGroupe = _httpContext.RecupererIdGroupe();
         string prefixGrp = await _groupeServ.PrefixAsync(idGroupe);

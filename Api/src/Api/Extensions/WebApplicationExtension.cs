@@ -14,7 +14,7 @@ public static class WebApplicationExtension
         apiGroupe.MapGroup("groupe").AjouterRouteGroupe().RequireAuthorization();
         apiGroupe.MapGroup("ingredient").AjouterRouteIngredient().RequireAuthorization();
         apiGroupe.MapGroup("recette").AjouterRouteRecette().RequireAuthorization();
-        apiGroupe.MapGroup("produit").AjouterRouteProduit().RequireAuthorization();
+        apiGroupe.MapGroup("produit").AjouterRouteProduit();
         apiGroupe.MapGroup("tva").AjouterRouteTva().RequireAuthorization();
         apiGroupe.MapGroup("categorie").AjouterRouteCategorie().RequireAuthorization();
         apiGroupe.MapGroup("vehicule").AjouterRouteVehicule().RequireAuthorization();
