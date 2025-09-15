@@ -81,7 +81,7 @@ builder.Services.AjouterRateLimiter();
 builder.Services.AddSingleton<IMailService>(new MailService(new MailOptions
 {
     Expediteur = "nicolas.np63@gmail.com",
-    Mdp = "cewy qbhb crqd mvsi",
+    Mdp = "aufy jxaj vovf odmu",
     NomSmtp = "smtp.gmail.com",
     NumeroPortSmtp = 587
 }));
