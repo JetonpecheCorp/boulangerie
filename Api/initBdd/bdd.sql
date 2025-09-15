@@ -222,12 +222,12 @@ CREATE TABLE IF NOT EXISTS Boulangerie.FournisseurProduit (
 );
 
 INSERT INTO Boulangerie.Groupe (Id, Nom, Adresse, Prefix) VALUES (1, "Groupe 1", "Adresse groupe 1", "Gup");
-INSERT INTO Boulangerie.Client (Id, IdPublic, IdGroupe, Nom, Adresse, AdresseFacturation) 
+INSERT INTO Boulangerie.Client (Id, IdPublic, IdGroupe, Nom, Adresse, AdresseFacturation, Mail) 
 VALUES 
-(1, "0a1ea0c8-c898-4c54-8492-44d19b4ebcae", 1, "Grand hotel", "13 rue de paris", "13 rue de paris"),
-(2, "a78ef710-dbe6-4704-8ada-7cf57c0b55e4", 1, "Ecole chocolaterie", "16 avenue Gustave Rocher", "16 avenue Gustave Rocher"),
-(3, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bdd236", 1, "Ecole maternelle Marie Brochet", "387 bd Gregoire Stark", "387 bd Gregoire Stark"),
-(4, "b6281099-b6b0-44e6-82c9-45a02f457efc", 1, "Point chaud", "1 rue Estelle Tripot", "1 rue Estelle Tripot");
+(1, "0a1ea0c8-c898-4c54-8492-44d19b4ebcae", 1, "Grand hotel", "13 rue de paris", "13 rue de paris", "nicolas.np63@gmail.com"),
+(2, "a78ef710-dbe6-4704-8ada-7cf57c0b55e4", 1, "Ecole chocolaterie", "16 avenue Gustave Rocher", "16 avenue Gustave Rocher", "nicolas.np63@gmail.com"),
+(3, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bdd236", 1, "Ecole maternelle Marie Brochet", "387 bd Gregoire Stark", "387 bd Gregoire Stark", "nicolas.np63@gmail.com"),
+(4, "b6281099-b6b0-44e6-82c9-45a02f457efc", 1, "Point chaud", "1 rue Estelle Tripot", "1 rue Estelle Tripot", "nicolas.np63@gmail.com");
 
 INSERT INTO Boulangerie.Utilisateur (Id, IdGroupe, IdPublic, Nom, Prenom, Mail, Telephone, Mdp, EstAdmin) VALUES
 (1, 1, "d41a0aa9-7f45-4e11-9e5c-3c1ef2bdd236", "Peyrachon", "Nicolas", "admin@mail.com", "0712345678", "vOba9D9fgUAtZLmjLOEj8g==$topujlqNGMnRZUBb70rk8GC+0H7lMRx8+dXtMH2SYT0=", 1),
