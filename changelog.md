@@ -70,3 +70,10 @@
 - Suppression produit
 - Suppression ingrédient
 - Suppression catégorie
+
+## 1.3.2
+- Résolutions bugs
+- Création login / mdp pour accès espace client
+- Espace client page commande
+- Client peut télécharger une facture de commande
+- Client peut voir les commandes faites
