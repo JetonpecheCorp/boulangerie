@@ -10,8 +10,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { environment } from '../../../environments/environment';
 import { ButtonComponent } from "@component/button/button.component";
 import { Router, RouterLink } from '@angular/router';
-import { Location } from '@angular/common';
-import { ToastrService } from 'ngx-toastr';
 import { ERole } from '@enum/ERole';
 
 @Component({
@@ -26,8 +24,6 @@ export class LoginComponent implements OnInit
   protected btnClicker = signal(false);
 
   private authentificationServ = inject(AuthentificationService);
-  private location = inject(Location);
-  private toastrServ = inject(ToastrService);
   private router = inject(Router);
 
   ngOnInit(): void 
@@ -36,28 +32,6 @@ export class LoginComponent implements OnInit
       login: new FormControl<string>("", [Validators.required]),
       mdp: new FormControl<string>("", [Validators.required])
     }); 
-
-    // reconnexion automatique
-    setTimeout(() => 
-    {      
-      if(sessionStorage.getItem("utilisateur"))
-      {      
-        environment.utilisateur = JSON.parse(sessionStorage.getItem("utilisateur")!);
-
-        const EXP = +JSON.parse(atob(environment.utilisateur.jwt.split(".")[1]))["exp"];
-
-        // JWT expiré
-        if(new Date(EXP * 1_000).getTime() < new Date().getTime())
-        {
-          sessionStorage.clear();
-          environment.utilisateur = null;
-          return;
-        }
-          
-        this.toastrServ.clear();
-        this.location.back();
-      }
-    }, 0);
   }
 
   protected OnConnexion(): void

@@ -1,6 +1,6 @@
 import { BooleanInput } from '@angular/cdk/coercion';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -12,6 +12,8 @@ import { environment } from '../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalParametreComponent } from '@modal/modal-parametre/modal-parametre.component';
 import { ERole } from '@enum/ERole';
+import { ToastrService } from 'ngx-toastr';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-root',
@@ -19,13 +21,16 @@ import { ERole } from '@enum/ERole';
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
-export class AppComponent 
+export class AppComponent implements OnInit
 {
   matDialog = inject(MatDialog);
   router = inject(Router);
 
   mdcBackdrop: BooleanInput = false;
   drawerMode: MatDrawerMode = "push";
+
+  private location = inject(Location);
+  private toastrServ = inject(ToastrService);
 
   constructor(private breakpointObserver: BreakpointObserver) 
   {
@@ -35,6 +40,41 @@ export class AppComponent
     breakpoint$.subscribe(() =>
       this.BreakpointChanges()
     );
+  }
+
+  ngOnInit(): void 
+  {
+    // reconnexion automatique    
+    if(sessionStorage.getItem("utilisateur"))
+    {
+      environment.utilisateur = JSON.parse(sessionStorage.getItem("utilisateur")!);
+
+      const EXP = +JSON.parse(atob(environment.utilisateur.jwt.split(".")[1]))["exp"];            
+
+      // JWT expiré
+      if(new Date(EXP * 1_000).getTime() < new Date().getTime())
+      {
+        sessionStorage.clear();
+        environment.utilisateur = null;
+        return;
+      }
+
+      this.toastrServ.clear();
+
+      // la page précédente est l'application
+      if(document.referrer && environment.urlFront.some(x => document.referrer.includes(x)))
+        this.location.back();
+      
+      // je viens d'autre part
+      else
+      {
+        if(environment.utilisateur.role == ERole.Admin)
+          this.router.navigateByUrl("/planning");
+
+        else if(environment.utilisateur.role == ERole.Client)
+          this.router.navigateByUrl("/commande");
+      }
+    }
   }
 
   protected EstConnecter(): boolean
