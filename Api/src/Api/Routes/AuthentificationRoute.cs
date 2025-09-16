@@ -136,7 +136,7 @@ public static class AuthentificationRoute
             Bonjour {utilisateur.Nom} {utilisateur.Prenom}, <br><br>
 
             Vous avez demandé de changer votre mot de passe sur l'application Boulangerie. <br>
-            Veuillez clicker <a href="http://localhost:4200/#/reset-mdp?p={jwt}">ici</a>. <br>
+            Veuillez clicker <a href="http://localhost:9000/#/reset-mdp?p={jwt}">ici</a>. <br>
             ATTENTION: Ce lien est valide 5 min.<br>
             <b>Si vous n'êtes pas l'auteur de cette demande, ignorer simplement ce mail </b>
             <br><br>
