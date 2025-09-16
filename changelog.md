@@ -77,3 +77,8 @@
 - Espace client page commande
 - Client peut télécharger une facture de commande
 - Client peut voir les commandes faites
+
+## 1.3.3
+- Bloquer / debloquer compte client
+- Fix reconnexion automatique
+- Modifier commande en tant que client
