@@ -118,9 +118,49 @@ export class ClientComponent
     });
   }
 
+  protected OuvrirModalConfirmationBloquerDebloquerCompte(_client: Client): void
+  {
+    let message = "Confirmez-vous le bloquage du compte ?";
+    let titre = "Bloquage du compte";
+
+    if(_client.connexionBloquer)
+    {
+      message = "Confirmez-vous le débloquage du compte ?";
+      titre = "Débloquage du compte";
+    }
+
+    this.themeServ.OuvrirConfirmation(titre, message);
+
+    this.themeServ.retourConfirmation.subscribe({
+      next: (retour) =>
+      {
+        if(retour)
+          this.BloquerDebloquerCompte(_client.idPublic);
+      }
+    });
+  }
+
   protected Exporter(): void
   {
     this.exportServ.Client();
+  }
+
+  private BloquerDebloquerCompte(_idPublicClient: string): void
+  {
+    this.clientServ.BloquerDebloquerCompte(_idPublicClient).subscribe({
+      next: () =>
+      {
+        this.dataSource.update(x => 
+        {
+          const INDEX = x.data.findIndex(y => y.idPublic == _idPublicClient);
+          x.data[INDEX].connexionBloquer = !x.data[INDEX].connexionBloquer;
+
+          return x;
+        });
+
+        this.toastrServ.success("Le compte a été mis à jour");
+      }
+    });
   }
 
   private GenererCompte(_idPublicClient: string): void

@@ -35,6 +35,11 @@ export class ClientService
     return this.http.put<void>(`${this.BASE_API}/modifier/${_idPublic}`, _client).pipe(takeUntilDestroyed(this.destroyRef));
   }
 
+  BloquerDebloquerCompte(_idPublic: string): Observable<void>
+  {
+    return this.http.put<void>(`${environment.urlApi}/authentification/bloquer-debloquer/${_idPublic}`, null).pipe(takeUntilDestroyed(this.destroyRef));
+  }
+
   GenererCompte(_idPublic: string): Observable<void>
   {
     return this.http.put<void>(`${this.BASE_API}/generer-compte/${_idPublic}`, null).pipe(takeUntilDestroyed(this.destroyRef));

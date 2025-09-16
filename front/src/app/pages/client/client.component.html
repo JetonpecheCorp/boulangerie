@@ -92,12 +92,22 @@
                     <mat-icon>edit</mat-icon>
                 </button>&nbsp;
 
-                <button matMiniFab
+                @if(row.possedeCompte)
+                {
+                    <button matMiniFab
+                            stop-propagation 
+                            (click)="OuvrirModalConfirmationBloquerDebloquerCompte(row)">
+                        <mat-icon>{{ row.connexionBloquer ? 'lock' : 'lock_open' }}</mat-icon>
+                    </button>
+                }
+                @else 
+                {
+                    <button matMiniFab
                         stop-propagation 
-                        (click)="OuvrirModalConfirmationGenererCompte(row)"
-                        [disabled]="row.possedeCompte">
+                        (click)="OuvrirModalConfirmationGenererCompte(row)">
                     <mat-icon>person_add</mat-icon>
                 </button>
+                }
             </td>
         </ng-container>
 
@@ -113,6 +123,6 @@
     <mat-paginator [length]="total()" 
                    [pageSize]="nbParPage()"
                    [pageSizeOptions]="[5, 10, 25, 100]" 
-                   aria-label="Utilisateur par page">
+                   aria-label="Client par page">
     </mat-paginator>
 </div>

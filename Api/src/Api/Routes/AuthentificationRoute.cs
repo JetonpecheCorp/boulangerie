@@ -38,6 +38,12 @@ public static class AuthentificationRoute
             .ProducesBadRequestErreurValidation()
             .ProducesNoContent();
 
+        builder.MapPut("bloquer-debloquer/{idPublicClient:guid}", BloquerDebloquerAsync)
+            .ProducesBadRequest()
+            .ProducesNotFound()
+            .ProducesNoContent()
+            .RequireAuthorization();
+
         return builder;
     }
 
@@ -66,6 +72,9 @@ public static class AuthentificationRoute
 
             if (client is null || client.Login is null || client.Mdp is null)
                 return Results.BadRequest("Login ou mot de passe incorrect");
+
+            if (client.ConnexionBloquer)
+                return Results.BadRequest("La connexion au compte est bloquée");
 
             infoConnexion.IdGroupe = client.IdGroupe;
             infoConnexion.Mdp = client.Mdp;
@@ -161,6 +170,33 @@ public static class AuthentificationRoute
         builder.SetProperty(x => x.Mdp, _mdpServ.Hasher(_info.Mdp));
 
         bool ok = await _utilisateurServ.ModifierAsync(builder, idGroupe, Guid.Parse(idUtilisateur));
+
+        return ok ? Results.NoContent() : Results.NotFound();
+    }
+
+    async static Task<IResult> BloquerDebloquerAsync(
+        HttpContext _httpContext,
+        [FromServices] IClientService _clientServ,
+        [FromRoute(Name = "idPublicClient")] Guid _idPublicClient
+    )
+    {
+        if (_idPublicClient == Guid.Empty)
+            return Results.NotFound();
+
+        int idGroupe = _httpContext.RecupererIdGroupe();
+
+        var client = await _clientServ.InfoAsync(_idPublicClient, idGroupe);
+
+        if (client is null)
+            return Results.NotFound();
+
+        if (client.Login is null || client.Mdp is null)
+            return Results.BadRequest("Client doit avoir un compte");
+
+        SetPropertyBuilder<Client> builder = new();
+        builder.SetProperty(x => x.ConnexionBloquer, !client.ConnexionBloquer);
+
+        bool ok = await _clientServ.ModifierAsync(builder, idGroupe, _idPublicClient);
 
         return ok ? Results.NoContent() : Results.NotFound();
     }
